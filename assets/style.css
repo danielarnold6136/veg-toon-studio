@@ -192,3 +192,14 @@ ul.clean li:last-child{border-bottom:none}
 .scene.beatcard>.head .beat{border-color:var(--marigold);color:var(--marigold)}
 .scene.beatcard>.body{padding:16px 18px}
 .scene.beatcard .shot.numbered{background:var(--panel)}
+
+/* ===== v8: story ticker + grouped batch prompts (story-3 & 4) ===== */
+.storychip{margin-left:auto;background:var(--marigold);color:#1a1206;font-weight:800;font-size:12.5px;
+  padding:4px 13px;border-radius:999px;white-space:nowrap;letter-spacing:.05em;box-shadow:0 2px 8px rgba(255,174,59,.35)}
+.storybadge{display:inline-flex;align-items:baseline;gap:8px;background:linear-gradient(135deg,var(--marigold),var(--marigold-d));
+  color:#1a1206;font-weight:800;font-size:23px;letter-spacing:.02em;padding:8px 20px;border-radius:12px;
+  margin-bottom:14px;box-shadow:0 5px 18px rgba(255,174,59,.32)}
+.storybadge span{font-size:12px;font-weight:600;opacity:.75}
+.beatgroup{border:1px solid var(--line);border-left:3px solid var(--marigold);border-radius:9px;padding:9px 11px;margin:10px 0;background:var(--panel)}
+.beatgroup-h{font-size:12.5px;font-weight:700;color:var(--marigold);margin-bottom:8px;display:flex;gap:8px;align-items:center}
+.beatgroup-h .rank{margin-left:auto;color:var(--faint);font-weight:500}
