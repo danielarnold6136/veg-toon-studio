@@ -159,3 +159,14 @@ ul.clean li:last-child{border-bottom:none}
 .shot-h{font-size:12px;font-weight:700;color:var(--berry);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .shot-h .rank{color:var(--faint);font-weight:500}
 .beatnote{font-size:12px;color:var(--faint);margin:2px 0 8px}
+
+/* ===== v5: all-image-prompts batch section (story-3) ===== */
+#allimg details{border:1px solid var(--line2);border-radius:var(--radius);background:var(--panel);padding:6px 16px 16px}
+#allimg summary{cursor:pointer;color:var(--marigold);font-weight:700;font-size:14.5px;padding:12px 4px;list-style:none}
+#allimg summary::-webkit-details-marker{display:none}
+#allimg summary:before{content:"▸ ";color:var(--marigold)}
+#allimg details[open] summary:before{content:"▾ "}
+.allimg-list{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:12px}
+@media(max-width:760px){.allimg-list{grid-template-columns:1fr}}
+.allrow{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:8px;padding:6px 8px 6px 12px;background:var(--panel2)}
+.alllbl{font-size:12.5px;color:var(--muted);font-family:var(--mono);white-space:nowrap}

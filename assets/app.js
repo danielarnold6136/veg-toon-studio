@@ -32,11 +32,11 @@
       var tgtId = btn.getAttribute('data-copy-target');
       if (tgtId) {
         var el = document.getElementById(tgtId);
-        if (el) text = el.innerText;
+        if (el) text = el.textContent;
       } else {
         var block = btn.closest('.block');
         var pre = block && block.querySelector('pre');
-        if (pre) text = pre.innerText;
+        if (pre) text = pre.textContent;
       }
       text = (text || '').replace(/ /g, ' ').trim();
       var label = btn.textContent;
