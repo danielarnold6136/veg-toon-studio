@@ -203,3 +203,9 @@ ul.clean li:last-child{border-bottom:none}
 .beatgroup{border:1px solid var(--line);border-left:3px solid var(--marigold);border-radius:9px;padding:9px 11px;margin:10px 0;background:var(--panel)}
 .beatgroup-h{font-size:12.5px;font-weight:700;color:var(--marigold);margin-bottom:8px;display:flex;gap:8px;align-items:center}
 .beatgroup-h .rank{margin-left:auto;color:var(--faint);font-weight:500}
+
+/* ===== v9: collapsible major sections ===== */
+h2.sec-toggle{cursor:pointer;user-select:none}
+h2.sec-toggle .caret{color:var(--marigold);font-size:15px;margin-left:auto;transition:.15s}
+h2.sec-toggle:hover{color:var(--marigold)}
+.sec-body{margin-top:6px}

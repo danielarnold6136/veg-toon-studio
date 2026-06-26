@@ -74,3 +74,40 @@
     ids.forEach(function (id) { obs.observe(document.getElementById(id)); });
   }
 })();
+
+/* Collapsible major sections — collapsed by default to keep long story pages short */
+(function () {
+  var COLLAPSE = ['fullscript', 'cast', 'allimg', 'scenes', 'packs'];
+  COLLAPSE.forEach(function (id) {
+    var sec = document.getElementById(id);
+    if (!sec) return;
+    var wrap = sec.querySelector('.wrap');
+    var h2 = wrap && wrap.querySelector('h2');
+    if (!wrap || !h2) return;
+    var body = document.createElement('div');
+    body.className = 'sec-body';
+    Array.prototype.slice.call(wrap.children).forEach(function (k) {
+      if (k !== h2) body.appendChild(k);
+    });
+    wrap.appendChild(body);
+    h2.classList.add('sec-toggle');
+    h2.setAttribute('role', 'button');
+    h2.tabIndex = 0;
+    var caret = document.createElement('span');
+    caret.className = 'caret';
+    h2.appendChild(caret);
+    function set(open) {
+      body.style.display = open ? '' : 'none';
+      caret.textContent = open ? '▾' : '▸';
+      sec.setAttribute('data-open', open ? '1' : '0');
+    }
+    set(false);
+    function toggle() { set(sec.getAttribute('data-open') !== '1'); }
+    h2.addEventListener('click', toggle);
+    h2.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+    var tl = document.querySelector('.toc a[href="#' + id + '"]');
+    if (tl) tl.addEventListener('click', function () { set(true); });
+  });
+})();
