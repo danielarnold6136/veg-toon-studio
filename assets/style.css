@@ -182,3 +182,13 @@ ul.clean li:last-child{border-bottom:none}
   background:linear-gradient(var(--line2),rgba(255,174,59,0))}
 .shot.numbered .shot-inner{flex:1;min-width:0}
 @media(max-width:760px){.shot.numbered .clipno{flex-basis:34px}.shot.numbered .clipno b{width:32px;height:32px;font-size:14px}}
+
+/* ===== v7: beat-outline cards (story-3 & story-4) — clearly separate each BEAT ===== */
+.scene.beatcard{border:1px solid var(--line2);border-left:5px solid var(--marigold);border-radius:14px;
+  margin:26px 0;box-shadow:0 6px 22px rgba(0,0,0,.22);overflow:hidden;background:var(--bg2)}
+.scene.beatcard>.head{background:linear-gradient(180deg,rgba(255,174,59,.11),rgba(255,174,59,.02));
+  border-bottom:1px solid var(--line2);padding:13px 18px}
+.scene.beatcard>.head .sn{background:var(--marigold);color:#1a1206;padding:3px 11px;border-radius:7px;font-size:14px}
+.scene.beatcard>.head .beat{border-color:var(--marigold);color:var(--marigold)}
+.scene.beatcard>.body{padding:16px 18px}
+.scene.beatcard .shot.numbered{background:var(--panel)}
