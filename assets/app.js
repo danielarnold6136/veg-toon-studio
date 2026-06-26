@@ -77,7 +77,7 @@
 
 /* Collapsible major sections — collapsed by default to keep long story pages short */
 (function () {
-  var COLLAPSE = ['fullscript', 'cast', 'allimg', 'scenes', 'packs'];
+  var COLLAPSE = ['fullscript', 'cast', 'scenes', 'packs'];
   COLLAPSE.forEach(function (id) {
     var sec = document.getElementById(id);
     if (!sec) return;
