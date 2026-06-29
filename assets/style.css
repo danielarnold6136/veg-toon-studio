@@ -41,8 +41,9 @@ h2 .dot{width:9px;height:9px;border-radius:3px;background:var(--marigold);displa
 h3{font-size:17px;margin:22px 0 8px;color:var(--ink)}
 .sub{color:var(--muted);margin:.2em 0 1.1em;max-width:820px}
 .grid{display:grid;gap:14px}
-.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)}
-@media(max-width:760px){.g2,.g3{grid-template-columns:1fr}}
+.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
+@media(min-width:761px) and (max-width:980px){.g4{grid-template-columns:repeat(2,1fr)}}
 
 /* TOC */
 .toc{position:sticky;top:0;z-index:20;background:rgba(13,17,23,.82);backdrop-filter:blur(10px);

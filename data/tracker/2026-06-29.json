@@ -1,0 +1,136 @@
+{
+ "date": "2026-06-29",
+ "instances": [
+  "seed:verified-2026-06-29"
+ ],
+ "ok": 8,
+ "seed": true,
+ "channels": {
+  "UCdLwcmuQrHo0l40d7HnMPkQ": {
+   "name": "Dugu Baba TV",
+   "role": "tracked",
+   "subCount": 41500,
+   "best": {
+    "title": "मिर्ची के लिए आलू ने दिया मां बाप को धोखा | Vegetable Cartoon Story | Sabji Cartoon Story",
+    "views": 6400000,
+    "len": 376,
+    "id": null
+   },
+   "latest": {
+    "title": "90s की गर्मियां और नानी का घर | बचपन की यादें | 2D Animated Ghibli Style",
+    "views": 68000,
+    "len": 196,
+    "id": null,
+    "published": "1 day ago"
+   }
+  },
+  "UCvCHO3BETUu6PmZrae-T1jg": {
+   "name": "Little Kids Hindi",
+   "role": "tracked",
+   "subCount": 33700,
+   "best": {
+    "title": "भिंडी के लिए आलू ने छोड़ा मूली और टमाटर का साथ 😭 | Sabji Cartoon Story | bhindi, karela, Aalu Story",
+    "views": 5000000,
+    "len": 379,
+    "id": null
+   },
+   "latest": {
+    "title": "😢 Bhindi Betrayed Him 💔 | Bhindi Leaves Poor Aalu for Rich Karela | Aalu, Bhindi, Karela Story",
+    "views": 527,
+    "len": 245,
+    "id": null,
+    "published": "5 hours ago"
+   }
+  },
+  "UCiTEJZ5IxYeWoygSaa_Majg": {
+   "name": "Bagu Baba TV",
+   "role": "tracked",
+   "subCount": 33700,
+   "best": {
+    "title": "गरीब आलू का उड़ाया गया मज़ाक 😭 | बाद में उसकी सफलता ने लहसुन को कर दिया हैरान Vegetable Story",
+    "views": 1500000,
+    "len": 551,
+    "id": null
+   },
+   "latest": {
+    "title": "Gareeb Aalu Wale Ko Patni Ne Diya Dhoka, Phir Barf Gola Bechkar Bana Crorepati Boss!",
+    "views": 279000,
+    "len": 620,
+    "id": null,
+    "published": "14 hours ago"
+   }
+  },
+  "UC3TZwPRd5cDwGoaIuCFYuZQ": {
+   "name": "Apna Mini Gaon",
+   "role": "tracked",
+   "subCount": 10300,
+   "best": {
+    "title": "आलू और मिर्ची की प्रेम कहानी 💔 | लाल मिर्च का धोखा | Sabzi Ki Kahani | Hindi Cartoon Story",
+    "views": 2300000,
+    "len": 336,
+    "id": null
+   },
+   "latest": {
+    "title": "गरीब लहसुन ने सूखी ज़मीन में बनाया तालाब, फिर दुश्मन ने सब बर्बाद किया! 😱 | Emotional Village Story",
+    "views": 171000,
+    "len": 649,
+    "id": null,
+    "published": "13 hours ago"
+   }
+  },
+  "UCDOWGA4XsPmHFX3oopUOc_w": {
+   "name": "Momo Toons",
+   "role": "tracked",
+   "subCount": 6310,
+   "best": {
+    "title": "मूली ने गरीब टमाटर को छोड़ अमीर बैंगन का हाथ थामा | Heart Touching Story",
+    "views": 1600000,
+    "len": 337,
+    "id": null
+   },
+   "latest": {
+    "title": "गाजर ने गरीब आलू को ठुकराया, फिर आलू बन गया करोड़पति! 😱💰 | दिल छू लेने वाली कहानी",
+    "views": 10000,
+    "len": 352,
+    "id": null,
+    "published": "8 hours ago"
+   }
+  },
+  "UCuN8KlvqOiozVwhYcrVsuAA": {
+   "name": "Funtoo Baba TV",
+   "role": "rival",
+   "subCount": 27200,
+   "best": {
+    "title": "आलू, प्याज और बेवफा भिंडी | bhindi, Aalu, pyaj Emotional Story | Sabji Story",
+    "views": 722000,
+    "len": null,
+    "id": null
+   },
+   "latest": null
+  },
+  "UC7VH5e2I11IW7f_NATDUjAA": {
+   "name": "Sabji Toon TV",
+   "role": "rival",
+   "subCount": 7730,
+   "best": {
+    "title": "टमाटर ने दिया आलू को धोखा 💔 | बैंगन की दौलत देखकर टमाटर भूल गई अपना परिवार 😱 | Sabji Cartoon Story",
+    "views": 1241384,
+    "len": null,
+    "id": null
+   },
+   "latest": null
+  },
+  "UCAPmPlUz9RGrNYPzVwfzDmw": {
+   "name": "Zigloo Cartoons",
+   "role": "rival",
+   "subCount": 5660,
+   "best": {
+    "title": "Tomato Betrayed Potato | Aalu Tomato and Onion Cartoon Story | Sabji Cartoon Story",
+    "views": 234951,
+    "len": null,
+    "id": null
+   },
+   "latest": null
+  }
+ }
+}
