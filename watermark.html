@@ -1,0 +1,168 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Animated Logo Watermark — VeggieToons TV</title>
+<meta name="description" content="Looping animated channel-logo watermark variations to cover the Gemini/Veo corner mark.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .wm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:14px}
+  .wm-card{background:var(--panel);border:1px solid var(--line2);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+  .wm-card.pick{border-color:var(--marigold);box-shadow:0 0 0 1px var(--marigold),0 10px 30px -12px rgba(255,174,59,.4)}
+  /* the "video corner" stage: dark frame with a fake Gemini mark to prove coverage */
+  .stage{position:relative;aspect-ratio:16/9;background:
+      repeating-linear-gradient(135deg,#10151d 0 14px,#0d1117 14px 28px);
+      display:flex;align-items:flex-end;justify-content:flex-end;overflow:hidden}
+  .stage .mark{position:relative;width:32%;margin:0 7px 6px 0;z-index:2;filter:drop-shadow(0 3px 7px rgba(0,0,0,.5))}
+  .stage .mark video,.stage .mark img{position:relative;width:100%;display:block;z-index:2}
+  /* the fake Gemini mark sits BEHIND the badge (z-index 1) — fully covered by the opaque circle */
+  .stage .mark .gem{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;
+      font-size:10px;color:#cfd6e0;opacity:.92;gap:3px;letter-spacing:.02em;font-weight:600}
+  .stage .mark .gem svg{width:12px;height:12px}
+  .stage .label{position:absolute;left:10px;top:9px;font-size:10.5px;color:var(--faint);letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+  .wm-meta{padding:11px 14px;display:flex;flex-direction:column;gap:8px}
+  .wm-meta h3{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}
+  .wm-meta p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+  .wm-dl{display:flex;gap:8px;margin-top:2px}
+  .wm-dl a{font-size:12px;font-weight:600;padding:5px 11px;border:1px solid var(--line2);border-radius:7px;color:var(--muted)}
+  .wm-dl a:hover{color:var(--ink);border-color:var(--marigold);background:rgba(255,174,59,.08);text-decoration:none}
+  .tag{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:rgba(255,174,59,.12);color:var(--marigold);border:1px solid rgba(255,174,59,.3)}
+  /* real-size demo: watermark placed in the actual corner of a mock 16:9 frame */
+  .demo-frame{position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line2);
+      background:linear-gradient(160deg,#2a2f3a,#171b24 60%,#0f1218);max-width:760px}
+  .demo-frame .demo-cap{position:absolute;left:18px;top:16px;max-width:60%;color:#e9eef6}
+  .demo-frame .demo-cap b{font-family:var(--deva);font-size:clamp(15px,2.4vw,24px);line-height:1.25;display:block;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+  .demo-frame .demo-mark{position:absolute;right:14px;bottom:12px;width:clamp(82px,14%,128px);z-index:3;filter:drop-shadow(0 4px 9px rgba(0,0,0,.55))}
+  .demo-frame .demo-mark video{position:relative;width:100%;display:block;z-index:2;transition:opacity .3s}
+  /* fake Gemini mark centred behind the badge — revealed when you peek under it */
+  .demo-frame .demo-gem{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;
+      font-size:12px;color:#e6ebf2;opacity:.92;font-weight:600;gap:4px}
+  .demo-frame .demo-gem svg{width:14px;height:14px}
+  .demo-frame.peek .demo-mark video{opacity:.18}
+  .swap{display:inline-flex;gap:6px;margin:10px 0 0;flex-wrap:wrap}
+  .swap button{cursor:pointer;font-size:12px;font-weight:600;padding:6px 13px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);transition:.15s}
+  .swap button.on{color:#1a1206;background:var(--marigold);border-color:var(--marigold)}
+  .note{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--marigold);border-radius:8px;padding:12px 15px;color:var(--muted);font-size:13.5px;margin:12px 0}
+  .note b{color:var(--ink)}
+</style>
+</head><body>
+<nav class="toc"><div class="wrap"><a class="brand" href="index.html">🥔 Veg<span>Toon</span> Studio</a><a href="index.html#workflow">Workflow</a><a href="index.html#stories">Scripts</a><a href="guides/bgm-guide.html">🎵 BGM</a><a href="guides/launch-playbook.html">🚀 Launch</a><a href="watermark.html" style="color:var(--ink);background:var(--panel);border-color:var(--line2)">🏷️ Watermark</a></div></nav>
+
+<header class="hero"><div class="wrap">
+<span class="kicker">🏷️ VeggieToons TV · Brand Watermark</span>
+<h1>The Animated Logo Watermark</h1>
+<p class="lede">A looping animation of our channel logo that sits in the <b>bottom-right corner</b> of every video — it becomes our trademark <em>and</em> permanently covers the Gemini/Veo render mark. Each variation below is a real, seamless loop shown over a mock video corner (with a fake Gemini mark underneath) so you can see it cover cleanly. Pick the motion you like.</p>
+<div class="pill-row"><a class="btn" href="#variations">▶ See the variations</a><a class="btn ghost" href="#prompt">📝 I2V prompt + how to apply</a></div>
+</div></header>
+
+<section><div class="wrap">
+<div class="note">✅ <b>Why it never goes “naked”:</b> the logo sits on its own <b>solid mint badge with a red scalloped border</b> — a fully opaque plate. The characters bob and sparkle <em>on top</em> of it, but the plate itself never moves, fades, or turns transparent, so whatever is behind it (the Gemini mark) is covered 100% of the time, every frame.</div>
+</div></section>
+
+<section id="variations"><div class="wrap">
+<h2><span class="dot"></span>6 Motion Variations</h2>
+<p class="sub">Each is a seamless loop (it joins back to the first frame with no jump). The dark striped panel = a stand-in for your video; the small “✦ Gemini” bottom-right is where the real watermark would be — notice the badge fully covers it. Hover-free, they auto-play and loop.</p>
+<div class="wm-grid" id="grid"></div>
+</div></section>
+
+<section id="demo"><div class="wrap">
+<h2><span class="dot"></span>Real-Corner Preview</h2>
+<p class="sub">This is roughly how it looks at real watermark size in the corner of a finished VeggieToons video. Switch the motion to compare in context.</p>
+<div class="demo-frame" id="demoFrame">
+  <div class="demo-cap"><b>गरीब टमाटर का धोखा 😭</b></div>
+  <div class="demo-mark">
+    <span class="demo-gem"><svg viewBox="0 0 24 24" fill="#cfd6e0"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg>Gemini</span>
+    <video id="demoVid" src="assets/watermark/wm_wiggle.webm" autoplay loop muted playsinline></video>
+  </div>
+</div>
+<div class="swap" id="swap"><button id="peekBtn" style="margin-left:6px">👁 Reveal what's underneath</button></div>
+<p class="sub" style="margin-top:8px">Hold <b>Reveal</b> to fade the badge — you'll see the Gemini mark it's permanently hiding. Because the badge is a solid opaque plate, that mark is covered in every single frame of the loop.</p>
+</div></section>
+
+<section id="prompt"><div class="wrap">
+<h2><span class="dot"></span>Make the “real” version (per-character motion)</h2>
+<p class="sub">The loops above are generated from the static logo (whole-badge motion — ready to use right now). For a premium version where the <b>corn pumps its fist</b> and the <b>pea waves</b> independently, run the logo through an image-to-video engine (Veo / Kling / facelessdev) with this exact prompt, then loop it with the ffmpeg commands below.</p>
+
+<div class="block"><div class="bar"><span class="lbl i2v">I2V ANIMATION PROMPT</span><button class="copy" data-copy-target="p-i2v">Copy</button></div><pre id="p-i2v">Animate this cartoon channel logo as a seamless, infinitely-looping corner watermark. Keep it as a subtle, friendly idle-motion logo sting — small, gentle movements only, like a mascot bobbing in place.
+
+WHAT MOVES (characters only, low amplitude):
+- The yellow CORN (top-left): pumps its raised white-gloved fist up and down twice, big happy smile, blinks once.
+- The purple BRINJAL/eggplant (centre): gives a tiny friendly head-tilt and taps the wooden sign with its white glove, blinks once.
+- The green PEA POD (right) and the little peeking pea: wave their hands side to side, cheerful bounce.
+- The green husk leaves and tendrils: sway very gently as if in a light breeze.
+- Optional: the small stars and dashes twinkle softly.
+
+WHAT IS FROZEN — DO NOT MOVE OR CHANGE:
+- The wooden "Veggie Toons TV" sign and ALL its lettering stays perfectly static, sharp and identical to the source — never redraw, warp, animate or restyle any letter or the red "TV" starburst badge.
+- The mint-green scalloped circular badge and its red scalloped border stay fully solid, opaque, filled and unchanged in EVERY frame — never transparent, never empty, never shrinking or fading. Characters animate ON TOP of it.
+
+LOOP: Seamless infinite loop — the final frame must match the first frame exactly so there is no visible jump. Start and end on the same neutral resting pose. No camera movement, no zoom, no pan.
+
+STYLE LOCK: Keep the exact same Pixar-style anthropomorphic vegetables — same shapes, same colours, same faces, same outfits and sneakers as the source image. Do not turn them human, do not redesign, do not add or remove characters.
+
+BAN: no new text, no captions, no subtitles, no watermark, no flicker, no flashing, no colour shift, no background change, no transparency, no morphing.</pre></div>
+
+<h3 style="margin-top:22px">Then loop it perfectly + export</h3>
+<p class="sub">I2V engines output a ~5s clip whose start ≠ end, so a raw loop jumps. The <b>ping-pong</b> (play forward then reverse) makes the join invisible. Then export a tiny alpha WebM (best) and an opaque GIF.</p>
+<div class="block"><div class="bar"><span class="lbl">FFMPEG · SEAMLESS LOOP + EXPORT</span><button class="copy" data-copy-target="p-ff">Copy</button></div><pre id="p-ff"># 1. Seamless ping-pong loop (forward + reverse)
+ffmpeg -i logo_i2v.mp4 -filter_complex "[0:v]reverse[r];[0:v][r]concat=n=2:v=1[v]" -map "[v]" -an logo_loop.mp4
+
+# 2. Lightweight alpha WebM overlay (BEST — full colour, tiny, true transparency)
+ffmpeg -i logo_loop.mp4 -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf 30 -an logo_watermark.webm
+
+# 3. Or an opaque, palette-optimised GIF
+ffmpeg -i logo_loop.mp4 -vf "fps=15,scale=300:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" logo_watermark.gif</pre></div>
+
+<h3 style="margin-top:22px">Placing it on your videos</h3>
+<div class="grid g2">
+<div class="card"><h3>📥 Import as overlay</h3><p style="color:var(--muted);margin:.3em 0 0">Drop <b>logo_watermark.webm</b> (or the GIF) into CapCut / Premiere / Resolve as a <b>picture-in-picture / overlay</b> layer on top of the video, set to loop for the whole runtime.</p></div>
+<div class="card"><h3>📐 Size &amp; position</h3><p style="color:var(--muted);margin:.3em 0 0">Scale to ~<b>12–15% of frame width</b>, anchor <b>bottom-right</b>, nudge a few px in from the edge so it fully covers the Gemini/Veo mark with a small margin.</p></div>
+<div class="card"><h3>🎞️ One-time setup</h3><p style="color:var(--muted);margin:.3em 0 0">Save it as a <b>preset / sticker</b> in your editor so every new VeggieToons upload gets the same watermark in one click — consistent branding across the channel.</p></div>
+<div class="card"><h3>🔁 WebM vs GIF</h3><p style="color:var(--muted);margin:.3em 0 0">Use the <b>WebM</b> — full colour, ~50–200 KB, clean soft edges around the circle. GIF is 256-colour and heavier; only use it where an editor won't accept WebM.</p></div>
+</div>
+</div></section>
+
+<footer><div class="wrap">VeggieToons TV — brand watermark kit · generated locally from the channel logo</div></footer>
+
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  var V=[
+    {k:'wiggle', n:'Wiggle', tag:'Lively', d:'Playful tilt + bounce together — reads the most “alive”. Great default.', pick:true},
+    {k:'bob',    n:'Bob',    tag:'Calm',  d:'Gentle float up and down. Soft, friendly, never distracting.'},
+    {k:'breathe',n:'Breathe',tag:'Subtle',d:'Slow scale in/out like a heartbeat. The most understated.'},
+    {k:'rock',   n:'Rock',   tag:'Cute',  d:'Tips side to side like a happy character rocking on its feet.'},
+    {k:'pop',    n:'Pop',    tag:'Bouncy',d:'Squash-and-stretch bounce — energetic, cartoony, kid-friendly.'},
+    {k:'sparkle',n:'Sparkle',tag:'Magic', d:'Badge holds still while stars twinkle around the characters.'}
+  ];
+  var GEM='<span class="gem"><svg viewBox="0 0 24 24" fill="#cfd6e0"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg>Gemini</span>';
+  var grid=document.getElementById('grid');
+  V.forEach(function(v){
+    var el=document.createElement('div');
+    el.className='wm-card'+(v.pick?' pick':'');
+    el.innerHTML=
+      '<div class="stage"><span class="label">'+(v.pick?'★ recommended':'mock video corner')+'</span>'+
+        '<div class="mark">'+GEM+'<video src="assets/watermark/wm_'+v.k+'.webm" autoplay loop muted playsinline></video></div></div>'+
+      '<div class="wm-meta"><h3>'+v.n+' <span class="tag">'+v.tag+'</span></h3><p>'+v.d+'</p>'+
+        '<div class="wm-dl"><a href="assets/watermark/wm_'+v.k+'.webm" download>⬇ WebM</a>'+
+        '<a href="assets/watermark/wm_'+v.k+'.gif" download>⬇ GIF</a></div></div>';
+    grid.appendChild(el);
+  });
+  // real-corner swapper (insert motion buttons before the Reveal button)
+  var swap=document.getElementById('swap'), vid=document.getElementById('demoVid');
+  var peekBtn=document.getElementById('peekBtn');
+  V.forEach(function(v){
+    var b=document.createElement('button'); b.textContent=v.n; if(v.k==='wiggle')b.className='on';
+    b.onclick=function(){ vid.src='assets/watermark/wm_'+v.k+'.webm'; vid.play();
+      swap.querySelectorAll('button').forEach(function(x){if(x!==peekBtn)x.classList.remove('on')}); b.classList.add('on'); };
+    swap.insertBefore(b, peekBtn);
+  });
+  // press-and-hold reveal
+  var frame=document.getElementById('demoFrame');
+  function on(){frame.classList.add('peek');peekBtn.classList.add('on');}
+  function off(){frame.classList.remove('peek');peekBtn.classList.remove('on');}
+  ['mousedown','touchstart'].forEach(function(e){peekBtn.addEventListener(e,function(ev){ev.preventDefault();on();});});
+  ['mouseup','mouseleave','touchend','touchcancel'].forEach(function(e){peekBtn.addEventListener(e,off);});
+})();
+</script>
+</body></html>
