@@ -1,291 +1,109 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>📘 Facebook &amp; Instagram Launch — Veggie Toons TV</title>
-<meta name="description" content="Verified Meta launch plan for Veggie Toons TV: new ID or existing, exact registration fields, DP, cover photo, format rules and monetization thresholds.">
+<title>📘 Facebook &amp; Instagram Setup — Veggie Toons TV</title>
+<meta name="description" content="Short setup sheet: what to create, what to paste, and the three rules that matter.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📘</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700;800&family=Noto+Sans+Devanagari:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <style>
-.tagbadge{display:inline-block;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:999px;letter-spacing:.05em;vertical-align:1px;white-space:nowrap}
-.tagbadge.off{background:rgba(91,208,122,.13);color:#5bd07a;border:1px solid rgba(91,208,122,.4)}
-.tagbadge.sec{background:rgba(255,178,44,.12);color:#ffc257;border:1px solid rgba(255,178,44,.35)}
-.tagbadge.unv{background:rgba(255,86,86,.1);color:#ff8888;border:1px solid rgba(255,86,86,.3)}
-.tagbadge.mine{background:rgba(120,170,255,.12);color:#8fb8ff;border:1px solid rgba(120,170,255,.35)}
-table.spec{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.6px}
-table.spec th,table.spec td{border:1px solid var(--line2);padding:9px 11px;text-align:left;vertical-align:top}
-table.spec th{background:rgba(255,255,255,.03);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-table.spec td b{color:var(--ink)}
-.wrapscroll{overflow-x:auto}
-.verdict{border:1px solid rgba(91,208,122,.35);border-radius:14px;padding:18px 20px;background:linear-gradient(100deg,rgba(91,208,122,.09),transparent 70%)}
-.verdict h3{margin:0 0 8px;font-size:19px}
-.rule{border-left:3px solid var(--line2);padding:2px 0 2px 14px;margin:12px 0;color:var(--muted);font-style:italic;line-height:1.6}
-.rule b{font-style:normal}
-.dontbox{border:1px solid rgba(255,86,86,.3);border-radius:12px;padding:14px 16px;background:rgba(255,86,86,.05);margin-top:14px}
-.stepgrid{counter-reset:s;margin-top:14px}
-.step{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--line2)}
+.steps{margin-top:6px}
+.step{display:grid;grid-template-columns:30px 1fr;gap:14px;padding:13px 0;border-top:1px solid var(--line2)}
 .step:first-child{border-top:0}
-.step .n{width:30px;height:30px;border-radius:50%;background:rgba(91,208,122,.13);border:1px solid rgba(91,208,122,.4);color:#5bd07a;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
-.step p{margin:0;line-height:1.62;color:var(--muted)}
+.step .n{width:26px;height:26px;border-radius:50%;background:rgba(91,208,122,.13);border:1px solid rgba(91,208,122,.4);color:#5bd07a;font-weight:800;font-size:12.5px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.step p{margin:0;line-height:1.6;color:var(--muted)}
 .step p b{color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
 .imgcard{border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:#0d0f12}
 .imgcard img{width:100%;display:block}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:820px){.two{grid-template-columns:1fr}}
-.cap{font-size:12.4px;color:var(--muted);margin:7px 0 0;line-height:1.55;padding:0 2px}
-ul.clean{margin:.5em 0 0;padding-left:1.15em}
-ul.clean li{margin:.45em 0;line-height:1.63}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.4px;color:var(--muted);margin-top:8px}
-.srclist{font-size:12.6px;color:var(--muted);line-height:1.75;word-break:break-word}
-.srclist code{font-size:11.8px}
+.cap{font-size:12.4px;color:var(--muted);margin:7px 0 0;line-height:1.55}
+.rules{margin:0;padding-left:1.15em}
+.rules li{margin:.55em 0;line-height:1.62;color:var(--muted)}
+.rules li b{color:var(--ink)}
+.fields{font-size:13.6px;color:var(--muted);line-height:1.75;margin:0;padding-left:1.15em}
+.fields li{margin:.3em 0}
+.fields b{color:var(--ink)}
 </style>
 </head><body>
-<nav class="toc"><div class="wrap"><a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a><a href="#verdict">The answer</a><a href="#evidence">Evidence</a><a href="#roles">FB vs IG</a><a href="#format">Format rules</a><a href="#fb">FB setup</a><a href="#ig">IG setup</a><a href="#assets">DP &amp; cover</a><a href="#launch">Launch</a><a href="#sources">Sources</a><span class="storychip">📘 META</span></div></nav>
+<nav class="toc"><div class="wrap"><a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a><a href="#do">Do this</a><a href="#paste">Paste this</a><a href="#art">DP &amp; cover</a><a href="#rules">3 rules</a><a href="#money">Money</a><span class="storychip">📘 META</span></div></nav>
 
 <header class="hero"><div class="wrap">
-<p class="crumbs"><a href="../index.html">← Veg-Toon Studio</a> / Facebook &amp; Instagram Launch</p>
-<span class="kicker">📘 Meta launch plan · researched 9 July 2026</span>
-<h1>Facebook &amp; Instagram — the full launch</h1>
-<p class="lede">Every fact below is marked by how well it is proven. <span class="tagbadge off">OFFICIAL</span> means it comes from Meta's own Terms, Help Centre, Transparency Center or newsroom. <span class="tagbadge sec">SECONDARY</span> means strong industry consensus that Meta does not publish. <span class="tagbadge unv">UNVERIFIED</span> means do not rely on it. <span class="tagbadge mine">MEASURED</span> means we pulled it from Meta ourselves today.</p>
-<div class="legend">Anything not marked <span class="tagbadge off">OFFICIAL</span> should be confirmed in the app before you depend on it.</div>
+<p class="crumbs"><a href="../index.html">← Veg-Toon Studio</a> / Facebook &amp; Instagram</p>
+<span class="kicker">📘 Setup sheet</span>
+<h1>Facebook &amp; Instagram — setup</h1>
+<p class="lede">Your plan is right: <b>same Facebook account, new Page</b>. <b>New Instagram</b> on the YouTube phone and email. Everything you need is on this page.</p>
 </div></header>
 
-<section id="verdict"><div class="wrap">
-<h2><span class="dot"></span>Your question: new ID, or your existing one?</h2>
-<div class="verdict">
-<h3>Use your existing personal profile — as the invisible admin of a brand-new Page. Do not create a new personal Facebook profile.</h3>
-<p style="color:var(--muted);line-height:1.65;margin:.5em 0 0">You were right to be uneasy, but the risk runs the opposite way from what you assumed. A second personal profile is the dangerous option, not the safe one — and it buys you no privacy, because <b>the admin behind a Facebook Page is never shown to the public</b>. Visitors see “Veggie Toons TV”. They cannot see you.</p>
+<section id="do"><div class="wrap">
+<h2><span class="dot"></span>Do this</h2>
+<div class="steps">
+<div class="step"><div class="n">1</div><p>From your existing Facebook account, create a Page called <b>Veggie Toons TV</b>. Never make a second personal profile — that breaks Meta's one-account rule and can get your real account disabled too. Nobody can see who runs a Page.</p></div>
+<div class="step"><div class="n">2</div><p>Set the Page URL to <b>facebook.com/veggietoonstv</b>. It's free. (<code>/veggietoons</code> is already taken by someone else.)</p></div>
+<div class="step"><div class="n">3</div><p>Create the Instagram account on the <b>YouTube phone + email</b>. Try <b>@veggietoonstv</b> first. Do not sign up "with Facebook".</p></div>
+<div class="step"><div class="n">4</div><p>In Instagram settings, switch to a <b>Professional</b> account. Creator or Business — either is fine, they unlock the same things.</p></div>
+<div class="step"><div class="n">5</div><p>On the Page: <b>Professional Dashboard → Monetization → Content Monetization → express interest</b>. Free, takes a minute. Do it on day one.</p></div>
 </div>
-
-<h3 style="margin-top:26px">Why a new personal Facebook profile is the wrong move</h3>
-<p style="color:var(--muted);line-height:1.65">Registering a profile called “Veggie Toons” breaks three separate Meta rules at once.</p>
-
-<div class="rule"><b>Facebook Terms of Service, §3.1 (effective 1 January 2025)</b> <span class="tagbadge off">OFFICIAL</span><br>“Provide for your account the same name that you use in everyday life.” … “Create only one account (your own) and use it for personal purposes.”</div>
-
-<div class="rule"><b>Community Standards — Authentic Identity Representation</b> <span class="tagbadge off">OFFICIAL</span><br>Meta “will seek further information before taking actions ranging from temporarily restricting to permanently disabling profiles or accounts” if you “create an account that represents a non-human entity, such as a business, pet, or fictional character,” or “create or maintain multiple Facebook accounts.”</div>
-
-<div class="rule"><b>Community Standards — Account Integrity (updated 28 May 2026)</b> <span class="tagbadge off">OFFICIAL</span><br>Meta may disable accounts “Owned by the same person or entity as an account that has been disabled.”</div>
-
-<p style="color:var(--muted);line-height:1.65;margin-top:14px">Read those together and the burner-profile plan collapses. A brand-named profile is a policy violation from the moment it exists. If it gets caught, it triggers a name-review checkpoint — government ID, sometimes a video selfie. And because Meta reserves the right to act on accounts <em>owned by the same person</em> as a disabled account, a burner does not quarantine risk from your real profile. <b>It links the two and can take both down.</b> Enforcement escalates over five strikes.</p>
-
-<div class="dontbox">
-<b style="color:#ff8888">Also not a workaround: Meta's “additional profiles”.</b>
-<p style="color:var(--muted);line-height:1.62;margin:.5em 0 0">Since 21 September 2023 an eligible adult may add <b>up to four additional personal profiles</b>, and these <em>are</em> allowed to use a name other than your legal one <span class="tagbadge off">OFFICIAL</span>. But they are useless here: at launch they excluded <b>Professional Mode and payments</b>, their policies forbid you to “falsely represent that you are authorized to speak on behalf of another person, brand, business or organization,” and they sit <b>underneath your one account</b> — so they insulate nothing. They are for a second personal identity, not for a business.</p>
-</div>
-
-<h3 style="margin-top:26px">Instagram is the opposite — it genuinely needs nothing of yours</h3>
-<ul class="clean">
-<li>An Instagram account <b>can be created from scratch with only an email address or phone number</b>, with no Facebook profile anywhere in the picture <span class="tagbadge off">OFFICIAL</span>. Meta now supports separate Meta Accounts per app, and Accounts Center links your identities <b>only if you choose to</b>.</li>
-<li>So register <b>a brand-new Instagram</b> on a brand-new brand email. It is never connected to you personally.</li>
-<li>The single point where they must touch: to <b>cross-post</b> between the Facebook Page and Instagram, the Instagram account must be switched to <b>Professional</b> (a personal Instagram account cannot connect to a Page), and a personal Facebook profile with admin rights sits behind the Page <span class="tagbadge off">OFFICIAL</span>. That connection lives inside your Business Portfolio. <b>It is not shown publicly.</b></li>
-</ul>
-
-<h3 style="margin-top:26px">So: Page or ID?</h3>
-<p style="color:var(--muted);line-height:1.65">A <b>Page</b>. There is no “first name / last name” on a Facebook Page — that pair of fields only exists on a personal profile, and we are not making one. A Page has a single Page name. On Instagram there is likewise no first/last split: only a <b>username</b> and a <b>display name</b>.</p>
+<div class="note warn" style="margin-top:16px"><b>One thing to check:</b> Instagram <b>@veggietoons_tv</b> already exists — name "Veggie Toons", 2 followers, 2 posts. If that isn't yours, someone has taken your name.</div>
 </div></section>
 
-<section id="structure"><div class="wrap">
-<h2><span class="dot"></span>The structure to build</h2>
-<div class="stepgrid">
-<div class="step"><div class="n">1</div><p><b>Your existing personal Facebook profile</b>, real name, left exactly as it is. It never appears on the Page. Make sure it is in good standing first — a profile with recent violations cannot create additional profiles and attracts scrutiny.</p></div>
-<div class="step"><div class="n">2</div><p>From it, create the <b>“Veggie Toons TV” Facebook Page</b>. This is the public brand and the only thing viewers see.</p></div>
-<div class="step"><div class="n">3</div><p>Create a <b>Meta Business Portfolio</b> (formerly Business Manager) and put the Page inside it. This is what lets you hand access to someone later without ever sharing your personal login.</p></div>
-<div class="step"><div class="n">4</div><p>Separately, register the <b>Instagram account</b> with a new brand email and phone. Switch it to a <b>Professional</b> account. Creator and Business unlock the identical monetization tools — the choice does not gate any earnings <span class="tagbadge off">OFFICIAL</span>.</p></div>
-<div class="step"><div class="n">5</div><p>Add the Instagram account to the same Business Portfolio and link it to the Page. Now cross-posting works, and your personal identity stays private.</p></div>
-</div>
-<div class="note warn" style="margin-top:16px"><b>One honest caveat.</b> Keeping the brand on a separate email and out of your personal Accounts Center reduces <em>public</em> cross-linking. It does not, and must not try to, hide same-person ownership from Meta — deliberately structuring accounts to evade enforcement is itself a violation under the Account Integrity policy <span class="tagbadge off">OFFICIAL</span>. Running a brand Page from the same device and IP as your personal profile is completely normal and allowed, as long as your profile is in good standing.</div>
-</div></section>
+<section id="paste"><div class="wrap">
+<h2><span class="dot"></span>Paste this</h2>
 
-<section id="evidence"><div class="wrap">
-<h2><span class="dot"></span>What is actually on Meta in this niche today</h2>
-<p class="sub">Facebook and Instagram both block this server, so these were pulled through a residential Indian exit with a real browser on <b>9 July 2026</b>, and every number was re-checked independently a second time. This is measured, not estimated.</p>
-<div class="wrapscroll"><table class="spec">
-<tr><th>Channel</th><th>YouTube subs</th><th>Facebook</th><th>Instagram</th></tr>
-<tr><td><b>Dugu Baba TV</b></td><td>42,100</td><td>No Page at <code>/dugubabatv</code></td><td>28 followers · 18 posts</td></tr>
-<tr><td><b>Bagu Baba TV</b></td><td>40,900</td><td><b>Real Page — 2,619 likes</b>, 3,745 talking about this</td><td>2 followers · 0 posts</td></tr>
-<tr><td><b>Sabji Toon TV</b></td><td>8,700</td><td>A <b>personal profile</b>, not a Page</td><td>98 followers · 9 posts</td></tr>
-<tr><td><b>Funtoo Baba TV</b></td><td>32,400</td><td>No Page at <code>/funtoobabatv</code></td><td>—</td></tr>
-<tr><td><b>Apna Mini Gaon</b></td><td>14,000</td><td>No Page at <code>/apnaminigaon</code></td><td>—</td></tr>
-<tr><td><b>Zigloo Cartoons</b></td><td>6,530</td><td>No Page at <code>/zigloocartoons</code></td><td>—</td></tr>
-</table></div>
-<p class="cap"><span class="tagbadge mine">MEASURED</span> The “no Page” rows were confirmed against a control: a deliberately nonsensical handle returns a byte-identical page, while <code>/cocacola</code> and <code>/bagubabatv</code> return real profile data. It only proves nothing exists <em>at that exact handle</em> — a Page could exist under a different URL.</p>
+<div class="block"><div class="bar"><span class="lbl img">FB PAGE NAME &amp; IG DISPLAY NAME</span><button class="copy" data-copy-target="m-name">Copy</button></div><pre id="m-name">Veggie Toons TV</pre></div>
 
-<h3 style="margin-top:22px">What this means</h3>
-<ul class="clean">
-<li><b>The niche has not been taken on Meta.</b> The YouTube leaders have between 6,500 and 42,100 subscribers and, between them, a single working Facebook Page and no Instagram audience at all. Dugu Baba TV converts 42,100 YouTube subscribers into 28 Instagram followers.</li>
-<li><b>Bagu Baba TV is the one to study.</b> They are the only competitor doing this properly, and their Page bio reads: <em>“Welcome to Bagu Baba TV ❤️ AI animated farming &amp; emotional village stories 🎬🌾”</em>. They state the content is AI-made, openly, and Meta has not punished them for it.</li>
-<li><b>Sabji Toon TV made the mistake you were about to make.</b> They put the brand on a personal Facebook profile. A profile cannot access Page monetization tools.</li>
-</ul>
+<div class="block"><div class="bar"><span class="lbl img">FB PAGE BIO</span><button class="copy" data-copy-target="m-fbbio">Copy</button></div><pre id="m-fbbio">Hindi sabzi cartoon kahaniyan. Nayi kahani har hafte. Dil chhoo lene wali moral stories.</pre></div>
 
-<div class="note warn" style="margin-top:16px"><b>Two things to settle before you register.</b> <code>facebook.com/veggietoons</code> is <b>already taken</b> by an unrelated page called “Global Edible Chalk”. And on Instagram, <b>@veggietoons_tv already exists</b> — display name “Veggie Toons”, 2 followers, 2 posts. <b>Is that yours?</b> If it isn't, someone has your brand name. <code>facebook.com/veggietoonstv</code> is free. On Instagram, <code>@veggietoonstv</code>, <code>@veggietoons</code> and <code>@veggie_toons_tv</code> do not currently resolve — but Instagram shows the identical “Profile isn't available” page for a free username and for a banned one, so availability can only be confirmed at signup.</div>
-</div></section>
+<div class="block"><div class="bar"><span class="lbl img">FB PAGE — ABOUT</span><button class="copy" data-copy-target="m-fbabout">Copy</button></div><pre id="m-fbabout">Veggie Toons TV par dekhiye Hindi mein sabzi cartoon kahaniyan — gareeb aur ameer, dhokha aur karam, pyaar aur insaaf.
 
-<section id="roles"><div class="wrap">
-<h2><span class="dot"></span>Facebook is the money. Instagram is the audience.</h2>
-<p class="sub">This is the single most important thing the research turned up, and it should decide how you spend your time.</p>
-<div class="wrapscroll"><table class="spec">
-<tr><th></th><th>Facebook</th><th>Instagram</th></tr>
-<tr><td><b>Pays per view?</b></td><td><b>Yes</b> — Facebook Content Monetization <span class="tagbadge off">OFFICIAL</span></td><td><b>No. None. At all.</b> <span class="tagbadge off">OFFICIAL</span></td></tr>
-<tr><td><b>What exists</b></td><td>One unified programme (launched 2 Oct 2024) merging In-Stream Ads, Ads on Reels and the Performance Bonus. Pays on Reels, longer videos, photo posts and text posts.</td><td>Only Badges, Bonuses, Creator Marketplace, Gifts and Subscriptions. No ad-revenue share product exists.</td></tr>
-<tr><td><b>India eligible?</b></td><td><b>Yes</b> — India is named in Meta's original eligible-country list <span class="tagbadge off">OFFICIAL</span></td><td>Gifts: yes. Subscriptions: yes. <span class="tagbadge off">OFFICIAL</span></td></tr>
-<tr><td><b>How you get in</b></td><td><b>Invite-only.</b> “Invitations are distributed periodically to eligible creators.” Open enrolment is promised but not live. Register interest at Professional Dashboard → Monetization.</td><td>Bonuses are invite-only and limited-time. Gifts and Subscriptions you apply for.</td></tr>
-<tr><td><b>Lowest paid threshold</b></td><td>The unified programme publishes <b>no numeric threshold</b>. The legacy in-stream bar was <b>10,000 followers + 600,000 minutes viewed in 60 days + 5 active videos</b> <span class="tagbadge off">OFFICIAL</span></td><td><b>Gifts at 500 followers</b> (professional account, 18+). Subscriptions need 10,000.</td></tr>
-<tr><td><b>Earnings rate</b></td><td>Meta publishes <b>no RPM or CPM for India</b>. Every figure you will find online is an unsourced estimate. <span class="tagbadge unv">UNVERIFIED</span></td><td>Not applicable — there is nothing to earn per view.</td></tr>
-</table></div>
-<div class="note warn" style="margin-top:14px"><b>Watch this one:</b> Instagram Subscriptions explicitly excludes “accounts that primarily post content focused on children” <span class="tagbadge off">OFFICIAL</span>. Our stories are betrayal, debt and karma dramas, not children's content — keep it that way in how the Page describes itself, and keep the “not made for kids” setting consistent with YouTube.</div>
-<p style="color:var(--muted);line-height:1.65;margin-top:14px"><b>Practical consequence:</b> a 0-follower Instagram account earns nothing and cannot earn anything until 500 followers, and then only tips. Treat Instagram purely as reach and a funnel to YouTube. Put the monetization effort into Facebook.</p>
-</div></section>
-
-<section id="format"><div class="wrap">
-<h2><span class="dot"></span>The format rules — these are not style choices</h2>
-
-<h3>Length</h3>
-<ul class="clean">
-<li><b>Facebook has no length cap.</b> Since Meta's 17 June 2025 change, all Facebook videos are reels and organic uploads have no length or format limit <span class="tagbadge off">OFFICIAL</span>. <b>Post the full 5–7 minute story natively to Facebook.</b></li>
-<li><b>Instagram Reels officially allow 20 minutes</b> — Instagram's Help Centre states “You can record and edit videos up to 20 minutes with Instagram Reels.” <span class="tagbadge off">OFFICIAL</span> <b>But the same page says “Reels over 3 minutes won't be recommended to new audiences.”</b></li>
-<li>For a 0-follower account, being recommended to non-followers <em>is</em> the only distribution that exists. Therefore <b>every Instagram Reel must be 3:00 or shorter.</b> No exceptions. Cut the story, or split it into parts.</li>
-</ul>
-
-<h3 style="margin-top:20px">Watermarks — the trap</h3>
-<div class="rule"><b>Adam Mosseri, Head of Instagram, 11 March 2025</b> <span class="tagbadge off">OFFICIAL</span><br>“We don't penalize content for being created in other apps. Just make sure you avoid posting content with watermarks, as that can affect your distribution.”</div>
-<ul class="clean">
-<li>Instagram makes a reel <b>less visible</b> if it is low-resolution, <b>watermarked</b>, muted, <b>bordered</b>, majority-text, or already-posted <span class="tagbadge off">OFFICIAL</span>. Facebook's guidance: “Avoid using visible third party watermarks and content that is visibly recycled from other apps or sources.”</li>
-<li>The signal is <b>other-platform provenance</b>, not the presence of a logo. <b>Your own Veggie Toons badge is fine.</b> A YouTube or CapCut mark is not.</li>
-<li>This makes our <a href="../watermark.html">animated logo watermark</a> load-bearing: the <b>Veo 3 render mark in the bottom-right corner is a third-party watermark</b>. It must be covered on every clip we post to Meta.</li>
-<li><b>Never letterbox.</b> Cropping a 16:9 story into 9:16 with black bars is a “bordered” reel and is demoted by name. Reframe properly, or don't post it vertically.</li>
-</ul>
-
-<h3 style="margin-top:20px">Originality — the thing that could kill the channel</h3>
-<p style="color:var(--muted);line-height:1.65">Facebook's unoriginal-content policy launched 14 July 2025 and was reinforced on 13 March 2026. It penalizes re-uploading content you had no role in creating, and “low-value” edits — <b>adding borders, inserting captions, changing reel speed</b>. Repeat offenders are deprioritized, then made <b>non-recommendable</b> (invisible to non-followers), then <b>demonetized</b>, with reduced distribution “on everything they share.”</p>
-<div class="rule"><b>Meta for Creators, “Combating unoriginal content”</b> <span class="tagbadge off">OFFICIAL</span><br>“You can share the same content across any of your Pages or profiles.”</div>
-<ul class="clean">
-<li><b>We are safe on ownership.</b> We produce every frame. Re-cutting our own YouTube video into a Facebook or Instagram upload is a transformation of content we made, not reuse of someone else's.</li>
-<li><b>Ownership is necessary but not sufficient.</b> Three things still bite regardless of who owns the video: a visible third-party watermark, a lazy edit that adds nothing (borders, captions, speed), and duplicate-copy detection routing views to the original.</li>
-<li>On Instagram, Mosseri put it plainly on 30 April 2026: “If most of what you post to Instagram is someone else's content, your account is no longer going to be recommendable.” <span class="tagbadge off">OFFICIAL</span></li>
-<li>Meta reports original-reel views and watch time on Facebook <b>approximately doubled in the second half of 2025</b> <span class="tagbadge off">OFFICIAL</span>. Original work is being actively rewarded.</li>
-<li>AI animation is <b>not</b> the problem. Bagu Baba TV advertises “AI animated” in its Page bio and runs a healthy Page. Meta penalizes unoriginal, not synthetic.</li>
-</ul>
-<div class="dontbox"><b style="color:#ff8888">Ignore the numbers you'll read on blogs.</b><p style="color:var(--muted);line-height:1.62;margin:.5em 0 0">“40–60% more distribution”, “60–70% less reach with a watermark”, “10+ reposts in 30 days” — none of these appear in any Meta document. Meta frames the threshold qualitatively. Do not plan around invented figures.</p></div>
-</div></section>
-
-<section id="fb"><div class="wrap">
-<h2><span class="dot"></span>Facebook Page — every field</h2>
-<div class="wrapscroll"><table class="spec">
-<tr><th>Field</th><th>What to enter</th><th>Rule</th></tr>
-<tr><td><b>Page name</b></td><td>Veggie Toons TV</td><td>Meta publishes <b>no character limit</b> <span class="tagbadge off">OFFICIAL</span>. Names must be grammatically correct; no all-caps (except acronyms); no symbols such as ®; no slogans or descriptions; may not be only a generic word or only a place name.</td></tr>
-<tr><td><b>Username / URL</b></td><td><code>facebook.com/veggietoonstv</code></td><td>Confirmed free today <span class="tagbadge mine">MEASURED</span>. <code>/veggietoons</code> is taken.</td></tr>
-<tr><td><b>First / last name</b></td><td><b>Does not exist on a Page.</b></td><td>Only personal profiles have these. We are not creating one.</td></tr>
-<tr><td><b>Profile picture</b></td><td>The brinjal-face DP below</td><td>Upload <b>320 × 320 px</b>. Displays 176×176 on desktop, 196×196 on phones, 36×36 on feature phones, cropped to a circle. <span class="tagbadge off">OFFICIAL</span></td></tr>
-<tr><td><b>Cover photo</b></td><td>The 851 × 315 file below</td><td>Meta: loads fastest as an <b>sRGB JPG, 851 × 315 px, under 100 KB</b>; minimum 400 × 150. Crops to <b>16:9 on desktop</b> and <b>2.4:1 on mobile</b>. The profile picture overlaps it by about 40 px on mobile. Meta publishes <b>no safe-zone pixel box</b> — ours is derived from those two ratios. <span class="tagbadge off">OFFICIAL</span></td></tr>
-<tr><td><b>Bio / Intro</b></td><td>See copy block</td><td>Around <b>101 characters</b> <span class="tagbadge sec">SECONDARY</span> — Meta does not publish this. Ours is 88, so it fits either way.</td></tr>
-<tr><td><b>Category</b></td><td>Pick the video/entertainment category in the creation flow</td><td>Meta changes the category list without notice; choose it in the UI rather than from a list written today.</td></tr>
-</table></div>
-
-<div class="block" style="margin-top:16px"><div class="bar"><span class="lbl img">FB PAGE NAME</span><button class="copy" data-copy-target="fb-name">Copy</button></div><pre id="fb-name">Veggie Toons TV</pre></div>
-
-<div class="block"><div class="bar"><span class="lbl img">FB PAGE BIO · 88 characters</span><button class="copy" data-copy-target="fb-bio">Copy</button></div><pre id="fb-bio">Hindi sabzi cartoon kahaniyan. Nayi kahani har hafte. Dil chhoo lene wali moral stories.</pre></div>
-
-<div class="block"><div class="bar"><span class="lbl img">FB PAGE — ABOUT / DESCRIPTION</span><button class="copy" data-copy-target="fb-about">Copy</button></div><pre id="fb-about">Veggie Toons TV par dekhiye Hindi mein sabzi cartoon kahaniyan — gareeb aur ameer, dhokha aur karam, pyaar aur insaaf.
-
-Har kahani ek moral ke saath khatam hoti hai, aur har hafte ek nayi kahani aati hai. Kallu Karela, Rasili Angoor, Sheth Anaar aur unke doston ki duniya mein aapka swagat hai.
-
-Ye kahaniyan poori tarah original hain aur humari apni team dwara AI animation se banai jaati hain.
+Har kahani ek moral ke saath khatam hoti hai, aur har hafte ek nayi kahani aati hai.
 
 Poori kahani dekhne ke liye humara YouTube channel dekhiye.</pre></div>
-<p class="cap">The last line matters. Bagu Baba TV declares “AI animated” in its own bio and runs a healthy Page — Meta penalizes unoriginal content, not AI. Saying it plainly costs nothing and pre-empts the accusation.</p>
-</div></section>
 
-<section id="ig"><div class="wrap">
-<h2><span class="dot"></span>Instagram account — every field</h2>
-<div class="wrapscroll"><table class="spec">
-<tr><th>Field</th><th>What to enter</th><th>Rule</th></tr>
-<tr><td><b>Sign up with</b></td><td>A new brand email + brand phone</td><td>No Facebook profile required <span class="tagbadge off">OFFICIAL</span>. Do not sign up “with Facebook”.</td></tr>
-<tr><td><b>Username</b></td><td><code>veggietoonstv</code> — fallback <code>veggietoons.tv</code></td><td><b>30 characters</b> max; letters, numbers, periods, underscores only <span class="tagbadge sec">SECONDARY</span>. Confirm availability at signup.</td></tr>
-<tr><td><b>Display name</b></td><td>Veggie Toons TV</td><td><b>30 characters</b> <span class="tagbadge sec">SECONDARY</span>. Ours is 15. Spaces and emoji allowed here.</td></tr>
-<tr><td><b>First / last name</b></td><td><b>Does not exist on Instagram.</b></td><td>Only a username and a display name.</td></tr>
-<tr><td><b>Bio</b></td><td>See copy block — 118 characters</td><td><b>150 characters</b> <span class="tagbadge sec">SECONDARY</span>.</td></tr>
-<tr><td><b>Links in bio</b></td><td>YouTube channel first</td><td><b>Up to 5 links</b> <span class="tagbadge off">OFFICIAL</span>. Only the first shows on the profile; tapping opens the rest.</td></tr>
-<tr><td><b>Profile picture</b></td><td>Same brinjal DP</td><td>Instagram publishes <b>no pixel spec</b> <span class="tagbadge unv">UNVERIFIED</span>. Upload 1080 × 1080 and let it downscale.</td></tr>
-<tr><td><b>Account type</b></td><td>Switch to <b>Professional</b></td><td>Required for every monetization tool and for linking to the Page. Creator and Business unlock the <b>identical</b> tools <span class="tagbadge off">OFFICIAL</span> — the choice gates nothing.</td></tr>
-<tr><td><b>Grid images</b></td><td>1080 × 1440 (3:4)</td><td>The profile grid moved from square to a tall <b>3:4</b> layout in January 2025. Upload 3:4 to fill the thumbnail without a crop.</td></tr>
-<tr><td><b>Hashtags</b></td><td>Exactly 5, see block</td><td><b>Maximum 5 hashtags</b> since 18 December 2025 <span class="tagbadge off">OFFICIAL</span>, down from 30. Instagram: “using fewer (up to 5) more targeted hashtags … can improve both your content's performance and people's experience.”</td></tr>
-</table></div>
-
-<div class="block" style="margin-top:16px"><div class="bar"><span class="lbl img">IG DISPLAY NAME</span><button class="copy" data-copy-target="ig-name">Copy</button></div><pre id="ig-name">Veggie Toons TV</pre></div>
-
-<div class="block"><div class="bar"><span class="lbl img">IG BIO · 118 characters</span><button class="copy" data-copy-target="ig-bio">Copy</button></div><pre id="ig-bio">🍅 Hindi sabzi cartoon kahaniyan
+<div class="block"><div class="bar"><span class="lbl img">IG BIO</span><button class="copy" data-copy-target="m-igbio">Copy</button></div><pre id="m-igbio">🍅 Hindi sabzi cartoon kahaniyan
 💛 Dil chhoo lene wali moral stories
 🎬 Nayi kahani har hafte
 👇 Poori kahani YouTube par</pre></div>
 
-<div class="block"><div class="bar"><span class="lbl img">HASHTAGS · exactly 5 · use on every post</span><button class="copy" data-copy-target="ig-tags">Copy</button></div><pre id="ig-tags">#SabjiCartoon #HindiKahani #VegetableCartoon #HindiMoralStory #VeggieToonsTV</pre></div>
-<p class="cap">Most guides still say 30 hashtags. That is stale — Instagram's own @creators account announced the drop to 5 on 18 December 2025. Using more than 5 is now pointless at best.</p>
+<div class="block"><div class="bar"><span class="lbl img">HASHTAGS — use exactly these 5</span><button class="copy" data-copy-target="m-tags">Copy</button></div><pre id="m-tags">#SabjiCartoon #HindiKahani #VegetableCartoon #HindiMoralStory #VeggieToonsTV</pre></div>
+
+<ul class="fields" style="margin-top:16px">
+<li>A Page has <b>no first/last name</b> — just the one Page name above.</li>
+<li>Instagram bio takes <b>up to 5 links</b>. Put YouTube first.</li>
+<li><b>5 hashtags is the maximum</b> now, not 30. Instagram changed it in December 2025.</li>
+</ul>
 </div></section>
 
-<section id="assets"><div class="wrap">
-<h2><span class="dot"></span>Your profile picture and cover photo</h2>
+<section id="art"><div class="wrap">
+<h2><span class="dot"></span>Profile picture &amp; cover</h2>
 <div class="two">
 <div>
-  <div class="imgcard"><img src="../assets/social/dp-size-proof.png" alt="The Veggie Toons profile picture shown at 120px, 110px, 56px, 40px and 32px"></div>
-  <p class="cap"><b>Profile picture.</b> The full logo badge is unusable as a DP: at the 32–40 px it occupies in feed and comments, the wordmark collapses into mush and the half-visible letters read as a broken image. So the DP is a tight crop of the brinjal's face — one big expression, no text, exactly the rule we already follow for thumbnails. It still reads at 32 px. <a href="../assets/social/dp-veggietoons-1024.png">Download 1024×1024 →</a></p>
+  <div class="imgcard"><img src="../assets/social/dp-size-proof.png" alt="Profile picture shown at 120, 110, 56, 40 and 32 pixels"></div>
+  <p class="cap"><b>Profile picture</b> — use on both. Upload at 320×320 on Facebook. The full logo turns to mush at the small size it actually appears at, so this is the brinjal's face. <a href="../assets/social/dp-veggietoons-1024.png">Download →</a></p>
 </div>
 <div>
-  <div class="imgcard"><img src="../assets/social/fb-cover-851x315.jpg" alt="Veggie Toons TV Facebook cover photo at 851 by 315 pixels"></div>
-  <p class="cap"><b>Cover photo.</b> 851 × 315 px, sRGB JPG, <b>44,550 bytes</b> — comfortably inside Meta's under-100 KB guidance. <a href="../assets/social/fb-cover-851x315.jpg">Download →</a></p>
+  <div class="imgcard"><img src="../assets/social/fb-cover-851x315.jpg" alt="Veggie Toons TV Facebook cover photo"></div>
+  <p class="cap"><b>Facebook cover</b> — ready to upload, 851×315. Nothing important sits where Facebook crops it on a phone. <a href="../assets/social/fb-cover-851x315.jpg">Download →</a></p>
 </div>
-</div>
-<div style="margin-top:20px">
-  <div class="imgcard"><img src="../assets/social/fb-cover-safezone.png" alt="Cover photo with the mobile safe zone marked in green, cropped edges in red, and the profile picture overlap in blue"></div>
-  <p class="cap">Why the artwork sits where it does. Facebook crops the cover to <b>16:9 on desktop</b> and <b>2.4:1 on mobile</b>, so only the centre 756 px survives on both — everything in the red bands is cut on a phone. The blue box is where the profile picture overlaps on mobile. The logo and the wordmark are held inside the green zone with a 26 px margin, and the bottom-left corner is kept empty.</p>
 </div>
 </div></section>
 
-<section id="launch"><div class="wrap">
-<h2><span class="dot"></span>The launch</h2>
-
-<h3>How a 0-follower account gets seen at all</h3>
-<ul class="clean">
-<li>Both Reels surfaces serve non-followers <b>by default</b>. Facebook's own Transparency Center says the Reels candidate set includes “content you may be interested in from creators you may not follow”, and Mosseri states that on Reels “the majority of what you see is from accounts you don't follow” <span class="tagbadge off">OFFICIAL</span>. You do not need followers to be shown. You need to be watched.</li>
-<li>Instagram picks roughly <b>100 candidate reels</b> and ranks them on watch time (a 3-second threshold), likes, saves, comments, reshares, audio clicks, reel length and skip behaviour. The follower signal it uses is <b>how many follows the reel itself produced</b> — not how many you already have <span class="tagbadge off">OFFICIAL</span>. A new account is not handicapped.</li>
-<li><b>There is no Meta source claiming Facebook Reels gives new pages more reach than Instagram.</b> One third-party study (12 Aug 2025) found Instagram reels averaged more views and roughly five times the engagement rate of Facebook's. Directional only — but it does not support the common “Facebook is easier” claim. <span class="tagbadge sec">SECONDARY</span></li>
-<li>Professional Mode on a profile has <b>no documented reach advantage</b> over a Page <span class="tagbadge off">OFFICIAL</span>. Choose the Page, for monetization.</li>
+<section id="rules"><div class="wrap">
+<h2><span class="dot"></span>Three rules — break these and you lose reach</h2>
+<ul class="rules">
+<li><b>Cover the Veo 3 watermark before posting anywhere on Meta.</b> Instagram and Facebook both cut your reach for another app's watermark. Our animated badge exists for this. Our own logo is fine — it's their mark that hurts.</li>
+<li><b>Instagram Reels: 3 minutes maximum.</b> Anything longer is not shown to people who don't follow you — and at zero followers that's your only audience. Facebook has no limit, so the full story goes there.</li>
+<li><b>Never add black bars to make a video vertical.</b> Instagram demotes bordered reels. Reframe it properly or don't post it.</li>
 </ul>
-
-<h3 style="margin-top:22px">Cadence and timing</h3>
-<p style="color:var(--muted);line-height:1.65">Meta publishes no posting cadence and no posting times. Everything here is outside data, and it is an average across accounts, not a promise. <b>Your own Insights will beat all of it within three weeks</b> — first-hour engagement is what triggers wider distribution, so watch that and adjust.</p>
-<div class="wrapscroll"><table class="spec">
-<tr><th>Thing</th><th>Guidance</th><th>Proof</th></tr>
-<tr><td>Reels per week</td><td>5–7 (about one a day)</td><td>Study of 4.4M posts across 45,700 accounts <span class="tagbadge sec">SECONDARY</span></td></tr>
-<tr><td>Feed posts per week</td><td>3–5. Mosseri himself suggests about 2.</td><td><span class="tagbadge sec">SECONDARY</span></td></tr>
-<tr><td>Stories per day</td><td>Mosseri: 1–2</td><td><span class="tagbadge sec">SECONDARY</span></td></tr>
-<tr><td>Best window (India)</td><td>Weekday evenings <b>7–9 PM IST</b>; strongest single slot Wednesday ~8 PM; best days Tue–Thu</td><td>Aggregated India data <span class="tagbadge sec">SECONDARY</span></td></tr>
-<tr><td>Facebook cadence</td><td>No credible figure exists</td><td><span class="tagbadge unv">UNVERIFIED</span> — don't plan around one</td></tr>
-</table></div>
-
-<h3 style="margin-top:22px">What to post</h3>
-<div class="stepgrid">
-<div class="step"><div class="n">1</div><p><b>Facebook, the full story.</b> Upload the complete 5–7 minute video natively, horizontal, in one piece. No length cap, and this is the surface that can pay. Never upload the YouTube file — export a clean master with the Veo 3 corner mark covered by our badge.</p></div>
-<div class="step"><div class="n">2</div><p><b>Instagram, a 3-minute cut.</b> Hard ceiling. A properly reframed vertical cut, not a letterboxed crop — the story's climax, ending on the moral. Point the bio link at the full YouTube video.</p></div>
-<div class="step"><div class="n">3</div><p><b>Both, a 30–45 second hook.</b> The betrayal beat alone, cut to end on the unanswered question. This is the piece that a non-follower actually watches to the end, and completion is the strongest ranking signal on both surfaces.</p></div>
-<div class="step"><div class="n">4</div><p><b>Every clip is a fresh export.</b> Never re-upload a file that has already been posted elsewhere — Instagram lists “already-posted” among the things that make a reel less visible. Re-render, don't recycle.</p></div>
-</div>
-
-<div class="note warn" style="margin-top:18px"><b>Before you post anything:</b> the Veo 3 render mark sits in the bottom-right of every clip. On Meta that is a third-party watermark and it will cost you distribution. The animated badge on the <a href="../watermark.html">watermark page</a> exists to cover it. Nothing goes to Facebook or Instagram until that mark is gone.</div>
 </div></section>
 
-<section id="sources"><div class="wrap">
-<h2><span class="dot"></span>Where every claim came from</h2>
-<p class="sub">Marked <span class="tagbadge off">OFFICIAL</span> above means the wording was read from one of these. Meta's Help Centre pages are JavaScript-walled and several could not be fetched directly; where that happened the fact is marked <span class="tagbadge sec">SECONDARY</span> rather than dressed up as official.</p>
-<div class="srclist">
-<p><b>Terms &amp; identity:</b> Facebook Terms of Service §3.1 (effective 1 Jan 2025) · Community Standards — Authentic Identity Representation · Community Standards — Account Integrity (updated 28 May 2026) · Meta newsroom, “additional profiles” (21 Sep 2023) · Meta Privacy Policy (effective 16 Dec 2025).</p>
-<p><b>Monetization:</b> <code>creators.facebook.com/tools/facebook-content-monetization</code> · <code>creators.facebook.com/introducing-facebook-content-monetization</code> · <code>creators.facebook.com/helping-creators-earn-from-more-types-of-content</code> (India named) · <code>facebook.com/business/help/2291268164468048</code> (legacy in-stream thresholds) · <code>help.instagram.com/427415519366046</code> (the five Instagram tools) · <code>help.instagram.com/738469380549477</code> (Gifts, 500 followers, India) · <code>help.instagram.com/478012211024479</code> (Subscriptions, 10,000 followers) · <code>creators.instagram.com/bonuses</code>.</p>
-<p><b>Originality &amp; watermarks:</b> Meta for Creators, “Combating unoriginal content” (14 Jul 2025) · about.fb.com, “Rewarding Original Creators on Facebook” (13 Mar 2026) · Adam Mosseri reel on watermarks (11 Mar 2025) · Mosseri on recommendability (30 Apr 2026).</p>
-<p><b>Specs &amp; limits:</b> Facebook Help — Page profile picture and cover photo dimensions · Meta video specs for Facebook Reels · <code>help.instagram.com/2720958398006062</code> (“up to 20 minutes”, “Reels over 3 minutes won't be recommended to new audiences”) · Instagram @creators announcement, 5-hashtag cap (18 Dec 2025) · Meta Broadcast Channel, 5 bio links (18 Apr 2023) · Facebook Help — Guidelines for Page names.</p>
-<p><b>Ranking:</b> Meta Transparency Center — Facebook Reels · Meta Transparency Center — Instagram Reels Chaining · Mosseri, Instagram ranking (31 May 2023).</p>
-<p><b>Measured by us, 9 July 2026:</b> Facebook and Instagram public profile data pulled through an Indian residential exit with a headful browser, each figure re-verified independently on a second exit, and the “no Page exists” results validated against a nonsense-handle control.</p>
-</div>
+<section id="money"><div class="wrap">
+<h2><span class="dot"></span>Money</h2>
+<p style="color:var(--muted);line-height:1.65;margin-top:2px"><b>CMT (Content Monetization Tool)</b> is the nickname for Facebook Content Monetization. Anyone can click <b>express interest</b> — do it on day one. But earning starts only when Meta invites you, and they publish no follower number. India is eligible.</p>
+<p style="color:var(--muted);line-height:1.65"><b>Your first real income is Facebook Stars</b> — 500 followers, held 30 days. That's the target.</p>
+<p style="color:var(--muted);line-height:1.65"><b>Instagram pays nothing per view.</b> No ad revenue share exists there. Use it to grow and to push people to YouTube.</p>
 </div></section>
 
-<footer><div class="wrap"><p>Veggie Toons TV · Facebook &amp; Instagram Launch Plan · researched and verified 9 July 2026 · <a href="../index.html">🥔 Studio</a> · <a href="../watermark.html">🏷️ Watermark</a> · <a href="thumbnail-review-story-1.html">🔍 S1 Thumbnail Review</a> · <a href="../guides/launch-playbook.html">🚀 YouTube Launch Playbook</a></p></div></footer>
+<footer><div class="wrap"><p>Veggie Toons TV · Facebook &amp; Instagram setup · 9 July 2026 · <a href="../index.html">🥔 Studio</a> · <a href="../watermark.html">🏷️ Watermark</a></p></div></footer>
 <script src="../assets/app.js"></script>
 </body></html>
