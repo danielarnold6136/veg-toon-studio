@@ -1,0 +1,165 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>🔍 Thumbnail Review — Story 1 (Video 2) — Veggie Toons TV</title>
+<meta name="description" content="Honest review of the Story 1 wedding-mandap thumbnail: what works, the render-lock breaks, and the corrected Veo 3 prompt.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700;800&family=Noto+Sans+Devanagari:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.shot{width:100%;border-radius:12px;border:1px solid var(--line2);display:block;background:#000}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+@media(max-width:760px){.pairs,.trio{grid-template-columns:1fr}}
+.cap{font-size:12.5px;color:var(--muted);margin:7px 0 0;line-height:1.5}
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;border:1px solid var(--line2);border-radius:14px;padding:16px 18px;background:linear-gradient(90deg,rgba(91,208,122,.07),transparent)}
+.verdict .score{font-size:42px;font-weight:800;line-height:1;letter-spacing:-.02em}
+.verdict .score small{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin-top:5px}
+.def{border:1px solid var(--line2);border-radius:14px;padding:16px 18px;margin:14px 0;background:rgba(255,255,255,.015)}
+.def h3{margin:0 0 4px;font-size:16.5px}
+.def .sev{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:999px;margin-right:8px;vertical-align:2px;letter-spacing:.04em}
+.sev.blocker{background:rgba(255,86,86,.12);color:#ff7a7a;border:1px solid rgba(255,86,86,.35)}
+.sev.major{background:rgba(255,178,44,.12);color:#ffc257;border:1px solid rgba(255,178,44,.35)}
+.sev.minor{background:rgba(140,150,170,.12);color:var(--muted);border:1px solid var(--line2)}
+.px{image-rendering:pixelated}
+.sizebox{text-align:center}
+.sizebox img{border-radius:8px;border:1px solid var(--line2)}
+ul.clean{margin:.5em 0 0;padding-left:1.1em}
+ul.clean li{margin:.42em 0;line-height:1.62}
+.zoomgrid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.zoomgrid{grid-template-columns:1fr}}
+</style>
+</head><body>
+<nav class="toc"><div class="wrap"><a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a><a href="#verdict">Verdict</a><a href="#good">What works</a><a href="#bad">What's broken</a><a href="#size">Size test</a><a href="#fix">The fix</a><a href="#prompt">New prompt</a><span class="storychip">🔍 REVIEW</span></div></nav>
+
+<header class="hero"><div class="wrap">
+<p class="crumbs"><a href="../index.html">← Veg-Toon Studio</a> / Thumbnail Review · Story 1</p>
+<span class="kicker">🔍 Story 1 · “गरीब करेला vs रसीली अंगूर” · this is Video 2</span>
+<h1>Your wedding-mandap thumbnail — the honest read</h1>
+<p class="lede">The concept and the composition are <b>right</b>. The craft has <b>one real problem</b>: Veo 3 ignored the render lock and put <b>six human faces</b> into an all-vegetable world, and it drew the bride as a green-skinned woman rather than a grape. Below: exactly where, why it happened, a reframe that fixes it in seconds, and the corrected prompt.</p>
+</div></header>
+
+<section id="verdict"><div class="wrap">
+<h2><span class="dot"></span>Verdict</h2>
+<div class="verdict">
+  <div class="score">7/10<small>SHIP-ABLE, WITH A CROP</small></div>
+  <div>This is the best thumbnail we've produced. The staged-scene formula from Playbook 2.0 landed: a viewer understands the entire story in one glance without reading a word. Karela's face is the strongest character render we've had out of Veo 3. But the humans are a brand-level break — a vegetable world with human wedding guests is the exact drift we wrote the RENDER LOCK to stop, and the same drift will show up in the <em>video</em> clips if we don't tighten the prompt now.
+  <br><br><b>For today's 5:30 PM publish:</b> use the <a href="#fix">reframed crop</a>. It removes all six humans, makes the faces bigger, and is already exactly 16:9. No re-render needed.</div>
+</div>
+</div></section>
+
+<section id="asis"><div class="wrap">
+<h2><span class="dot"></span>What you sent — as rendered</h2>
+<img class="shot" src="../assets/thumb-review/story-1/original.jpg" alt="Original rendered thumbnail: crying Karela groom kneeling, grape bride led away by pomegranate Anaar toward a car, at a wedding mandap">
+<p class="cap">Canon check passed: <b>कल्लू करेला</b> the groom, <b>रसीली अंगूर</b> the bride, <b>सेठ अनार</b> the rich pomegranate — all three match the Story 1 script, and Anaar's sunglasses, gold sherwani and luxury car read as “rich” instantly. Zero text baked into the image, exactly as the rule demands.</p>
+</div></section>
+
+<section id="good"><div class="wrap">
+<h2><span class="dot"></span>What works — and it's a lot</h2>
+<div class="zoomgrid">
+  <div>
+    <ul class="clean">
+      <li><span class="k">Karela's face is the win.</span> Crumpled brow, open frown, two fat tears catching the light, and he still reads as a bumpy bitter-gourd rather than a person. This is on-model and genuinely affecting.</li>
+      <li><span class="k">The story tells itself.</span> Groom on his knees, garland slipping from his hand, bride walking away hand-in-hand with the man in sunglasses, car waiting. No caption required — that's the whole point of the story-scene style.</li>
+      <li><span class="k">Colour split does the work.</span> Cool dulled green on the left, hot red-purple-gold on the right. Heartbreak versus greed, separated by the sacred fire in the middle.</li>
+      <li><span class="k">The reaction crowd sells it.</span> Potato, tomato, carrot and pea gasping with hands over mouths — that's the “something terrible just happened” signal that lifts click-through.</li>
+      <li><span class="k">No baked-in text.</span> Clean plate for the Canva overlay, exactly per the brand rule.</li>
+    </ul>
+  </div>
+  <div><img class="shot" src="../assets/thumb-review/story-1/zoom-groom.jpg" alt="Close-up of Karela the groom: tearful cartoon eyes, bumpy green gourd skin, wedding turban">
+  <p class="cap">Karela, 1:1 detail. Perfectly on-model — cartoon eyes, no human features. This is the bar for every other character.</p></div>
+</div>
+</div></section>
+
+<section id="bad"><div class="wrap">
+<h2><span class="dot"></span>What's broken</h2>
+<img class="shot" src="../assets/thumb-review/story-1/defect-map.jpg" alt="Defect map: red boxes marking a human head on the left, human guests and car occupants on the right, and the bride's human face">
+<p class="cap">Zones <b>1</b> and <b>2</b> are humans. Zone <b>3</b> is the bride's face.</p>
+
+<div class="def">
+  <h3><span class="sev blocker">BLOCKER</span>Six human faces in an all-vegetable world</h3>
+  <p style="color:var(--muted);margin:.4em 0 0;line-height:1.62">Your prompt explicitly said “<em>NO real human face, skin, hair or hands anywhere</em>”. Veo 3 ignored it in three places — and it ignored it precisely where the prompt gave it a human-shaped excuse.</p>
+  <div class="trio" style="margin-top:14px">
+    <div><img class="shot" src="../assets/thumb-review/story-1/zoom-humans-right.jpg" alt="Zoom: turbaned man, white-haired person and suited man in the wedding crowd, plus two men visible inside the car">
+      <p class="cap"><b>Zone 2, the crowd:</b> a turbaned man with a moustache, a white-haired guest, and a man in a suit and tie. Plus <b>two more men sitting inside the car</b>, visible through the windshield.</p></div>
+    <div><img class="shot" src="../assets/thumb-review/story-1/zoom-human-left.jpg" alt="Zoom: a human man's head with dark hair and moustache between the carrot and tomato characters">
+      <p class="cap"><b>Zone 1:</b> a sixth human — dark hair, moustache — tucked between the carrot and the tomato.</p></div>
+    <div style="display:flex;flex-direction:column;justify-content:center">
+      <p style="color:var(--muted);margin:0;line-height:1.62;font-size:13.5px"><span class="k">Why it happened:</span> the prompt said “a shiny luxury car parked at the edge”. Every photo Veo 3 has ever seen of a wedding car has <b>people in it</b>, so it filled the windows. Same with “wedding guests” — the model's prior for a mandap crowd is human. A negative instruction at the end of a long prompt loses to a strong visual prior stated positively in the middle of it. The fix is to make the car <b>explicitly empty</b> and the crowd <b>explicitly vegetable</b>, in the same breath as you introduce them.</p>
+    </div>
+  </div>
+</div>
+
+<div class="def">
+  <h3><span class="sev major">MAJOR</span>The bride is a green woman, not a grape</h3>
+  <div class="zoomgrid" style="margin-top:10px">
+    <div><p style="color:var(--muted);margin:0;line-height:1.62">Look at रसीली अंगूर beside कल्लू करेला. He has a vegetable body with big cartoon eyes. She has a <b>human woman's face</b> — human nose, human cheekbones, arched human eyebrows, eyelashes, lipsticked human lips — tinted green, with grapes arranged around it like hair. She's a person in a grape costume.</p>
+    <p style="color:var(--muted);margin:.7em 0 0;line-height:1.62"><span class="k">Why it happened:</span> the prompt described her only as “a glamorous purple-green grape in a rich purple-and-gold bridal lehenga”. “Glamorous” plus “bridal” is an overwhelmingly human prior, and nothing in the line told Veo 3 what her <b>face</b> was made of. Karela got a full physical description; she didn't. The model filled the gap with a Bollywood bride.</p>
+    <p style="color:var(--muted);margin:.7em 0 0;line-height:1.62">This one matters more than the humans, because at thumbnail size <b>her face is large and central</b> — you can't crop it away, and it's the flaw a viewer actually registers.</p></div>
+    <div><img class="shot" src="../assets/thumb-review/story-1/zoom-bride.jpg" alt="Close-up of the bride: a human female face tinted green with grapes arranged as hair">
+    <p class="cap">Human nose, human lips, human brows. Compare with Karela above.</p></div>
+  </div>
+</div>
+
+<div class="def">
+  <h3><span class="sev major">MAJOR</span>No clean space for the Hindi overlay</h3>
+  <p style="color:var(--muted);margin:.4em 0 0;line-height:1.62">Our older prompts always ended with “<em>reserve clean empty negative space along the TOP edge for a short 3–5 word Hindi overlay</em>”. The Playbook 2.0 scene prompt <b>dropped that line</b>, and it shows: every band of this frame is busy. I measured edge-density across the image — the calmest zones are the two top corners, and the busiest is the bottom strip, which is exactly where you'd instinctively put the text. Put the overlay top-left, or restore the negative-space line to the prompt.</p>
+</div>
+
+<div class="def">
+  <h3><span class="sev minor">MINOR</span>Not quite 16:9</h3>
+  <p style="color:var(--muted);margin:.4em 0 0;line-height:1.62">The file you sent is 1398×779, which is 1.795:1. True 16:9 is 1.778:1. If that's the real render and not an artefact of the screenshot, YouTube will shave a sliver off. Always upload exactly <b>1280×720</b> or <b>1920×1080</b>. The reframe below is already exact.</p>
+</div>
+</div></section>
+
+<section id="size"><div class="wrap">
+<h2><span class="dot"></span>The only test that matters — 168 pixels wide</h2>
+<p class="sub">This is the real size of a thumbnail in the YouTube sidebar and mobile grid. Shown at true scale, then blown up so you can see what survives.</p>
+<div class="pairs" style="margin-top:14px">
+  <div class="sizebox">
+    <img class="px" src="../assets/thumb-review/story-1/size-test.jpg" alt="Original thumbnail shrunk to 168 pixels wide and magnified" style="width:100%;max-width:504px">
+    <p class="cap"><b>As rendered.</b> The story still reads — that's a real achievement. But the tears, the whole emotional payload, have almost vanished, and the middle is a mush of crowd, fire and fairy lights competing with the leads.</p>
+  </div>
+  <div class="sizebox">
+    <img class="px" src="../assets/thumb-review/story-1/reframe-size-test.jpg" alt="Reframed thumbnail shrunk to 168 pixels wide and magnified" style="width:100%;max-width:504px">
+    <p class="cap"><b>Reframed.</b> Faces roughly 40% bigger. The tears read. Anaar's smug grin reads. Same image, better crop.</p>
+  </div>
+</div>
+</div></section>
+
+<section id="fix"><div class="wrap">
+<h2><span class="dot"></span>The fix for today — a crop, not a re-render</h2>
+<p class="sub">Video 2 publishes at 5:30 PM. You do not have time to re-render, and you don't need to. Cropping to the three leads throws away every human in the frame at once.</p>
+<img class="shot" style="margin-top:14px" src="../assets/thumb-review/story-1/reframe.jpg" alt="Reframed thumbnail at 1280x720: the three lead characters, no humans anywhere">
+<p class="cap">Crop box <b>x 210 → 1190, y 120 → 671</b> on the file you sent, exported at <b>1280×720</b>. Zero humans, exact 16:9, faces significantly larger. The luxury car is trimmed to a glint at the right edge — Anaar's gold sherwani and sunglasses carry the “rich” signal on their own.</p>
+<div class="note warn" style="margin-top:14px"><b>What the crop cannot fix:</b> the bride still has a human face, and she's now more prominent. It's a real flaw, and it's the one thing I'd want gone. But it is not worth missing the publish slot for — competitor channels with far cruder renders pull millions of views, because the hook and the emotional arc beat polish every time. <b>Ship the crop today. Re-render with the corrected prompt for the next one</b>, and use the corrected character block for every Story 1 <em>video</em> clip, where the drift will be far more damaging than it is in a still.</div>
+</div></section>
+
+<section id="prompt"><div class="wrap">
+<h2><span class="dot"></span>The corrected Veo 3 prompt</h2>
+<p class="sub">Three changes from the version you used: the car is <b>explicitly empty</b>, the crowd is <b>explicitly vegetable with no humans</b>, and रसीली अंगूर gets a <b>full face description</b> so Veo 3 has no gap to fill with a human. The negative-space line is restored, and the render lock is stated <em>before</em> the scene rather than after it, where it kept losing.</p>
+<div class="block" style="margin-top:14px"><div class="bar"><span class="lbl img">THUMBNAIL · STORY 1 · v2</span><button class="copy" data-copy-target="s1-thumb-v2">Copy</button></div><pre id="s1-thumb-v2">RENDER LOCK, obey before everything else: this is an all-vegetable cartoon world. EVERY living thing in this image is an anthropomorphic Pixar-style vegetable or fruit with cartoon eyes and tiny stubby cartoon limbs. There are NO humans anywhere — no human face, no human skin, no human hair, no human hands, nobody inside any vehicle, nobody in the crowd. Absolutely NO text, letters, numbers, captions, subtitles, watermarks or logos anywhere in the image.
+
+Cinematic 3D Pixar-style animated thumbnail still, 16:9 (1280x720), ultra-high-CTR Indian "sabji cartoon" story-scene that reads instantly at 120px. A STAGED DRAMATIC WEDDING BEAT, not a portrait.
+
+SETTING: a decorated Indian wedding mandap at golden dusk — marigold garlands, red-and-gold drapes, sacred fire, softly blurred fairy lights. At the right edge, a shiny black luxury car, COMPLETELY EMPTY, with dark tinted windows and no driver and no passengers, nobody visible through any window.
+
+LEFT, the victim: KARELA the groom — a dark-green bumpy ridged bitter-gourd with a tapered body, huge glossy tear-filled cartoon eyes, mouth open in heartbreak, a cream-and-gold sherwani, a flower-veil sehra slipping off his head, one stubby cartoon hand reaching out as his wedding garland slips from his fingers.
+
+RIGHT, the betrayers: RASILI the bride — she is a CLUSTER OF GLOSSY PALE-GREEN GRAPES, not a woman. Her head is a round bunch of grapes; her face has BIG ROUND CARTOON EYES with no human nose, no human lips, no lipstick, no human eyebrows, no eyelashes, no human cheekbones — a simple curved cartoon mouth and a small cartoon nub of a nose, exactly the same cartoon face style as Karela. Her body is a grape cluster with tiny stubby cartoon arms. She wears a rich purple-and-gold bridal lehenga, chin lifted, turning away from Karela toward SHETH ANAAR — a fat glossy red pomegranate with a waxy facetted shell and a golden crown-like calyx, flashy golden sherwani, gold chains and sunglasses, smirking, pulling the grape bride to his side.
+
+IN THE BACKGROUND, softly blurred: a small crowd of shocked WEDDING-GUEST VEGETABLES ONLY — a potato, a tomato, a carrot, a pea pod — each an anthropomorphic cartoon vegetable with cartoon eyes and stubby cartoon hands over their mouths, gasping. No human guests. No human silhouettes.
+
+Strong warm rim-light, high saturation, dramatic Bollywood-poster lighting, sharp focus on the three lead faces, the three leads large in frame, clear tonal split between the heartbroken green groom and the rich red-purple couple.
+
+Reserve clean, calm, uncluttered negative space across the TOP-LEFT of the frame for a short 3-5 word Hindi text overlay that will be added later in post — keep that area free of faces, props and busy detail.</pre></div>
+<ul class="clean" style="margin-top:16px">
+  <li><span class="k">Render two or three takes</span> and pick the clean one. Veo 3 still wanders on some seeds — that's expected, and it's why we pick rather than accept.</li>
+  <li><span class="k">Check the car windows every time.</span> That's the spot the model reaches for a human first.</li>
+  <li><span class="k">Carry the corrected रसीली अंगूर block</span> — the “cluster of grapes, cartoon face, no human features” wording — into <b>every</b> Story 1 image and video prompt where she appears. Her design was under-specified everywhere, not just here.</li>
+</ul>
+</div></section>
+
+<footer><div class="wrap"><p>Veggie Toons TV · Thumbnail Review · Story 1 / Video 2 · 9 July 2026 · rendered and reviewed against Thumbnail Playbook 2.0 · <a href="../guides/thumbnail-playbook.html">🖼️ Playbook</a> · <a href="../stories/story-1.html">📜 Story 1</a> · <a href="video-2.html">📤 Video 2 Launch Pack</a></p></div></footer>
+<script src="../assets/app.js"></script>
+</body></html>
