@@ -1,0 +1,161 @@
+{
+ "date": "2026-07-09",
+ "instances": [
+  "https://iv.melmac.space"
+ ],
+ "channels": {
+  "UCdLwcmuQrHo0l40d7HnMPkQ": {
+   "name": "Dugu Baba TV",
+   "role": "tracked",
+   "subCount": 42100,
+   "best": {
+    "title": "मिर्ची के लिए आलू ने दिया मां बाप को धोखा | Vegetable Cartoon Story | Sabji Cartoon Story ",
+    "views": 7100000,
+    "len": 376,
+    "id": "k0cpAVd88uo"
+   },
+   "latest": {
+    "title": "4 लड़की को मिला दुनिया का सबसे बड़ा अमरूद | Giant Guava Story In Hindi | Village Animation ",
+    "views": 2200,
+    "len": 143,
+    "id": "fPzRKajFkwU",
+    "published": "3 days ago"
+   },
+   "author": "Dugu Baba TV"
+  },
+  "UCvCHO3BETUu6PmZrae-T1jg": {
+   "name": "Little Kids Hindi",
+   "role": "tracked",
+   "subCount": 46500,
+   "best": {
+    "title": "भिंडी के लिए आलू ने छोड़ा मूली और टमाटर का साथ 😭 | Sabji Cartoon Story | bhindi, karela, Aalu Story",
+    "views": 5000000,
+    "len": 379,
+    "id": "brR02QGjB4E"
+   },
+   "latest": {
+    "title": "💔 Poor Tea Seller Becomes Rich… Then What Happened Was Unthinkable | Emotional Vegetable Story",
+    "views": 413,
+    "len": 521,
+    "id": "4QqUQzBMi-g",
+    "published": "8 hours ago"
+   },
+   "author": "Little Kids Hindi 🌟"
+  },
+  "UCiTEJZ5IxYeWoygSaa_Majg": {
+   "name": "Bagu Baba TV",
+   "role": "tracked",
+   "subCount": 40700,
+   "best": {
+    "title": "Gareeb Aalu Wale Ko Patni Ne Diya Dhoka, Phir Kismat Ne Bana Diya Crorepati Manager!",
+    "views": 4300000,
+    "len": 585,
+    "id": "dS_4mJrwzMM"
+   },
+   "latest": {
+    "title": "Aalu Ne Apni Patni Palak Ko Chhoda, Phir Mila Bada Dhoka | Hindi Moral Cartoon Story",
+    "views": 29000,
+    "len": 623,
+    "id": "2MyE1BFBJXI",
+    "published": "21 hours ago"
+   },
+   "author": "Bagu Baba TV"
+  },
+  "UC3TZwPRd5cDwGoaIuCFYuZQ": {
+   "name": "Apna Mini Gaon",
+   "role": "tracked",
+   "subCount": 13900,
+   "best": {
+    "title": "आलू और मिर्ची की प्रेम कहानी 💔 | लाल मिर्च का धोखा | Sabzi Ki Kahani | Hindi Cartoon Story",
+    "views": 2300000,
+    "len": 336,
+    "id": "BUAA9Htw9Mo"
+   },
+   "latest": {
+    "title": "वॉटर पार्क में आई भयानक बाढ़! बहादुर आलू ने बचाई मूली की जान | Sabzi Cartoon Story",
+    "views": 221000,
+    "len": 477,
+    "id": "fTTi1PZPGE0",
+    "published": "1 day ago"
+   },
+   "author": "Apna Mini Gaon"
+  },
+  "UCDOWGA4XsPmHFX3oopUOc_w": {
+   "name": "Momo Toons",
+   "role": "tracked",
+   "subCount": 7110,
+   "best": {
+    "title": "मूली ने गरीब टमाटर को छोड़ अमीर बैंगन का हाथ थामा |\"Heart Touching Story",
+    "views": 1700000,
+    "len": 337,
+    "id": "2I04z0v8jiQ"
+   },
+   "latest": {
+    "title": "करेला और उसकी पत्नी टमाटर ने मिलकर गरीब आलू को खाई में धक्का दे दिया! 😭",
+    "views": 15000,
+    "len": 280,
+    "id": "2I54Cn5NQjU",
+    "published": "20 hours ago"
+   },
+   "author": "Momo Toons"
+  },
+  "UCuN8KlvqOiozVwhYcrVsuAA": {
+   "name": "Funtoo Baba TV",
+   "role": "rival",
+   "subCount": 32400,
+   "best": {
+    "title": "Poor corn started Ice Truck in the summer | Ladyfinger's deception and corn's victory | Hindi sto...",
+    "views": 6000000,
+    "len": 542,
+    "id": "puX7N5DUnv4"
+   },
+   "latest": {
+    "title": "Tomato and Okra stole Corn's magic seed... but what happened next was terrifying! 😨",
+    "views": 43000,
+    "len": 595,
+    "id": "W1VqSGevi0E",
+    "published": "2 days ago"
+   },
+   "author": "Funtoo Baba TV"
+  },
+  "UC7VH5e2I11IW7f_NATDUjAA": {
+   "name": "Sabji Toon TV",
+   "role": "rival",
+   "subCount": 8700,
+   "best": {
+    "title": "😢भिंडी ने दिया धोखा 💔 | गरीब आलू को छोड़कर अमीर करेले के साथ भागी भिंडी | Aalu, Bhindi, Karela Story",
+    "views": 1400000,
+    "len": 258,
+    "id": "Q75sGKAgOJc"
+   },
+   "latest": {
+    "title": "😭 आलू ने भिंडी के लिए टमाटर को दिया धोखा! 💔 | Aalu, Tamatar, Bhindi Story | Emotional Cartoon Story",
+    "views": 307000,
+    "len": 484,
+    "id": "K7Kb3lCy4MI",
+    "published": "1 week ago"
+   },
+   "author": "Sabji Toon TV"
+  },
+  "UCAPmPlUz9RGrNYPzVwfzDmw": {
+   "name": "Zigloo Cartoons",
+   "role": "rival",
+   "subCount": 6520,
+   "best": {
+    "title": "Bottle Gourd to Onion for Garlic | Sabji Cartoon story | Vegetable cartoon story",
+    "views": 322000,
+    "len": 301,
+    "id": "5IsI2yD62I4"
+   },
+   "latest": {
+    "title": "The Victory of Poor Farmer Aalu Trapped in Debt | Emotional Story | Sabji Cartoon Story",
+    "views": 2000,
+    "len": 428,
+    "id": "I0AQGKdYh0E",
+    "published": "1 day ago"
+   },
+   "author": "Zigloo Cartoons "
+  }
+ },
+ "ok": 8
+}
