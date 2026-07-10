@@ -22,9 +22,14 @@
 .principle .pn{flex:none;width:30px;height:30px;border-radius:8px;background:rgba(255,174,59,.12);border:1px solid rgba(255,174,59,.35);color:var(--marigold);font-weight:800;display:flex;align-items:center;justify-content:center}
 .storypick{font-size:12.5px;color:var(--berry);font-weight:600;margin:0 0 4px}
 @media(max-width:700px){.teardown{grid-template-columns:1fr}}
+.wrapscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:13.5px;min-width:520px}
+table.tbl th,table.tbl td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+table.tbl th{background:rgba(255,255,255,.03);font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--faint)}
+table.tbl td b{color:var(--ink)}
 </style>
 </head><body>
-<nav class="toc"><div class="wrap"><a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a><a href="#why">Why Pivot</a><a href="#teardown">Competitor Teardown</a><a href="#formula">The Formula</a><a href="#template">Prompt Template</a><a href="#prompts">Ready Scene Prompts</a><a href="#text">The Text Rule</a><span class="storychip">🖼️ THUMBS 2.0</span></div></nav>
+<nav class="toc"><div class="wrap"><a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a><a href="#why">Why Pivot</a><a href="#teardown">Competitor Teardown</a><a href="#formula">The Formula</a><a href="#charlock">🔒 Character Lock</a><a href="#template">Prompt Template</a><a href="#prompts">Ready Scene Prompts</a><a href="#text">The Text Rule</a><span class="storychip">🖼️ THUMBS 2.0</span></div></nav>
 
 <header class="hero"><div class="wrap">
 <p class="crumbs"><a href="../index.html">← Veg-Toon Studio</a> / Thumbnail Playbook 2.0</p>
@@ -97,6 +102,37 @@
 <div class="principle"><div class="pn">6</div><div><b>No text overlay.</b> Let the scene talk. (Diegetic prop signs like a cart label are fine — that's part of the world.)</div></div>
 <div class="principle"><div class="pn">7</div><div><b>Mood-matched cinematic lighting.</b> Bright day for a confrontation, warm sunset for a romance-betrayal, dark night for humiliation, rainy grey for tragedy. High saturation, sharp faces, shallow depth of field.</div></div>
 <div class="principle"><div class="pn">8</div><div><b>Reads at 120px.</b> Big clear silhouettes, faces large enough to see the emotion, strong tonal separation between the two sides. Check it thumbnail-sized before you ship.</div></div>
+</div></section>
+
+<section id="charlock"><div class="wrap">
+<h2><span class="dot"></span>🔒 Character Lock — stop the AI swapping the vegetable</h2>
+<p class="sub">The single biggest render bug: the AI silently changes a character's vegetable. In Story 7 our <b>karela</b> saas rendered as a <b>baingan</b>, and our <b>mirchi</b> jethani rendered as a <b>tomato</b>. It happens because rare, odd-shaped vegetables get swapped for the common, easy "character vegetables" the model draws best. Every thumbnail character must now be locked so this can't happen.</p>
+
+<h3>The three rules</h3>
+<ol style="line-height:1.7">
+<li><b>Define each character in a fixed block:</b> <b>SPECIES</b> (say it in capitals and say "must be a …"), then <b>SHAPE &amp; SKIN</b>, then <b>FACE NOW</b> (the only part that changes per scene), then <b>DRESS</b>, then <b>DO NOT</b>.</li>
+<li><b>Add a negative — name the wrong vegetable.</b> "She is a KARELA — NOT an eggplant/brinjal/baingan, no purple body." Naming the exact wrong swap is what blocks it.</li>
+<li><b>Kill colour cues that pull toward the wrong veg.</b> A green karela in a <b>maroon/purple</b> pallu renders as an eggplant, because the model fuses the purple cloth into the body. We recoloured her pallu to <b>mustard-gold</b>. Never dress a green vegetable in purple.</li>
+</ol>
+
+<h3>The drift table — the swaps to block by name</h3>
+<div class="wrapscroll"><table class="tbl">
+<tr><th>Character veg</th><th>Renders wrongly as</th><th>Lock it with</th></tr>
+<tr><td><b>Karela</b> (bitter gourd)</td><td>Baingan / eggplant</td><td>"long, warty, ridged, DARK GREEN; NOT an eggplant/brinjal, no purple, no smooth teardrop"</td></tr>
+<tr><td><b>Mirchi</b> (chilli)</td><td>Tomato</td><td>"long, slender, curved, pointed; NOT a round tomato, NOT a bell pepper"</td></tr>
+<tr><td><b>Lauki</b> (bottle gourd)</td><td>Cucumber / zucchini / eggplant</td><td>"bulbous bottom + slim neck (bottle shape), pale green; NOT a cucumber/zucchini/eggplant"</td></tr>
+<tr><td><b>Ganna</b> (sugarcane)</td><td>Bamboo / plain stick / human</td><td>"upright jointed cane with ring-nodes + leaf-top; NOT bamboo, NOT a stick, NOT a human"</td></tr>
+<tr><td><b>Bhindi</b> (okra)</td><td>Green chilli / bean / cucumber</td><td>"long five-ridged tapering pod with cap-stem; NOT a chilli/bean/cucumber"</td></tr>
+<tr><td><b>Gobhi</b> (cauliflower)</td><td>Broccoli / mushroom</td><td>"round WHITE bumpy curd florets; NOT broccoli (not green), NOT a mushroom"</td></tr>
+<tr><td><b>Chukandar</b> (beetroot)</td><td>Onion / apple / radish</td><td>"deep beet-red bulb + taproot + leafy pink-veined top; NOT an onion/apple/radish"</td></tr>
+<tr><td><b>Shimla mirch</b> (bell pepper)</td><td>Tomato / apple</td><td>"blocky body with 3-4 rounded lobes + stem-cap; NOT a round tomato/apple"</td></tr>
+<tr><td><b>Grapes / peas</b></td><td>A human, or one round ball</td><td>"a CLUSTER with a cartoon face; NOT a human, NOT a single berry"</td></tr>
+<tr><td><b>Pomegranate / pineapple</b></td><td>Loses its crown, becomes a plain ball</td><td>"keep the golden crown-calyx / spiky green crown + facetted-or-cross-hatch rind"</td></tr>
+</table></div>
+
+<h3>Worked example — the locked character block</h3>
+<div class="block"><div class="bar"><span class="lbl img">CHARACTER LOCK · KARELAMMA</span><button class="copy" data-copy-target="charlock-eg">Copy</button></div><pre id="charlock-eg">KARELAMMA (strict saas) — she is a KARELA / BITTER GOURD and must be a bitter gourd. SHAPE &amp; SKIN: a long tapered spindle body entirely covered in raised knobbly warty ridges and bumpy lumps running lengthwise, deep forest-green with pale-green ridge highlights, a grey leafy top-knot bun. FACE NOW: stern downturned scowl, sharp slanted eyes, one bumpy arm pointing. DRESS (fixed): a heavy MUSTARD-GOLD and ochre pallu with gold zari border (NOT maroon, NOT purple), big gold nose-ring, gold bangles. DO NOT: she is NOT an eggplant, brinjal or baingan — no purple skin, no smooth teardrop body; keep her dark-green and warty.</pre></div>
+<p class="sub" style="margin-top:12px"><b>Already applied:</b> all 26 thumbnail prompts across Stories 1–10 now use this locked-character format. The scenes, heroes, emotions and props stay different from each other — only the way each character is <em>defined</em> is now this strict. Reuse the same lock block for that character in any new render, and render 2–3 takes and pick the clean one.</p>
 </div></section>
 
 <section id="template"><div class="wrap">
