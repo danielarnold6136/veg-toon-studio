@@ -26,9 +26,30 @@
 .copy-list li b{color:var(--ink)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
 @media(max-width:760px){.two{grid-template-columns:1fr}}
+.wrapscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.script{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.2px;min-width:660px}
+table.script th,table.script td{border:1px solid var(--line2);padding:8px 10px;text-align:left;vertical-align:top;line-height:1.5}
+table.script th{background:rgba(255,255,255,.03);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+table.script td.t{white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums;font-size:12px}
+table.script .who{font-weight:800;font-size:11px;letter-spacing:.03em;white-space:nowrap}
+table.script tr.narr .who{color:#8fb8ff}
+table.script tr.narr{background:rgba(120,170,255,.05)}
+table.script tr.dlg .who{color:#ffc257}
+table.script .hi{font-family:'Mukta','Noto Sans Devanagari',sans-serif;font-size:14px;color:var(--ink)}
+table.script .en{color:var(--muted);font-size:12.4px;font-style:italic}
+.jobs{margin:0;padding:0;list-style:none;counter-reset:j}
+.jobs li{counter-increment:j;display:grid;grid-template-columns:28px 1fr;gap:12px;padding:11px 0;border-top:1px solid var(--line2)}
+.jobs li:first-child{border-top:0}
+.jobs li::before{content:counter(j);width:24px;height:24px;border-radius:50%;background:rgba(143,184,255,.13);border:1px solid rgba(143,184,255,.4);color:#8fb8ff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}
+.jobs b{color:var(--ink)}
+.vstat{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px}
+@media(max-width:640px){.vstat{grid-template-columns:repeat(2,1fr)}}
+.vstat .b{border:1px solid var(--line2);border-radius:12px;padding:13px 12px;background:rgba(255,255,255,.02);text-align:center}
+.vstat .n{font-size:22px;font-weight:800;line-height:1.05}
+.vstat .l{font-size:10.5px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.04em}
 </style>
 </head><body>
-<nav class="toc"><div class="wrap"><a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a><a href="#numbers">Numbers</a><a href="#why">Why it blew up</a><a href="#thumb">Thumbnail</a><a href="#story">Story</a><a href="#style">Art style</a><a href="#copy">What we copy</a><span class="storychip">🔬 POST-MORTEM</span></div></nav>
+<nav class="toc"><div class="wrap"><a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a><a href="#numbers">Numbers</a><a href="#why">Why it blew up</a><a href="#thumb">Thumbnail</a><a href="#story">Story</a><a href="#style">Art style</a><a href="#voice">🎙️ Voiceover</a><a href="#copy">What we copy</a><span class="storychip">🔬 POST-MORTEM</span></div></nav>
 
 <header class="hero"><div class="wrap">
 <p class="crumbs"><a href="../index.html">← Veg-Toon Studio</a> / Post-Mortem</p>
@@ -94,9 +115,68 @@
 </div>
 </div></section>
 
+<section id="voice"><div class="wrap">
+<h2><span class="dot"></span>🎙️ The voiceover — the real engine, from the inside</h2>
+<p class="sub">I downloaded the full 13½-minute video, pulled the audio, transcribed all ~2,100 Hindi words with timestamps, and had a second pass independently re-transcribe and re-check the key lines. This is the part you can't see from the outside — and it's the biggest difference between their video and ours.</p>
+
+<div class="verdict" style="border-color:rgba(143,184,255,.4);background:linear-gradient(100deg,rgba(143,184,255,.09),transparent 70%);margin-top:10px">
+<h3 style="margin:0 0 6px">The story is carried by a third-person NARRATOR, with character dialogue only at the emotional peaks. Our model bans narrators. That is the core difference.</h3>
+<p style="color:var(--muted);line-height:1.65;margin:.4em 0 0">It is told the way a <em>dadi-nani ki kahani</em> is told: a warm storyteller voice sets every scene, jumps time, speaks the characters' inner feelings, and delivers the moral — while the characters only speak out loud when they fight, plead or break. Ours is the opposite: 100% lip-synced character dialogue, no narrator, moral spoken by the hero. Theirs is easier to make and covers far more story.</p>
+</div>
+
+<div class="vstat">
+<div class="b"><div class="n">~3</div><div class="l">voices total</div></div>
+<div class="b"><div class="n">~156</div><div class="l">words / minute</div></div>
+<div class="b"><div class="n">~99%</div><div class="l">of runtime is speech</div></div>
+<div class="b"><div class="n">Narrator<br>+ dialogue</div><div class="l">structure</div></div>
+</div>
+
+<h3 style="margin-top:24px">Hear the interleaving — the actual script</h3>
+<p class="sub">Blue rows are the narrator (storyteller). Gold rows are a character speaking in the moment. Hindi is cleaned from the audio; English is the meaning. Cast: <b>Aaloo</b> (poor potato husband), <b>Mooli</b> (radish wife), <b>Baingan</b> (rich eggplant).</p>
+<div class="wrapscroll"><table class="script">
+<tr><th>Time</th><th>Voice</th><th>Line (Hindi)</th><th>Meaning</th></tr>
+<tr class="narr"><td class="t">0:00</td><td class="who">NARRATOR</td><td class="hi">एक छोटे से गाँव के किनारे, टूटी-फूटी मिट्टी की झोपड़ी में, एक गरीब आलू अपनी पत्नी मूली के साथ रहता था। उनकी झोपड़ी की छत जगह-जगह से टपकती थी।</td><td class="en">At the edge of a small village, in a broken mud hut, a poor Potato lived with his wife Radish. Their roof leaked from every corner.</td></tr>
+<tr class="dlg"><td class="t">0:09</td><td class="who">AALOO</td><td class="hi">मूली, इधर आ जाओ — इस कोने में कम पानी टपकेगा।</td><td class="en">Radish, come here — less water leaks in this corner.</td></tr>
+<tr class="dlg"><td class="t">0:12</td><td class="who">MOOLI</td><td class="hi">कहाँ कम टपकेगा? पूरी झोपड़ी ही बरस रही है। आखिर कब बदलेगी हमारी किस्मत?</td><td class="en">Where's it less? The whole hut is raining. When will our luck ever change?</td></tr>
+<tr class="dlg"><td class="t">0:18</td><td class="who">AALOO</td><td class="hi">भगवान, बस इतनी कमाई हो जाए कि मूली को कभी भूखा न सोना पड़े।</td><td class="en">God, let me earn just enough that Radish never sleeps hungry.</td></tr>
+<tr class="narr"><td class="t">0:23</td><td class="who">NARRATOR</td><td class="hi">लेकिन किस्मत जैसे हर बार उसकी मेहनत का इम्तिहान ले रही थी।</td><td class="en">But fate seemed to test his hard work at every turn.</td></tr>
+<tr class="dlg"><td class="t">4:00</td><td class="who">MOOLI</td><td class="hi">अगर तुम मर्द होते तो आज हम भी अमीर होते।</td><td class="en">If you were a real man, we'd be rich by now.</td></tr>
+<tr class="narr"><td class="t">4:04</td><td class="who">NARRATOR</td><td class="hi">मूली के ये शब्द सुनकर वो वहीं खड़ा रह गया, जैसे उसकी सारी ताकत एक पल में टूट गई हो।</td><td class="en">At her words he just stood there, as if all his strength shattered in an instant.</td></tr>
+<tr class="dlg"><td class="t">5:47</td><td class="who">BAINGAN</td><td class="hi">तुम इस सुनसान सड़क पर अकेली क्या कर रही हो?</td><td class="en">What are you doing all alone on this deserted road?</td></tr>
+<tr class="dlg"><td class="t">6:15</td><td class="who">MOOLI</td><td class="hi">मैं एक गरीब आदमी की पत्नी थी। अब उसे छोड़कर जा रही हूँ।</td><td class="en">I was a poor man's wife. Now I'm leaving him.</td></tr>
+<tr class="dlg"><td class="t">6:27</td><td class="who">BAINGAN</td><td class="hi">अब मैं तुम्हें वो ज़िंदगी दे सकता हूँ जिसका तुमने हमेशा सपना देखा।</td><td class="en">Now I can give you the life you always dreamed of.</td></tr>
+<tr class="dlg"><td class="t">7:29</td><td class="who">BAINGAN</td><td class="hi">भावनाओं से बिज़नेस नहीं चलता — मुझे काम करने दो।</td><td class="en">Business doesn't run on feelings — let me work.</td></tr>
+<tr class="dlg"><td class="t">8:09</td><td class="who">BAINGAN</td><td class="hi">ये खाना मुझे पसंद नहीं आया, नौकरों को दे दो — पाँच-सितारा होटल से मँगवाओ।</td><td class="en">I don't like this food, give it to the servants — order from a five-star hotel. (She had cooked it with love — the very thing she once denied Aaloo.)</td></tr>
+<tr class="dlg"><td class="t">8:51</td><td class="who">MOOLI</td><td class="hi">काश, मैंने सच्चे प्यार की कीमत समय रहते समझ ली होती।</td><td class="en">If only I'd understood the worth of true love in time.</td></tr>
+<tr class="dlg"><td class="t">9:06</td><td class="who">MOOLI</td><td class="hi">दौलत तो मिल गई, लेकिन सच्चा प्यार खो दिया।</td><td class="en">I got the wealth — but lost true love.</td></tr>
+<tr class="narr"><td class="t">11:10</td><td class="who">NARRATOR</td><td class="hi">इंसान की असली पहचान उसके कपड़ों या दौलत से नहीं, उसके कर्मों से होती है।</td><td class="en">A person's true identity comes not from clothes or wealth, but from their deeds.</td></tr>
+<tr class="narr"><td class="t">13:05</td><td class="who">NARRATOR</td><td class="hi">पैसा घर खरीद सकता है, लेकिन परिवार नहीं; महँगे गहने खरीद सकता है, लेकिन सच्चा प्यार नहीं।</td><td class="en">Money can buy a house but not a family; jewellery, but not true love.</td></tr>
+<tr class="narr"><td class="t">13:20</td><td class="who">NARRATOR</td><td class="hi">जो लोग सिर्फ दौलत देखकर रिश्ते बनाते हैं, वे अक्सर सच्ची खुशी खो देते हैं।</td><td class="en">Those who build relationships seeing only wealth often lose true happiness.</td></tr>
+</table></div>
+
+<h3 style="margin-top:24px">The four jobs the narrator does — that our dialogue-only model can't</h3>
+<ol class="jobs">
+<li><span><b>Sets every scene instantly.</b> "In a broken mud hut, a poor Potato lived with his wife" — one line and you know the whole setup. No acting it out, no wasted seconds.</span></li>
+<li><span><b>Jumps time for free.</b> The narrator skips months and years between beats ("but fate tested him at every turn…") so the story covers a full rise-and-fall arc in 13 minutes without dragging.</span></li>
+<li><span><b>Speaks the inner feeling the picture can't.</b> "He stood there as if his strength shattered in an instant." The camera can't say that — the narrator can, and that's where the emotion lands.</span></li>
+<li><span><b>Delivers the moral, out loud, three times.</b> The lesson is stated plainly by the narrator at the end and repeated — exactly what the Hindi moral-story audience expects and rewards.</span></li>
+</ol>
+
+<h3 style="margin-top:24px">The voice cast &amp; how it's actually made</h3>
+<ul class="copy-list">
+<li><b>About three voices, not a big cast.</b> One low male voice (~110 Hz) carries the <em>narrator and every male character</em> — including the hero — and one clearly female voice (~210–275 Hz) is Mooli. The rich Baingan may be a third male voice or the same one re-used. It's a small, cheap voice set.</li>
+<li><b>It's a voiceover laid over the video, not the engine lip-syncing every line.</b> The narrator obviously isn't lip-synced to anyone, and the speech runs continuously over a soft background-music bed for ~99% of the runtime. This is a separate TTS/voiceover track dropped in during editing — which is <em>far</em> less work than making the video engine speak and lip-sync every line, the way our current model does.</li>
+<li><b>Continuous audio, ~156 words/minute.</b> There is almost no silence — a warm voice never stops telling the story. That constant narration is itself the retention hook: it's an audio-first kahani with pictures, not a picture with occasional talking.</li>
+<li><b>Poetic justice is built into the dialogue.</b> Mooli mocks Aaloo's poverty and rejects the food and love he offers; later the rich Baingan treats <em>her</em> with the exact same coldness — rejecting the food she cooks, having no time for her. The script makes her live what she did. That mirror is what makes the ending satisfying.</li>
+</ul>
+
+<div class="note warn" style="margin-top:16px"><b>Us vs them, plainly:</b> our production rule is "no narrator, every line lip-synced by the video engine, moral spoken by the hero." Theirs is "a narrator tells the kahani over a music bed, characters speak only at the peaks." Theirs covers more story, hits the emotion harder, matches the format Hindi audiences already love, and is cheaper and faster to produce. This is the single most important thing to consider changing in our model.</div>
+</div></section>
+
 <section id="copy"><div class="wrap">
 <h2><span class="dot"></span>What we copy</h2>
 <ul class="copy-list">
+<li><b>Test a narrator.</b> This is the big one. Add a warm third-person storyteller voice that opens the story, jumps time, speaks the inner feelings and reads the moral — with character dialogue only at the peaks. It's cheaper (a voiceover track, not lip-syncing every line), it covers more story, and it's the kahani format Hindi viewers already love. Try one Story 11 this way and compare to our lip-synced model.</li>
 <li><b>Thumbnail is the whole game.</b> Cinematic betrayal frame, one glance tells the story, a Rolls-Royce or mansion as the instant "money" signal, a crying bride, no text. Keep pouring effort here above everything else.</li>
 <li><b>Stakes in the first 5 seconds.</b> Open on poverty or the betrayal — no logo intro, no slow build.</li>
 <li><b>Title template:</b> 😭 + "X ke liye Y chhoda / thukraya, phir kismat ne aisa sabak sikhaya" + English tail (Heart Touching Story) + #viral.</li>
