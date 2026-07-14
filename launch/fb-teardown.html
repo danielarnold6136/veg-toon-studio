@@ -1,0 +1,342 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>📘 FB Competitor Teardown — 5 videos, frame by frame</title>
+<meta name="description" content="Full post-mortem of 5 Facebook competitor veg-cartoon reels: length, shots, hook, voiceover, emotion, characters, endings, CTAs — and the 9 rules we copy.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📘</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700;800&family=Noto+Sans+Devanagari:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.stat{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:8px}
+@media(max-width:760px){.stat{grid-template-columns:repeat(2,1fr)}}
+.stat .b{border:1px solid var(--line2);border-radius:12px;padding:14px 12px;background:rgba(255,255,255,.02);text-align:center}
+.stat .n{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.stat .l{font-size:10.5px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.05em}
+.wrapscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.m{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.2px;min-width:820px}
+table.m th,table.m td{border:1px solid var(--line2);padding:9px 11px;text-align:left;vertical-align:top;line-height:1.5}
+table.m th{background:rgba(255,255,255,.03);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+table.m td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+table.m tr:hover td{background:rgba(255,255,255,.015)}
+.rules{margin:0;padding:0;list-style:none;counter-reset:r}
+.rules li{counter-increment:r;display:grid;grid-template-columns:32px 1fr;gap:14px;padding:15px 0;border-top:1px solid var(--line2)}
+.rules li:first-child{border-top:0}
+.rules li::before{content:counter(r);width:27px;height:27px;border-radius:50%;background:rgba(255,178,44,.14);border:1px solid rgba(255,178,44,.42);color:#ffc257;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.rules b{color:var(--ink);display:block;margin-bottom:3px}
+.rules span{color:var(--muted);line-height:1.62}
+.vid{border:1px solid var(--line2);border-radius:14px;padding:20px;margin-top:20px;background:rgba(255,255,255,.018)}
+.vid>h3{margin:0 0 4px;font-size:19px;letter-spacing:-.01em}
+.vid .meta{font-size:12px;color:var(--muted);margin:0 0 16px;font-variant-numeric:tabular-nums}
+.vid .meta b{color:#ffc257;font-weight:700}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0 16px}
+.shots figure{margin:0}
+.shots img{width:100%;display:block;border-radius:10px;border:1px solid var(--line2)}
+.shots figcaption{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+table.beat{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+table.beat th,table.beat td{border:1px solid var(--line2);padding:8px 10px;text-align:left;vertical-align:top;line-height:1.55}
+table.beat th{background:rgba(255,255,255,.03);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+table.beat td.t{white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums;font-size:12px;width:1%}
+table.beat .hi{font-family:'Mukta','Noto Sans Devanagari',sans-serif;font-size:14px;color:var(--ink)}
+table.beat .en{color:var(--muted);font-size:12.2px;font-style:italic;display:block;margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+.tag{font-size:11px;padding:4px 9px;border-radius:20px;border:1px solid var(--line2);color:var(--muted);background:rgba(255,255,255,.02)}
+.tag.good{border-color:rgba(120,200,140,.45);color:#8fd7a4;background:rgba(120,200,140,.08)}
+.tag.bad{border-color:rgba(255,110,110,.45);color:#ff9a9a;background:rgba(255,110,110,.08)}
+.note{border:1px solid var(--line2);border-left:3px solid #ffc257;border-radius:10px;padding:14px 16px;margin:16px 0;background:rgba(255,178,44,.05);font-size:13.6px;line-height:1.65;color:var(--muted)}
+.note b{color:var(--ink)}
+.note.warn{border-left-color:#ff6e6e;background:rgba(255,110,110,.06)}
+.note.good{border-left-color:#63c98a;background:rgba(99,201,138,.06)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+.chg{margin:0;padding:0;list-style:none}
+.chg li{padding:13px 0;border-top:1px solid var(--line2);line-height:1.62;color:var(--muted)}
+.chg li:first-child{border-top:0}
+.chg b{color:var(--ink)}
+.chg .was{color:#ff9a9a;font-size:12.4px;display:block;margin-top:4px}
+.chg .now{color:#8fd7a4;font-size:12.4px;display:block;margin-top:2px}
+.q{margin:0;padding-left:1.15em}
+.q li{margin:.6em 0;line-height:1.62;color:var(--muted)}
+.q li b{color:var(--ink)}
+</style>
+</head><body>
+
+<nav class="toc"><div class="wrap">
+<a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a>
+<a href="#numbers">Numbers</a><a href="#rules">The 9 rules</a><a href="#videos">Video by video</a><a href="#style">Art style</a><a href="#serial">Serialisation</a><a href="#change">What we change</a><a href="#open">Open</a>
+<span class="storychip">📘 FB TEARDOWN</span>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+<p class="crumbs"><a href="../index.html">← Veg-Toon Studio</a> / Facebook / Competitor teardown</p>
+<span class="kicker">📘 5 competitor videos · 3 different pages · measured 14 July 2026</span>
+<h1>What the Facebook winners actually do</h1>
+<p class="lede">Every frame, every line, every cut of the five videos Shilpi pulled. They are <b>not</b> what we are building. They are <b>31–84 seconds</b>, they open on the conflict inside half a second, and two of them end on a <b>burned-in CTA that farms comments</b>. Here is all of it, and the nine rules that fall out.</p>
+</div></header>
+
+<main class="wrap">
+
+<!-- ─────────────────────────  NUMBERS  ───────────────────────── -->
+<section id="numbers">
+<h2>The measured shape</h2>
+<p class="sub">Every number here was measured off the files with ffmpeg and re-measured by a second pass. Nothing is estimated.</p>
+
+<div class="stat">
+<div class="b"><div class="n">9:16</div><div class="l">all five, no exceptions</div></div>
+<div class="b"><div class="n">31–84s</div><div class="l">total runtime</div></div>
+<div class="b"><div class="n">0.0–0.4s</div><div class="l">first spoken word (4 of 5)</div></div>
+<div class="b"><div class="n">69–98%</div><div class="l">of runtime is speech</div></div>
+<div class="b"><div class="n">1 of 5</div><div class="l">states a moral</div></div>
+</div>
+
+<div class="wrapscroll">
+<table class="m">
+<thead><tr><th>#</th><th>Page</th><th>Story</th><th class="n">Length</th><th class="n">Shots</th><th class="n">Avg shot</th><th class="n">Hindi words</th><th class="n">Speech</th><th>Ends on</th></tr></thead>
+<tbody>
+<tr><td>v1</td><td>Ai&nbsp;Fairytales</td><td>Dowry / saas–bahu</td><td class="n">63.4s</td><td class="n">~16</td><td class="n">4.0s</td><td class="n">202</td><td class="n">84%</td><td>Cliffhanger + <b>“COMMENT FOR NEXT PART”</b></td></tr>
+<tr><td>v2</td><td>SN&nbsp;Story&nbsp;AI</td><td>Onion-seller romance</td><td class="n">38.9s</td><td class="n">~13</td><td class="n">3.0s</td><td class="n">65</td><td class="n">69%</td><td>Spoken moral, twice</td></tr>
+<tr><td>v3</td><td>(samosa&nbsp;logo)</td><td>Chrome-family heist</td><td class="n">84.0s</td><td class="n">~13</td><td class="n">6.5s</td><td class="n">180</td><td class="n">73%</td><td>Villains win. No moral.</td></tr>
+<tr><td>v4</td><td>unidentified</td><td>Baingan × Mooli love</td><td class="n">31.4s</td><td class="n">4</td><td class="n">7.8s</td><td class="n">77</td><td class="n">96%</td><td>Happy couple</td></tr>
+<tr><td>v5</td><td>Ai&nbsp;Fairytales</td><td>Bridge: friend or lover?</td><td class="n">30.9s</td><td class="n">~18</td><td class="n">1.7s</td><td class="n">52</td><td class="n">98%</td><td><b>“TAG KARO APNE BESTY KO”</b></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note"><b>Only three pages, not five.</b> v1 and v5 carry a pixel-identical circular <b>“Ai Fairytales”</b> logo — same page. v2 carries an <b>“SN Story AI”</b> logo top-right. v3 has its own samosa-character badge. v4 carries no page logo at all — only the same white <b>“Like”</b> sticker v2 uses, which is a shared editing template, not proof of a shared page. <b>So we cannot say who published v4.</b></div>
+
+<div class="note warn"><b>They are hiding a generator watermark, and they are sloppy about it.</b> v2 and v3 still have an AI-generator “sparkle” glyph burned into the source footage — in v2 it peeks out from <em>behind</em> the “Like” sticker, in v3 it is bisected by the samosa badge. They are covering it, not removing it. v1, v4 and v5 are clean. No literal Veo/Sora wordmark appears anywhere, so I will not claim these are Veo — only that <b>the corner-cover play is exactly what we already planned, and it is what the field does.</b></div>
+</section>
+
+<!-- ─────────────────────────  RULES  ───────────────────────── -->
+<section id="rules">
+<h2>The nine rules that fall out</h2>
+<p class="sub">These are the patterns that hold across the set — not one-offs.</p>
+
+<ol class="rules">
+<li><b>No intro. Ever.</b><span>Zero logo stings, zero title cards, zero establishing shots. Four of the five have a character <em>talking</em> by 0.4 seconds. The one that dawdles — v2, first word at 2.9s — is also the flattest video in the batch. Frame one is already the middle of the scene.</span></li>
+
+<li><b>Frame one <em>is</em> the conflict.</b><span>v5 opens on a man dangling off a collapsed rope bridge holding two people by the hands. v3 opens on a villain spray-painting a child silver next to a “MISSING CHILD — REWARD $1,000,000” poster. You cannot scroll past either. The question the image asks is the hook — no narrator sets anything up.</span></li>
+
+<li><b>31–84 seconds. Not ten minutes.</b><span>Facebook removed the Reels length cap — length is not the constraint. They are choosing short. The long story still exists; they just ship it in parts (see §Serialisation).</span></li>
+
+<li><b>Dialogue-led, and it never stops.</b><span>69–98% of runtime is speech, and <b>not one of the five has a silence gap over 0.6 seconds</b>. Music runs continuously underneath. There is no “breathe here” beat — dead air is treated as a scroll cue. This confirms the dialogue-led correction we already made for Story 12.</span></li>
+
+<li><b>Short lines, many per clip.</b><span>Hindi runs at ~2.5 words/sec here. v4 packs <b>~19 words into one continuous 7.8-second take</b> — that is 4–6 rapid lines of two-person back-and-forth, each 3–6 words, not one long speech. <b>This corrects our own rule:</b> the limit is ~15–20 words per 8s clip, and the line length ceiling is ~6 words, not 9.</span></li>
+
+<li><b>Cut speed follows emotion, not a template.</b><span>Jeopardy cuts fast: v5 averages <b>1.7s/shot</b> through the bridge sequence. Romance holds: v4 is <b>four ~7.8s takes</b>, no hard cuts at all — just dips to black. Same page can do both. Pick the rhythm per scene.</span></li>
+
+<li><b>One close-up carries the whole video.</b><span>Every video has exactly one held, tear-streaked or wide-eyed face CU at its emotional peak — the crying peach at 12s and again at 60s in v1; the strawberry girl weeping as she is about to be dropped at 6s in v5. That frame is also the thumbnail frame. Budget one hero CU per video and put it at the peak.</span></li>
+
+<li><b>The ending is a CTA, not a moral.</b><span>Only <b>one</b> of five states a moral (v2, “सच्चा प्यार हमेशा जीतता है”, said twice). The other four end on a cliffhanger, a comment-bait, a tag-bait, or nothing. <b>Our own FB page bio currently promises “har kahani ek moral ke saath khatam hoti hai.”</b> The winners are not doing that.</span></li>
+
+<li><b>Villains are allowed to win.</b><span>v3 runs 84 seconds and the con artists get away with everything — they steal the child, the reward, and the diamonds, and the last shot is them gloating over the pile while the victims shop, oblivious. No punishment, no karma, no moral. It is the longest video in the set. Moral closure is optional; a <em>reaction</em> is not.</span></li>
+</ol>
+</section>
+
+<!-- ─────────────────────────  VIDEOS  ───────────────────────── -->
+<section id="videos">
+<h2>Video by video</h2>
+<p class="sub">Hindi is transcribed by ASR and is approximate on spelling — the meaning is right, the exact spelling may not be.</p>
+
+<!-- v5 first: it is the most instructive -->
+<div class="vid">
+<h3>v5 — “Who do you save?” <span class="tag bad">engagement bait</span></h3>
+<p class="meta">Ai Fairytales · <b>30.9s</b> · ~18 shots · <b>1.7s</b> avg shot · 52 Hindi words · 98% speech · fast-cut</p>
+
+<div class="shots">
+<figure><img src="../assets/fb/v5-hook.jpg" alt="Potato man hanging from a broken rope bridge holding a brinjal and a strawberry girl"><figcaption><b>0.0s</b> — the entire hook. No build-up.</figcaption></figure>
+<figure><img src="../assets/fb/v5-splash.jpg" alt="Splash in the river below the bridge"><figcaption><b>12s</b> — he drops the girl he loves.</figcaption></figure>
+<figure><img src="../assets/fb/v5-tag.jpg" alt="TAG KARO APNE BESTY KO overlay on a dhaba scene"><figcaption><b>24.7–30.6s</b> — burned-in tag bait.</figcaption></figure>
+</div>
+
+<div class="wrapscroll"><table class="beat">
+<thead><tr><th class="t">Time</th><th>What happens</th><th>Emotion</th></tr></thead>
+<tbody>
+<tr><td class="t">0–10s</td><td>Aloo hangs off a smashed rope bridge over a gorge, gripping <b>Baingan (childhood friend)</b> in one hand and <b>Strawberry (his love)</b> in the other. Both scream to be saved. The rope is snapping. <span class="hi">“अब मैं किसे बचाऊँ?”</span><span class="en">“Now who do I save?”</span></td><td>Panic, impossible choice</td></tr>
+<tr><td class="t">10–13s</td><td>He <b>lets go of the girl.</b> She falls. Splash. Cut.</td><td>Shock — he chose the friend</td></tr>
+<tr><td class="t">15–24s</td><td><b>Hard tonal cut.</b> Aloo and Baingan roaring with laughter on a motorbike through a market, then at a dhaba with drinks. No grief, no aftermath, no mention of her.</td><td>Jarring joy</td></tr>
+<tr><td class="t">24.7–30.6s</td><td>Overlay: <b>TAG KARO APNE BESTY KO.</b> VO: <span class="hi">“दोस्तो, टैग करो अपने उस दोस्त को जिसके लिए आप कुछ भी कर सकते हैं। जल्दी करो, कॉमेंट्स में नीचे।”</span><span class="en">“Tag that friend you'd do anything for. Quick — down in the comments.”</span></td><td>Direct instruction</td></tr>
+</tbody>
+</table></div>
+
+<p style="color:var(--muted);font-size:13.4px;line-height:1.65;margin-top:14px">The whole video exists to earn the last six seconds. The dilemma is engineered to be <em>argued about</em> — half the comments will be “friendship 🔥”, half “he's a monster”, and both are comments. <b>No moral. No consequence. The emotional logic is deliberately indefensible</b>, and that is the point: an indefensible choice is a comment engine. Note the structure — 20 seconds of fast-cut jeopardy, then two long, calm takes to land the CTA.</p>
+
+<div class="tags"><span class="tag good">first word at 0.34s</span><span class="tag good">peak CU at 6s</span><span class="tag bad">no moral</span><span class="tag">3 characters</span><span class="tag">dips to black between acts</span></div>
+</div>
+
+<div class="vid">
+<h3>v1 — Dowry / saas–bahu, <b>“PART 1”</b> <span class="tag good">serialised</span></h3>
+<p class="meta">Ai Fairytales · <b>63.4s</b> · ~16 shots · <b>4.0s</b> avg shot · 202 Hindi words · 84% speech</p>
+
+<div class="shots">
+<figure><img src="../assets/fb/v1-hook.jpg" alt="Jamun-headed mother-in-law flaunting a gold necklace at two daughters-in-law"><figcaption><b>0–4s</b> — “PART 1” label, mid-taunt.</figcaption></figure>
+<figure><img src="../assets/fb/v1-cry.jpg" alt="Crying peach-headed bride in close-up"><figcaption><b>12s</b> — the hero CU. Repeated at 60s.</figcaption></figure>
+<figure><img src="../assets/fb/v1-comment.jpg" alt="COMMENT FOR NEXT PART overlay"><figcaption><b>58.5–63.4s</b> — the ask.</figcaption></figure>
+</div>
+
+<div class="wrapscroll"><table class="beat">
+<thead><tr><th class="t">Time</th><th>What happens</th><th>Emotion</th></tr></thead>
+<tbody>
+<tr><td class="t">0–7s</td><td><b>“PART 1”</b> in a black box, top-centre. The <b>Jamun-headed saas</b> hands gold to her two rich bahus: <span class="hi">“ये लो मेरी रानी बहुओं… कार से लेकर सोना तक, मेरा सर ऊँचा कर दिया।”</span><span class="en">“Take it, my queen daughters-in-law — car to gold, they raised my head high.”</span></td><td>Boasting, favouritism</td></tr>
+<tr><td class="t">7–19s</td><td>She turns on the third — the <b>poor Peach bahu</b>: her father <span class="hi">“एक फूटी कौड़ी नहीं लाया”</span>. Held CU: Peach in tears, hands folded.</td><td><b>Humiliation → peak CU</b></td></tr>
+<tr><td class="t">20–30s</td><td>Peach defends her father — he spent his life's savings. Saas: <span class="hi">“ज़ुबान मत लड़ा… आज से घर का सारा काम तू ही करेगी।”</span><span class="en">“Don't answer back. From today you do all the housework.”</span></td><td>Injustice hardening</td></tr>
+<tr><td class="t">31–44s</td><td>The <b>Aloo husband</b> intervenes: <span class="hi">“दहेज लेना और देना दोनों पाप है।”</span><span class="en">“Taking and giving dowry are both sins.”</span> Saas threatens to throw Peach out if the rest of the dowry doesn't arrive.</td><td>Defiance vs threat</td></tr>
+<tr><td class="t">44–57s</td><td>Peach alone at the hand pump scrubbing a mountain of dishes, crying. The rich bahus stroll past and mock her.</td><td>Grinding humiliation</td></tr>
+<tr><td class="t">57–63.4s</td><td>Husband sits with her, promises he's with her, <span class="hi">“अम्मी को इस गलती का एक दिन ज़रूर अफ़सोस होगा।”</span> Overlay: <b>COMMENT FOR NEXT PART.</b> Story is <b>unresolved.</b></td><td>Hope + cliffhanger</td></tr>
+</tbody>
+</table></div>
+
+<p style="color:var(--muted);font-size:13.4px;line-height:1.65;margin-top:14px">This is our exact genre — poor-vs-rich, dhokha, saas–bahu — <b>chopped into a 63-second Part 1 that resolves nothing.</b> The moral line is spoken <em>mid-video</em> as a character's dialogue, not as a closing narration. The family is written Muslim (<span class="hi">अम्मी</span>, <span class="hi">ख़ुदा</span>, <span class="hi">बेगम</span>), which is a deliberate audience choice we have never made.</p>
+
+<div class="tags"><span class="tag good">first word at 0.21s</span><span class="tag good">PART 1 label</span><span class="tag good">comment bait</span><span class="tag">4 characters</span><span class="tag">unresolved on purpose</span></div>
+</div>
+
+<div class="vid">
+<h3>v3 — Chrome-family heist <span class="tag bad">villains win</span></h3>
+<p class="meta">samosa-logo page · <b>84.0s</b> (longest) · ~13 shots · <b>6.5s</b> avg shot · 180 Hindi words · 73% speech</p>
+
+<div class="shots">
+<figure><img src="../assets/fb/v3-hook.jpg" alt="Strawberry villain spray-painting a child silver beside a MISSING CHILD reward poster"><figcaption><b>0.5s</b> — spray-painting a kid silver, next to a $1,000,000 MISSING poster.</figcaption></figure>
+<figure><img src="../assets/fb/v3-loot.jpg" alt="Villain and fake son gloating over a pile of stolen diamonds"><figcaption><b>70s</b> — they get away with all of it.</figcaption></figure>
+</div>
+
+<div class="wrapscroll"><table class="beat">
+<thead><tr><th class="t">Time</th><th>What happens</th><th>Emotion</th></tr></thead>
+<tbody>
+<tr><td class="t">0–11s</td><td>A <b>Strawberry-headed con man</b> spray-paints a Strawberry boy <b>chrome silver</b> so he'll pass as the missing son of a rich <b>all-chrome family</b>. He runs through the city with the reward poster. <span class="hi">“अब देखना हम कैसे अमीर बनते हैं।”</span><span class="en">“Now watch how we get rich.”</span></td><td>Greed, scheming</td></tr>
+<tr><td class="t">12–26s</td><td>Mansion. He hands over the “found” child, collects a <b>briefcase of cash</b>. The chrome parents weep with joy and embrace the fake son: <span class="hi">“मेरा बेटा… आख़िर तुम मिल गए।”</span></td><td>False reunion — dramatic irony</td></tr>
+<tr><td class="t">27–36s</td><td>Parents leave, telling the boy to stay inside and take care. <span class="hi">“अलविदा मम्मी पापा… जल्दी वापस आना।”</span></td><td>Trust being exploited</td></tr>
+<tr><td class="t">37–57s</td><td>The boy produces a <b>diamond key</b>, opens the vault, loads jewels into a bag, escapes through night streets <b>leaving a trail of dropped diamonds.</b></td><td>Tense theft</td></tr>
+<tr><td class="t">58–75s</td><td>Parents in the limo, tender about their son. Cut: the boy delivers the loot. Villain gloats over a mountain of diamonds. <span class="hi">“शाबाश बेटा।”</span></td><td>Cold triumph</td></tr>
+<tr><td class="t">76–84s</td><td>The chrome parents shopping with Dior bags, happy, <b>oblivious.</b> <span class="hi">“बेटा, तुम कहाँ हो?”</span> End.</td><td>Dread, no resolution</td></tr>
+</tbody>
+</table></div>
+
+<p style="color:var(--muted);font-size:13.4px;line-height:1.65;margin-top:14px">Two things to steal here. First, it fuses our genre with the <b>chrome/liquid-metal “silver people” AI trend</b> — a visual gimmick doing real work: the whole plot (paint a kid silver to fake him into a silver family) is <em>only possible</em> because of the trend. Second, <b>it is the longest video in the set and it has no moral and no justice.</b> Greed → con → the con works. That is the whole story.</p>
+
+<div class="tags"><span class="tag good">first word at 0.37s</span><span class="tag good">trend-fused premise</span><span class="tag bad">no moral, no justice</span><span class="tag bad">AI sparkle under logo</span><span class="tag">longest = 84s</span></div>
+</div>
+
+<div class="two">
+<div class="vid">
+<h3>v4 — Baingan × Mooli <span class="tag good">long takes</span></h3>
+<p class="meta">unidentified page · <b>31.4s</b> · <b>4 shots</b> · <b>7.8s</b> avg · 77 words · 96% speech</p>
+<div class="shots" style="grid-template-columns:1fr">
+<figure><img src="../assets/fb/v4-cu.jpg" alt="Brinjal-headed man and radish-headed woman meeting in a market"><figcaption><b>6s</b> — note her head: a real white <b>mooli</b> with leaves, fused to a human face and hair.</figcaption></figure>
+</div>
+<div class="wrapscroll"><table class="beat">
+<thead><tr><th class="t">Time</th><th>What happens</th></tr></thead><tbody>
+<tr><td class="t">0–8s</td><td>Market. Baingan sees Mooli. <span class="hi">“अरे… ये कौन है? इतनी प्यारी तो मैंने कभी नहीं देखी।”</span> First word at <b>0.0s</b>.</td></tr>
+<tr><td class="t">8–16s</td><td>Names exchanged, crowd applauds as they walk. <span class="hi">“आज से हम दोस्त।”</span></td></tr>
+<tr><td class="t">16–24s</td><td>He kneels with a rose. <span class="hi">“तुम मेरी ज़िंदगी की साथी बनोगी?”</span> Petal-fall CU on her face.</td></tr>
+<tr><td class="t">24–31s</td><td>She accepts. They walk off holding hands at sunset. No moral, just warmth.</td></tr>
+</tbody></table></div>
+<p style="color:var(--muted);font-size:13.4px;line-height:1.65;margin-top:12px"><b>The most technically useful video in the batch.</b> Four takes of ~7.8s — i.e. <b>four raw 8-second AI clips, used whole</b>, joined by dips to black. Zero hard cuts. And each one carries <b>~19 Hindi words of two-person back-and-forth.</b> This is a real, working shape for an 8s clip, and it is denser than the rule we wrote for ourselves.</p>
+<div class="tags"><span class="tag good">4 clips = whole video</span><span class="tag good">19 words / 8s clip</span><span class="tag">dips to black</span><span class="tag bad">no moral</span></div>
+</div>
+
+<div class="vid">
+<h3>v2 — Onion-seller romance <span class="tag good">has a moral</span></h3>
+<p class="meta">SN Story AI · <b>38.9s</b> · ~13 shots · <b>3.0s</b> avg · 65 words · 69% speech</p>
+<div class="shots" style="grid-template-columns:1fr 1fr">
+<figure><img src="../assets/fb/v2-cu.jpg" alt="Onion-headed shopkeeper and karela-headed customer close-up"><figcaption><b>5s</b> — Pyaaz × Karela.</figcaption></figure>
+<figure><img src="../assets/fb/v2-rose.jpg" alt="Rose close-up between the two characters"><figcaption><b>22s</b> — the rose beat.</figcaption></figure>
+</div>
+<div class="wrapscroll"><table class="beat">
+<thead><tr><th class="t">Time</th><th>What happens</th></tr></thead><tbody>
+<tr><td class="t">0–3s</td><td>Market wide. <b>First word only at 2.93s</b> — the slowest open in the set.</td></tr>
+<tr><td class="t">3–16s</td><td><span class="hi">“एक किलो प्याज़ देना।” / “और कुछ चाहिए?” / “हाँ, आपकी एक मुस्कान भी।”</span><span class="en">“A kilo of onions.” / “Anything else?” / “Yes — your smile too.”</span> She notices he comes every day.</td></tr>
+<tr><td class="t">16–27s</td><td>He confesses. Rose. <span class="hi">“अब ये दुकान हमारी ख़ुशियों की दुकान होगी… और तुम मेरी पूरी दुनिया।”</span></td></tr>
+<tr><td class="t">27–38.9s</td><td>Moral, spoken <b>twice</b>: <span class="hi">“सच्चा प्यार हमेशा जीतता है।”</span><span class="en">“True love always wins.”</span> Festival lights.</td></tr>
+</tbody></table></div>
+<p style="color:var(--muted);font-size:13.4px;line-height:1.65;margin-top:12px">The weakest of the five and the only one with a stated moral — those two facts sitting together is the uncomfortable part. It also has the <b>slowest open (2.9s)</b> and the <b>lowest speech density (69%)</b>. If any video in this set is a cautionary example rather than a model, it is this one. (Caveat: I have no view counts — see Open questions.)</p>
+<div class="tags"><span class="tag bad">first word at 2.9s</span><span class="tag bad">lowest speech density</span><span class="tag good">explicit moral</span><span class="tag bad">AI sparkle under “Like”</span></div>
+</div>
+</div>
+</section>
+
+<!-- ─────────────────────────  ART STYLE  ───────────────────────── -->
+<section id="style">
+<h2>The art style — we already picked right, with one correction</h2>
+<p class="sub">All five run the same construction. It is the Story-12 style, not the legacy cute full-veg style.</p>
+
+<div class="note good"><b>Confirmed:</b> photoreal-ish <b>vegetable head on a normal human body in Indian dress</b>. Every single character, all five videos, three different pages. The legacy “whole body is a vegetable” look from Stories 1–11 appears <b>nowhere</b>. Our 2026-07-13 art-style switch was correct.</div>
+
+<div class="note warn"><b>Correction to our render lock:</b> our prompts say the head is <em>“a single real vegetable”</em> and nothing else. The winners add <b>human hair on top of the vegetable head</b>, and give the female characters <b>a human face with the vegetable forming the crown/skull</b> — look at Mooli in v4: white radish skull with green leaves, black human hair, human eyes, human mouth, human skin on the cheeks. Pure “head IS a vegetable” reads as a mask; <b>their hybrid reads as a character.</b> This is the difference between uncanny and lovable and we should adopt it.</div>
+
+<ul class="q">
+<li><b>Cast size:</b> 2–4 characters. Never more. v4 works with two.</li>
+<li><b>Wardrobe:</b> always real Indian clothing — salwar/saree/kurta on women, shirt+jeans or kurta on men. The clothes carry the class signal (rich = gold + silk; poor = plain cotton).</li>
+<li><b>Backgrounds:</b> one location per act, heavily dressed — village haveli courtyard, sabzi mandi, dhaba, mansion. Never empty.</li>
+<li><b>The gimmick layer:</b> v3 stacks the chrome/silver-people trend <em>on top of</em> the veg-head style. Two trends in one video. Worth trying.</li>
+</ul>
+</section>
+
+<!-- ─────────────────────────  SERIALISATION  ───────────────────────── -->
+<section id="serial">
+<h2>The engine: serialisation + comment bait</h2>
+
+<p style="color:var(--muted);line-height:1.7">This is the single biggest thing in the teardown, and it resolves the tension between “Facebook wants short” and “we have ten-minute stories.”</p>
+
+<div class="note"><b>v1 is literally labelled “PART 1” and ends 63 seconds later on “COMMENT FOR NEXT PART” with nothing resolved.</b> They are not writing short stories. They are writing the same long saas–bahu melodrama we write — and shipping it as a serial of ~60-second vertical parts, each one ending on an open wound, each one asking for a comment to unlock the next.</div>
+
+<p style="color:var(--muted);line-height:1.7">Why this is the right machine, not just a trick:</p>
+<ul class="q">
+<li><b>It converts our existing asset.</b> A 10–11 minute Story becomes <b>8–10 Facebook parts</b> — we do not need new scripts to start, we need a different edit.</li>
+<li><b>Comments are the ask, and comments are the cheapest ranking signal to move.</b> “Comment for next part” is a far lower-friction ask than a like or a follow, and it is self-justifying: the viewer wants the next part.</li>
+<li><b>It builds the only thing a cold page lacks — return viewers.</b> Someone who comments on Part 3 comes back for Part 4.</li>
+<li><b>It fixes our cold-start problem</b> (3–4 uploads in 2 months). One story = 8–10 posts. Cadence solves itself.</li>
+</ul>
+
+<div class="note warn"><b>What I have NOT verified:</b> whether these “comment for next part” pages actually get the traction, or whether Facebook rewards it. Engagement-bait is explicitly a <em>demotion</em> category in Meta's Community Standards when it is pure “comment to win” spam. A genuine serial cliffhanger is different in kind from “COMMENT YES IF YOU LOVE YOUR MOTHER” — but it is close enough that I would not bet the page on it. <b>See Open questions before we commit.</b></div>
+</section>
+
+<!-- ─────────────────────────  WHAT WE CHANGE  ───────────────────────── -->
+<section id="change">
+<h2>What this changes in our build</h2>
+
+<ul class="chg">
+<li><b>Line length ceiling: 9 words → ~6 words.</b>
+<span class="was">Was: “no dialogue line over 9 Hindi words, max 2 lines per clip, ≤16 words per clip.”</span>
+<span class="now">Now: lines of 3–6 words, 4–6 of them per 8s clip, ~15–20 words per clip — a real two-person exchange inside one continuous take. Measured off v4.</span></li>
+
+<li><b>The 8s-vs-10s question is answered — it's 8s.</b>
+<span class="was">Was: open risk in CLAUDE.md; Shilpi chose 10s timing; we flagged that line 2 at [7-10s] might get cut.</span>
+<span class="now">Now: v4 is four clean ~7.8s takes. The field is shipping 8-second clips. <b>This still needs Shilpi's render test to confirm for our pipeline</b>, but the competitive evidence says 8s.</span></li>
+
+<li><b>Add human hair + human facial features to the veg head.</b>
+<span class="was">Was: “whose entire head IS a single real X”, nothing else.</span>
+<span class="now">Now: veg forms the skull/crown; human hair, human eyes/mouth, human skin tone on the cheeks. Reads as a character rather than a mask.</span></li>
+
+<li><b>Kill the “every story ends with a moral” promise.</b>
+<span class="was">Was: our FB page bio says <em>“Har kahani ek moral ke saath khatam hoti hai.”</em></span>
+<span class="now">Now: 4 of 5 winners have no moral. The ending's job is a <b>reaction</b> — cliffhanger, comment, tag, or an unpunished villain. Bio needs rewriting.</span></li>
+
+<li><b>Cut the intro to zero and open on the wound.</b>
+<span class="now">First frame = the conflict already in progress. First spoken word before 0.5s. No establishing shot, no title card, no logo sting.</span></li>
+
+<li><b>Never leave a silence gap.</b>
+<span class="now">Continuous music bed under 100% of runtime; no gap over 0.6s. Speech should cover 70%+ of the video.</span></li>
+
+<li><b>Cover the bottom-right corner on every export.</b>
+<span class="now">Our animated badge already exists for this. Two of the five competitors are covering a generator watermark badly and getting away with it — but Meta names visible third-party watermarks as an unoriginal-content trigger carrying a <b>90-day demonetisation</b>. Cover it cleanly, every time.</span></li>
+</ul>
+</section>
+
+<!-- ─────────────────────────  OPEN  ───────────────────────── -->
+<section id="open">
+<h2>Open — I need these before we commit</h2>
+
+<ol class="q">
+<li><b>Which page is which, and how much traction?</b> The files are stripped of all metadata. I can see three distinct pages but I have <b>no page URLs, no view counts, no like/comment counts, no post dates.</b> “Gaining good traction” is doing a lot of work here — v2 could be a 400-view dud for all I can measure. <b>Send the post links</b> (or the page names + a screenshot of the view counts) and I will re-rank this whole teardown by what actually performed.</li>
+<li><b>Is the “COMMENT FOR NEXT PART” page actually winning</b>, or is it just the loudest? This is the one finding I want to build our whole FB format on, and it is the one I can least verify from the file alone.</li>
+<li><b>Do we go Muslim-family framing</b> (v1: अम्मी / ख़ुदा / बेगम)? It is a deliberate, large-audience choice and we have never made it. Your call — I won't pick a religious frame for the brand unilaterally.</li>
+<li><b>Do we serialise Story 10 or 12 as the first FB run</b>, or write short-form-native scripts from scratch? Serialising is far cheaper — we already have the renders.</li>
+</ol>
+</section>
+
+<footer class="foot"><div class="wrap">
+Veggie Toons TV · Facebook competitor teardown · 5 videos measured 14 July 2026 · <a href="../index.html">🥔 Studio</a> · <a href="meta-launch.html">📘 Meta setup</a> · <a href="../watermark.html">🏷️ Watermark</a>
+</div></footer>
+
+</main>
+</body></html>
