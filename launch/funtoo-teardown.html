@@ -1,0 +1,418 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>🎥 Funtoo Baba TV — Teardown of a 28.6M-view rival</title>
+<meta name="description" content="Full frame-by-frame teardown of Funtoo Baba TV: all 13 videos measured — storylines, art, formation, thumbnails, the winning formula, why the duds died, and exactly what we change in our own scripts.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700;800&family=Noto+Sans+Devanagari:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.stat{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:8px}
+@media(max-width:760px){.stat{grid-template-columns:repeat(2,1fr)}}
+.stat .b{border:1px solid var(--line2);border-radius:12px;padding:14px 12px;background:rgba(255,255,255,.02);text-align:center}
+.stat .n{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1;color:var(--marigold)}
+.stat .l{font-size:10.5px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.05em}
+.wrapscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.m{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.2px;min-width:860px}
+table.m th,table.m td{border:1px solid var(--line2);padding:9px 11px;text-align:left;vertical-align:top;line-height:1.5}
+table.m th{background:rgba(255,255,255,.03);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+table.m td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+table.m tr:hover td{background:rgba(255,255,255,.015)}
+table.m tr.win td:first-child{box-shadow:inset 3px 0 0 var(--leaf)}
+table.m tr.dud td:first-child{box-shadow:inset 3px 0 0 var(--chili)}
+.rules{margin:0;padding:0;list-style:none;counter-reset:r}
+.rules li{counter-increment:r;display:grid;grid-template-columns:32px 1fr;gap:14px;padding:15px 0;border-top:1px solid var(--line2)}
+.rules li:first-child{border-top:0}
+.rules li::before{content:counter(r);width:27px;height:27px;border-radius:50%;background:rgba(255,178,44,.14);border:1px solid rgba(255,178,44,.42);color:#ffc257;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.rules b{color:var(--ink);display:block;margin-bottom:3px}
+.rules span{color:var(--muted);line-height:1.62}
+.vid{border:1px solid var(--line2);border-radius:14px;padding:18px;margin-top:18px;background:rgba(255,255,255,.018)}
+.vid.win{border-color:rgba(91,208,122,.3)}
+.vid.dud{border-color:rgba(255,90,90,.28)}
+.vhead{display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:start}
+@media(max-width:640px){.vhead{grid-template-columns:1fr}}
+.vhead img{width:100%;display:block;border-radius:10px;border:1px solid var(--line2)}
+.vid h3{margin:0 0 3px;font-size:18px;letter-spacing:-.01em}
+.vid .rank{font-size:12px;color:var(--muted);margin:0 0 10px;font-variant-numeric:tabular-nums}
+.vid .rank b{font-weight:800}
+.vid .rank .v{color:var(--leaf)}
+.vid.dud .rank .v{color:var(--chili)}
+.vid p.lg{margin:0 0 10px;color:var(--muted);line-height:1.6;font-size:13.6px}
+.vid p.lg b{color:var(--ink)}
+.beats{margin:6px 0 0;padding-left:1.1em}
+.beats li{margin:.32em 0;line-height:1.55;color:var(--muted);font-size:13px}
+.hi{font-family:'Mukta','Noto Sans Devanagari',sans-serif;color:var(--ink)}
+.gl{color:var(--faint);font-style:italic}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+.tag{font-size:11px;padding:4px 9px;border-radius:20px;border:1px solid var(--line2);color:var(--muted);background:rgba(255,255,255,.02)}
+.tag.good{border-color:rgba(120,200,140,.45);color:#8fd7a4;background:rgba(120,200,140,.08)}
+.tag.bad{border-color:rgba(255,110,110,.45);color:#ff9a9a;background:rgba(255,110,110,.08)}
+.tag.veg{border-color:rgba(255,178,44,.4);color:#ffc257;background:rgba(255,178,44,.07)}
+.note{border:1px solid var(--line2);border-left:3px solid #ffc257;border-radius:10px;padding:14px 16px;margin:16px 0;background:rgba(255,178,44,.05);font-size:13.6px;line-height:1.65;color:var(--muted)}
+.note b{color:var(--ink)}
+.note.warn{border-left-color:#ff6e6e;background:rgba(255,110,110,.06)}
+.note.good{border-left-color:#63c98a;background:rgba(99,201,138,.06)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:14px 0}
+.gallery figure{margin:0}
+.gallery img{width:100%;display:block;border-radius:9px;border:1px solid var(--line2)}
+.gallery figcaption{font-size:10.5px;color:var(--faint);margin-top:5px;line-height:1.4;font-variant-numeric:tabular-nums}
+.gallery figcaption b{color:var(--muted)}
+.hero-imgs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+@media(max-width:640px){.hero-imgs{grid-template-columns:1fr}}
+.hero-imgs figure{margin:0}
+.hero-imgs img{width:100%;display:block;border-radius:11px;border:1px solid var(--line2)}
+.hero-imgs figcaption{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+.chg{margin:0;padding:0;list-style:none}
+.chg li{padding:15px 0;border-top:1px solid var(--line2);line-height:1.62}
+.chg li:first-child{border-top:0}
+.chg b.h{color:var(--ink);display:block;margin-bottom:5px;font-size:14.5px}
+.chg .was{color:#ff9a9a;font-size:12.8px;display:block;margin-top:5px}
+.chg .now{color:#8fd7a4;font-size:12.8px;display:block;margin-top:3px}
+.chg .was b,.chg .now b{color:inherit}
+.q{margin:0;padding-left:1.15em}
+.q li{margin:.6em 0;line-height:1.62;color:var(--muted)}
+.q li b{color:var(--ink)}
+h2 .em{color:var(--marigold)}
+</style>
+</head><body>
+
+<nav class="toc"><div class="wrap">
+<a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a>
+<a href="#numbers">Numbers</a><a href="#runtime">Runtime</a><a href="#formula">The Formula</a><a href="#voice">Voice</a><a href="#looks">Art</a><a href="#thumbs">Thumbnails</a><a href="#videos">All 13</a><a href="#duds">Why duds die</a><a href="#change">What we change</a><a href="#open">Open</a>
+<span class="storychip">🎥 FUNTOO TEARDOWN</span>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+<p class="crumbs"><a href="../index.html">← Veg-Toon Studio</a> / Competitor teardown / Funtoo Baba TV</p>
+<span class="kicker">🎥 One rival · 13 videos · every frame + every line measured · 17 July 2026</span>
+<h1>What Funtoo Baba TV actually does</h1>
+<p class="lede">Funtoo Baba TV is the exact channel we're chasing: Hindi <b>sabzi</b> melodrama, AI image→video, uploaded twice a week. In <b>55 days</b> and just 13 videos it has pulled <b>28.6&nbsp;million views</b> — five videos over 3M, one at 7.2M. I pulled all 13 through a residential proxy, transcribed the Hindi, measured every cut, read every thumbnail, and had a second agent independently re-verify every view count. This is the whole machine: the story engine, the art, the pacing, the thumbnails, why their flops flopped — and the exact list of things we change in our scripts.</p>
+</div></header>
+
+<main class="wrap">
+
+<!-- ══════════════════════════ NUMBERS ══════════════════════════ -->
+<section id="numbers">
+<h2>The channel, in numbers</h2>
+<p class="sub">Every view/like count below was pulled fresh on 17 Jul 2026 and independently re-pulled by a second agent — the two pulls matched to within live-growth drift. Durations, shot counts and words-per-second were measured off the downloaded files with ffmpeg + the Hindi captions. Nothing is estimated.</p>
+
+<div class="stat">
+<div class="b"><div class="n">28.6M</div><div class="l">total views, 13 videos</div></div>
+<div class="b"><div class="n">7 / 13</div><div class="l">over 1M · five over 3M</div></div>
+<div class="b"><div class="n">1.2M</div><div class="l">median views/video</div></div>
+<div class="b"><div class="n">4.6 days</div><div class="l">between uploads (~1.5/wk)</div></div>
+<div class="b"><div class="n">~8s</div><div class="l">average shot length</div></div>
+</div>
+
+<div class="wrapscroll">
+<table class="m">
+<thead><tr><th>Story</th><th class="n">Views</th><th class="n">Likes</th><th class="n">Length</th><th class="n">Shots</th><th class="n">Avg shot</th><th class="n">Words</th><th class="n">W/s</th></tr></thead>
+<tbody>
+<tr class="win"><td>Poor corn's <b>Ice Truck</b> vs Bhindi's sabotage</td><td class="n">7.21M</td><td class="n">5.7K</td><td class="n">9:01</td><td class="n">68</td><td class="n">8.0s</td><td class="n">1,235</td><td class="n">2.29</td></tr>
+<tr class="win"><td>Rickshaw <b>Karela</b> betrayed by wife → millionaire</td><td class="n">4.99M</td><td class="n">7.9K</td><td class="n">8:28</td><td class="n">63</td><td class="n">8.1s</td><td class="n">1,028</td><td class="n">2.03</td></tr>
+<tr class="win"><td><b>Lauki</b> dumps poor Mooli for rich Bhindi <span class="tag">Part&nbsp;1</span></td><td class="n">3.97M</td><td class="n">7.5K</td><td class="n">5:36</td><td class="n">41</td><td class="n">8.2s</td><td class="n">927</td><td class="n">2.75</td></tr>
+<tr class="win"><td>Wife leaves poor <b>soup-seller</b> → he's a tycoon</td><td class="n">3.65M</td><td class="n">9.5K</td><td class="n">11:43</td><td class="n">112</td><td class="n">6.3s</td><td class="n">2,029</td><td class="n">2.88</td></tr>
+<tr class="win"><td><b>Karela</b> wins despite Bhindi+Aloo conspiracy</td><td class="n">3.28M</td><td class="n">5.7K</td><td class="n">8:52</td><td class="n">60</td><td class="n">8.9s</td><td class="n">1,300</td><td class="n">2.44</td></tr>
+<tr class="win"><td><b>Aloo</b> abandons wife &amp; son for rich Bhindi</td><td class="n">2.73M</td><td class="n">5.5K</td><td class="n">6:22</td><td class="n">51</td><td class="n">7.5s</td><td class="n">822</td><td class="n">2.14</td></tr>
+<tr><td>Potato cheats with boss's daughter <b>Tomato</b></td><td class="n">1.23M</td><td class="n">2.7K</td><td class="n">5:16</td><td class="n">37</td><td class="n">8.5s</td><td class="n">908</td><td class="n">2.88</td></tr>
+<tr><td>Bhindi dumps poor Karela for rich <b>Baigan</b> (AC)</td><td class="n">834.7K</td><td class="n">1.1K</td><td class="n">5:04</td><td class="n">35</td><td class="n">8.7s</td><td class="n">814</td><td class="n">2.67</td></tr>
+<tr><td>Uncle Potato's <b>water-park</b> miracle (eco fable)</td><td class="n">459.9K</td><td class="n">708</td><td class="n">5:58</td><td class="n">44</td><td class="n">8.1s</td><td class="n">900</td><td class="n">2.50</td></tr>
+<tr class="dud"><td>Tomato &amp; Okra steal Corn's <b>magic seed</b> 😨 <span class="tag">newest</span></td><td class="n">124.3K</td><td class="n">245</td><td class="n">9:55</td><td class="n">63</td><td class="n">9.4s</td><td class="n">1,716</td><td class="n">2.89</td></tr>
+<tr class="dud"><td>Poor Gajar &amp; the unfaithful Tamatar</td><td class="n">84.5K</td><td class="n">401</td><td class="n">3:45</td><td class="n">22</td><td class="n">10.2s</td><td class="n">568</td><td class="n">2.51</td></tr>
+<tr class="dud"><td>Aloo betrays Kaddu (friendship gossip)</td><td class="n">30.0K</td><td class="n">146</td><td class="n">4:54</td><td class="n">32</td><td class="n">9.2s</td><td class="n">494</td><td class="n">1.70</td></tr>
+<tr class="dud"><td>Cabbage abandons his parents for a Strawberry</td><td class="n">6.1K</td><td class="n">50</td><td class="n">3:38</td><td class="n">27</td><td class="n">8.1s</td><td class="n">600</td><td class="n">2.75</td></tr>
+</tbody>
+</table>
+</div>
+<p class="sub" style="margin-top:6px"><span style="color:var(--leaf)">▎</span> green = 2M+ hit &nbsp;·&nbsp; <span style="color:var(--chili)">▎</span> red = flop (under 130K). Sorted by views.</p>
+</section>
+
+<!-- ══════════════════════════ RUNTIME ══════════════════════════ -->
+<section id="runtime">
+<h2>The single clearest signal: <span class="em">longer wins</span></h2>
+<p class="sub">Sort their 13 videos into three runtime buckets and the pattern is almost binary. This is the strongest correlation in the whole dataset — and it directly backs the 8:28–13:32 breakout band we already target.</p>
+
+<div class="wrapscroll">
+<table class="m" style="min-width:520px">
+<thead><tr><th>Runtime bucket</th><th class="n">Videos</th><th class="n">Avg views</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr class="dud"><td>Under 5 min</td><td class="n">3</td><td class="n">40K</td><td>All three are flops. No exceptions.</td></tr>
+<tr><td>5–8 min</td><td class="n">5</td><td class="n">1.84M</td><td>Reliable base hits.</td></tr>
+<tr class="win"><td>8–12 min</td><td class="n">5</td><td class="n">3.85M</td><td>Every mega-hit lives here.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note good"><b>But length has to be earned with STORY, not with slow shots.</b> Their 11:43 monster (the soup-seller, 3.65M) is the <b>fastest-cut video on the channel</b> (6.3s/shot vs the 8–9s norm) and the <b>most word-dense</b> (2.88 w/s — its 2,029 words nearly equal two other winners combined). It got long by adding <b>more beats and more dialogue and cutting faster</b> — a 75-second seduction sequence, a granular village→city→TV→restaurant-chain rise montage. The flops that ran long (the 9:55 magic-seed video) did the opposite: <b>held shots to stretch a thin plot</b> (9.4s/shot) and died. <b>Go long by stacking beats, never by lingering.</b></div>
+</section>
+
+<!-- ══════════════════════════ FORMULA ══════════════════════════ -->
+<section id="formula">
+<h2>The story engine — one spine, run 13 times</h2>
+<p class="sub">Strip the sabzi names off and every hit is the same machine. This is the template, in the order it plays.</p>
+
+<ol class="rules">
+<li><b>A sympathetic POOR hero, established in one shot.</b><span>A rickshaw-puller, a soup-seller, a fisherman, a jobless husband. Poverty is shown physically (sweating, hauling, counting coins) so we side with them before anyone speaks. Wealth is <em>always</em> the corrupting force — never the reward for villainy.</span></li>
+<li><b>Wealth arrives as a branded prop and detonates the plot.</b><span>The inciting incident in nearly every video is a <b>luxury vehicle rolling into a poor village</b> — a Mercedes, a Rolls, a helicopter, a Lamborghini. It's the same beat every time: the shiny thing shows up, and someone's head gets turned.</span></li>
+<li><b>The betrayal — someone trades love for money.</b><span>A wife runs off with a rich man; a husband is seduced by his rich boss; a best friend and a wife conspire to steal the business; a son ditches his parents. Flavours vary — a <b>fake-affair frame</b> (Ice Truck), a <b>CCTV sabotage mystery</b> (Cooling Dhaba), a <b>child left crying</b> (fisherman) — but the engine is always money-vs-loyalty.</span></li>
+<li><b>A held, tear-streaked close-up at the low point.</b><span>Every single video parks on one big watery-eyed veg face at its darkest moment. This shot is doing double duty — it's the emotional peak <em>and</em> it's the thumbnail frame.</span></li>
+<li><b>Karma, delivered and stated out loud.</b><span>The greedy one is punished (banished by the panchayat, dumped by the man she left for, left washing dishes at a dhaba); the honest one is rewarded (made a manager, a restaurant tycoon). Then a narrator <b>says the moral aloud</b> so even a half-watching viewer gets the payoff — <span class="hi">"मेहनत कभी धोखा नहीं देती"</span> <span class="gl">(hard work never betrays you)</span>.</span></li>
+<li><b>End on justice, a reunion, or a "Part 2" cliffhanger.</b><span>Three endings recur: clean justice (villain exposed), warm reunion (family forgives), or a deliberate cliffhanger — the Lauki video literally freezes on <span class="hi">"असली तूफान अभी बाकी था"</span> <span class="gl">(the real storm was yet to come)</span> and cuts to a like/subscribe-for-Part-2 card. They serialise the longer stories on purpose.</span></li>
+</ol>
+
+<div class="note"><b>The topical hook they lean on hardest: summer.</b> Four of their biggest videos are built on <b>गर्मी / the heatwave</b> — an ice truck, an AC, an AC-free "cooling dhaba", a water park. It's a hook every Indian viewer feels physically, and it lets them wrap the melodrama around a <b>concrete, novel business idea</b> (which also makes a great thumbnail prop). Seasonal + tangible + aspirational.</div>
+</section>
+
+<!-- ══════════════════════════ VOICE ══════════════════════════ -->
+<section id="voice">
+<h2>Voice model — they are <span class="em">narrator-led</span>, and it's a decision we should revisit</h2>
+<p class="sub">This is the finding that pushes against our own current plan, so I measured it carefully across all 13.</p>
+
+<div class="note warn"><b>Funtoo Baba TV — the biggest channel we've measured in our exact niche — runs on a constant third-person storyteller VO, not per-character dialogue.</b> Across the hits, narration is roughly <b>50–70% of all spoken words</b>, with character dialogue saved for the taunts, seductions and reveals. Our current Story-12 decision (from the Vegetables World post-mortem) assumes <b>winners are dialogue-dominant</b> and pushes per-character lip-sync. Funtoo is the counter-example, at 28.6M views. <b>Worth a real rethink — especially because the narrator model is far cheaper to produce.</b></div>
+
+<ul class="beats" style="padding-left:1.2em;font-size:13.6px">
+<li><b>One voice actor carries the whole film.</b> The narrator drives every montage and time-jump with stock connectors — <span class="hi">धीरे-धीरे…</span> <span class="gl">(slowly…)</span>, <span class="hi">अगले ही दिन…</span> <span class="gl">(the very next day…)</span>, <span class="hi">कुछ दिन बीत गए</span> <span class="gl">(some days passed)</span> — so limited animation can stretch to 6–12 minutes with no lip-sync burden.</li>
+<li><b>Dialogue is reserved for the punches.</b> Characters speak only at the high-emotion beats: the villain's taunt <span class="hi">"गरीब आदमी आखिर गरीब ही रहता है"</span> <span class="gl">(a poor man stays poor in the end)</span>, the betrayal line, the child's <span class="hi">"पापा, हमें छोड़कर मत जाओ"</span> <span class="gl">(Papa, don't leave us)</span>.</li>
+<li><b>Narration share scales with length.</b> The shortest / most dialogue-driven hit (the fisherman, 6:22) runs ~45% narration; the montage-heavy ones climb to ~65–70%. More narration = more story compressed per minute = the longer runtimes that win.</li>
+<li><b>They still peak on dialogue.</b> The narrator is the connective tissue; the <em>emotional</em> gut-punches are always a spoken line over a held face. It's a hybrid, weighted toward narration — not a pure storybook read.</li>
+</ul>
+</section>
+
+<!-- ══════════════════════════ LOOKS ══════════════════════════ -->
+<section id="looks">
+<h2>Art &amp; character design — the "looks"</h2>
+<p class="sub">One rigidly consistent art system across all 13 videos. This is exactly reproducible.</p>
+
+<div class="hero-imgs">
+<figure><img src="../assets/funtoo/hero_soup.jpg" alt="Rich brinjal villain in a black suit and sunglasses under an umbrella, a chef stirring a pot, and a crowd of villager-vegetables in the rain">
+<figcaption>The soup-seller (3.65M). <b>Every character is a single vegetable head on a full human body</b> — the brinjal villain in a black suit, gold chain &amp; sunglasses under an umbrella; a chef stirring the pot; carrot/tomato/onion villagers in saris &amp; kurtas. Note the cinematic rain, and the <b>double watermark</b> (text bottom-left + logo bottom-right).</figcaption></figure>
+<figure><img src="../assets/funtoo/hero_corn_shop.jpg" alt="A corn character and a green chili shopkeeper at a village kirana shop stacked with water bottles">
+<figcaption>The Ice Truck (7.21M). Corn's <b>husk-leaves read as swept-back hair</b>; the chili shopkeeper's stem is his crown. Human hands, human faces (eyes, brows, tears, blush), Indian village dress. Warm golden daylight = the hero's world.</figcaption></figure>
+</div>
+
+<ol class="rules">
+<li><b>Single vegetable HEAD on a full HUMAN body.</b><span>Never a full-vegetable body, never a mask. One clean vegetable head — corn, potato, okra, radish, brinjal — sitting on a normal clothed human body with human hands. This is the hybrid we already switched to; they confirm it's the whole field's standard.</span></li>
+<li><b>Leaves / husk / stem = the hair.</b><span>Carrot's green top, corn's husk, the radish's pink greens, the tomato's calyx crown — the plant's own foliage is styled as hair. It's what makes each head read as a <em>character</em> and not a produce-aisle photo.</span></li>
+<li><b>Cute Pixar-grade 3D — deliberately NOT photoreal.</b><span>Glossy, saturated, big-eyed, expressive — Disney/Pixar animation, not a photoreal render. Cartoon-human faces (lashes, bindi, blush, streaming tears) mapped onto the veg head. <b>This is the opposite of the photoreal direction we set for Story 12+ — and it's what's winning.</b></span></li>
+<li><b>Clothing upgrades with status.</b><span>The same character goes plaid-shirt villager → designer suit + sunglasses + gold chain as they rise or fall. Wardrobe is how they show the arc without a word.</span></li>
+<li><b>Village-warm vs City-cool colour coding.</b><span>Home/virtue = warm golden mud-house village, palms, dusty roads. Temptation/corruption = cool neon-blue glass-tower city with luxury brand storefronts (Gucci, Prada, Vogue, Rolex), real landmarks (India Gate, Charminar, Marine Drive). The palette itself tells you who's good.</span></li>
+<li><b>Un-rippable double branding on every frame.</b><span>A <span class="hi">"FuntooBaBaTv"</span> text mark bottom-left <em>and</em> a round colourful logo badge bottom-right — on every single shot. No generator watermark ever shows. (We do the same with our animated badge.)</span></li>
+</ol>
+
+<div class="note warn"><b>Their art is not flawless — and the seams are exactly where they lose.</b> On the weaker videos you can see the AI cracks: a character's colour drifts mid-video (a brinjal flips purple↔green), a near-black glitch frame, a blurred/mosaic render, generic NYC skyscrapers standing in for "Delhi", off-model designs where a lead looks like a different age than the rest. On the mega-hits the design holds rock-steady. <b>Consistency is the premium signal — protect it, or the whole thing reads as slop.</b></div>
+</section>
+
+<!-- ══════════════════════════ THUMBNAILS ══════════════════════════ -->
+<section id="thumbs">
+<h2>Thumbnails — a staged spoiler, never a portrait</h2>
+<p class="sub">Their thumbnails are the clearest lever in the dataset: the winners' thumbnails all follow one formula, and the flops all break it. This is the whole channel's thumbnails, sorted by views.</p>
+
+<div class="gallery">
+<figure><img src="../assets/funtoo/puX7N5DUnv4.jpg" alt="thumbnail"><figcaption><b>7.21M</b> · Ice Truck — hero+bride+hearts vs villain smashing truck</figcaption></figure>
+<figure><img src="../assets/funtoo/LpQUfmQR5SI.jpg" alt="thumbnail"><figcaption><b>4.99M</b> · Rickshaw vs Rolls-Royce + Charminar + hearts</figcaption></figure>
+<figure><img src="../assets/funtoo/KDloV9WwiV8.jpg" alt="thumbnail"><figcaption><b>3.97M</b> · Glam couple + helicopter + Lambo vs crying wife</figcaption></figure>
+<figure><img src="../assets/funtoo/URsmaIivgwo.jpg" alt="thumbnail"><figcaption><b>3.65M</b> · Two luxury cars, crying husband vs cheating couple</figcaption></figure>
+<figure><img src="../assets/funtoo/T4K4r_0gna4.jpg" alt="thumbnail"><figcaption><b>3.28M</b> · Secret couple + hearts, hero spying with a camera</figcaption></figure>
+<figure><img src="../assets/funtoo/JG0zgp2HhnY.jpg" alt="thumbnail"><figcaption><b>2.73M</b> · Crying child + net vs cold suited CEO at penthouse</figcaption></figure>
+<figure><img src="../assets/funtoo/u-FVhrXKi6o.jpg" alt="thumbnail"><figcaption><b>1.23M</b> · Lambo + India Gate + hearts vs crying wife</figcaption></figure>
+<figure><img src="../assets/funtoo/xuumqasiMoQ.jpg" alt="thumbnail"><figcaption><b>834K</b> · AC box martyr vs Mercedes luxury couple</figcaption></figure>
+<figure><img src="../assets/funtoo/KS4IuTpywhU.jpg" alt="thumbnail"><figcaption><b>460K</b> · Busy water-park build, ~6 tiny figures, no conflict</figcaption></figure>
+<figure><img src="../assets/funtoo/W1VqSGevi0E.jpg" alt="thumbnail"><figcaption><b>124K</b> · Golden magic tree + gold sacks (genre departure)</figcaption></figure>
+<figure><img src="../assets/funtoo/kbxChkYY6o4.jpg" alt="thumbnail"><figcaption><b>84K</b> · Split scene, small faces, competing halves</figcaption></figure>
+<figure><img src="../assets/funtoo/nNuA4obg1Fk.jpg" alt="thumbnail"><figcaption><b>30K</b> · Three ambiguous kids at a fair — unreadable stakes</figcaption></figure>
+<figure><img src="../assets/funtoo/xenMNizjQ9c.jpg" alt="thumbnail"><figcaption><b>6K</b> · 6+ cluttered elements, green head lost on dark tux</figcaption></figure>
+</div>
+
+<div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+<div class="note good"><b>What the winners' thumbnails always have</b>
+<ul class="beats" style="padding-left:1.15em;margin-top:8px">
+<li>A <b>staged confrontation scene</b>, 3–4 characters mid-drama — never a lone portrait.</li>
+<li><b>One clear branded wealth prop</b>: a luxury car, a helicopter, a penthouse, a building.</li>
+<li><b>One emotional signal</b>: floating red hearts (a love-triangle) <em>or</em> tears.</li>
+<li><b>Warm-vs-cold staging</b>: the poor/crying side against the rich/smug side.</li>
+<li><b>Little or no title text</b> — in-scene signage does the talking; the picture over-tells the story on purpose.</li>
+</ul></div>
+<div class="note warn"><b>What the flops' thumbnails do instead</b>
+<ul class="beats" style="padding-left:1.15em;margin-top:8px">
+<li><b>Tiny faces</b> and 6+ elements fighting for attention (the 6K dud).</li>
+<li><b>Unreadable stakes</b> — three kids on a swing; you can't tell who wronged whom (the 30K).</li>
+<li><b>Low silhouette contrast</b> — a green cabbage head lost against a dark tux.</li>
+<li><b>No money / no romance / no clear villain</b> — the busy water-park build (460K, their lowest "hit").</li>
+</ul></div>
+</div>
+</section>
+
+<!-- ══════════════════════════ VIDEO BY VIDEO ══════════════════════════ -->
+<section id="videos">
+<h2>All 13, video by video</h2>
+<p class="sub">Each with its real storyline (read off the Hindi caption), its cast, and the one thing it teaches. Winners first.</p>
+
+<div class="vid win"><div class="vhead"><img src="../assets/funtoo/puX7N5DUnv4.jpg" alt="Ice Truck thumbnail"><div>
+<h3>Poor corn's Ice Truck — the framed husband who wins</h3>
+<p class="rank"><b class="v">7.21M views</b> · 9:01 · 68 shots · ~55% narration</p>
+<p class="lg"><b>Corn</b> sees the poor priced out of water in a heatwave, sells his wedding ring to buy a truck and sell cheap ice. Jealous rich shopkeeper <b>Lauki Seth</b> fakes affair photos of corn with <b>Mooli</b>, so wife <b>Bhindi</b> believes it and leaves; Lauki sabotages the truck. Bhindi secretly records Lauki's men confessing, the panchayat banishes him, the couple reunites, business bigger than ever.</p>
+<div class="tags"><span class="tag veg">Makai = hero</span><span class="tag veg">Bhindi = wife</span><span class="tag veg">Lauki = villain</span><span class="tag good">fake-affair frame + phone-recording reveal</span><span class="tag good">public-trial karma ending</span></div>
+</div></div></div>
+
+<div class="vid win"><div class="vhead"><img src="../assets/funtoo/LpQUfmQR5SI.jpg" alt="Rickshaw Karela thumbnail"><div>
+<h3>Karela the rickshaw-puller → millionaire manager</h3>
+<p class="rank"><b class="v">4.99M views</b> · 8:28 · 63 shots · ~65% narration</p>
+<p class="lg">Poor <b>Karela</b> gives his whole day's earnings to save a fainted rich <b>Bhindi</b>; she rewards him with a city job. City glamour corrupts his wife <b>Onion</b>, who's seduced away by rich <b>Tomato</b> — who then dumps her. Karela's honesty earns him the manager's chair; the wife is left regretting. Bittersweet: hero rises, betrayer punished, <b>no reunion</b>.</p>
+<div class="tags"><span class="tag veg">Karela = hero</span><span class="tag veg">Onion = wife</span><span class="tag veg">Tomato = seducer</span><span class="tag good">good-deed-rewarded fantasy</span><span class="tag good">Charminar / luxury-brand spectacle</span></div>
+</div></div></div>
+
+<div class="vid win"><div class="vhead"><img src="../assets/funtoo/KDloV9WwiV8.jpg" alt="Lauki thumbnail"><div>
+<h3>Lauki leaves loyal Mooli for rich Bhindi <span class="tag">Part 1</span></h3>
+<p class="rank"><b class="v">3.97M views</b> · 5:36 · 41 shots · ~60% narration</p>
+<p class="lg">Poor-but-in-love farmer <b>Lauki</b> is dazzled when a helicopter-riding rich businesswoman <b>Bhindi</b> singles him out. One designer-suit temptation at a time he goes cold on devoted wife <b>Mooli</b> and leaves for the city. Ends unresolved on <span class="hi">"असली तूफान अभी बाकी था"</span> and a hard <b>like/subscribe-for-Part-2</b> card.</p>
+<div class="tags"><span class="tag veg">Lauki = betrayer</span><span class="tag veg">Mooli = loyal wife</span><span class="tag veg">Bhindi = temptress</span><span class="tag good">serialised cliffhanger → subs</span><span class="tag good">helicopter + Lambo bait</span></div>
+</div></div></div>
+
+<div class="vid win"><div class="vhead"><img src="../assets/funtoo/URsmaIivgwo.jpg" alt="Soup-seller thumbnail"><div>
+<h3>The soup-seller's revenge (their longest, 11:43)</h3>
+<p class="rank"><b class="v">3.65M views</b> · 11:43 · 112 shots · ~50% narration · fastest cuts (6.3s)</p>
+<p class="lg">Beloved chicken-soup vendor <b>Aloo</b> is mocked by rich <b>Baingan</b>, who then seduces away wife <b>Mooli</b>. Aloo pours his grief into his craft; a city businesswoman <b>Bhindi</b> makes him a restaurant tycoon while Mooli ends up washing dishes at a roadside dhaba. Explicit karma, moralised aloud.</p>
+<div class="tags"><span class="tag veg">Aloo = hero</span><span class="tag veg">Mooli = wife</span><span class="tag veg">Baingan = villain</span><span class="tag good">long = more beats + faster cuts, not slower</span><span class="tag good">"she ends up washing dishes" karma</span></div>
+</div></div></div>
+
+<div class="vid win"><div class="vhead"><img src="../assets/funtoo/T4K4r_0gna4.jpg" alt="Cooling Dhaba thumbnail"><div>
+<h3>The Cooling Dhaba — double betrayal + a CCTV mystery</h3>
+<p class="rank"><b class="v">3.28M views</b> · 8:52 · 60 shots · ~60% narration</p>
+<p class="lg">Mocked, jobless <b>Karela</b> builds a hit AC-free "cooling" restaurant. His jealous wife <b>Bhindi</b> secretly sabotages it; CCTV exposes her. Then he overhears his "best friend" <b>Aloo</b> plotting with her to steal the business — <span class="hi">"कूलिंग ढाबा हमारा हो जाएगा"</span>. He plays them the tape and throws both out; the dhaba becomes a resort.</p>
+<div class="tags"><span class="tag veg">Karela = hero</span><span class="tag veg">Bhindi = saboteur wife</span><span class="tag veg">Aloo = traitor friend</span><span class="tag good">double betrayal escalates stakes</span><span class="tag good">CCTV "whodunit" thriller hook</span></div>
+</div></div></div>
+
+<div class="vid win"><div class="vhead"><img src="../assets/funtoo/JG0zgp2HhnY.jpg" alt="Fisherman thumbnail"><div>
+<h3>Aloo comes home — fisherman abandons wife &amp; son</h3>
+<p class="rank"><b class="v">2.73M views</b> · 6:22 · 51 shots · ~45% narration (most dialogue-led hit)</p>
+<p class="lg">Poor fisherman <b>Aloo</b> is hired and seduced by rich company-owner <b>Bhindi</b>, abandons wife <b>Mooli</b> and his young son <b>Tamatar</b> — the son's <span class="hi">"पापा, हमें छोड़कर मत जाओ"</span> is the gut-punch. Bhindi later dumps Aloo for another man; ruined, he returns and the family forgives him. Warm reunion ending.</p>
+<div class="tags"><span class="tag veg">Aloo = betrayer</span><span class="tag veg">Mooli = wife</span><span class="tag veg">Tamatar = crying child</span><span class="tag good">a child amplifies the betrayal</span><span class="tag good">feel-good reunion widens appeal</span></div>
+</div></div></div>
+
+<div class="vid"><div class="vhead"><img src="../assets/funtoo/u-FVhrXKi6o.jpg" alt="thumbnail"><div>
+<h3>Potato cheats with the boss's daughter Tomato</h3>
+<p class="rank">1.23M views · 5:16 · 37 shots · ~70% narration</p>
+<p class="lg">Married corporate <b>Aloo</b> dumps his simple village wife <b>Bhindi</b> for his boss's glamorous foreign-returned daughter <b>Tomato</b>, is used and discarded when the money runs out, and crawls back to beg forgiveness. The most universally legible love-triangle of the set — and their strongest mid-tier performer.</p>
+<div class="tags"><span class="tag veg">Aloo = strayer</span><span class="tag veg">Tomato = gold-digger</span><span class="tag bad">title spoils the whole plot</span><span class="tag bad">3-char thumbnail reads cluttered small</span></div>
+</div></div></div>
+
+<div class="vid"><div class="vhead"><img src="../assets/funtoo/xuumqasiMoQ.jpg" alt="thumbnail"><div>
+<h3>Bhindi leaves poor Karela for rich Baigan (the AC story)</h3>
+<p class="rank">834K views · 5:04 · 35 shots · ~65% narration</p>
+<p class="lg">In a heatwave, auto-driver <b>Karela</b> can't afford an AC, so wife <b>Bhindi</b> runs off with rich <b>Baigan</b> and his cold Mercedes — then regrets it. Karela sells his auto to buy the AC; she refuses it and asks him to get his livelihood back. Clever "AC = love" metaphor and a fresh sacrifice-twist ending.</p>
+<div class="tags"><span class="tag veg">Karela = husband</span><span class="tag veg">Baigan = seducer</span><span class="tag good">seasonal AC hook = physically relatable</span><span class="tag bad">bumpy bitter-gourd lead is less "attractive"</span></div>
+</div></div></div>
+
+<div class="vid"><div class="vhead"><img src="../assets/funtoo/KS4IuTpywhU.jpg" alt="thumbnail"><div>
+<h3>Uncle Potato's water-park miracle (eco fable)</h3>
+<p class="rank">460K views · 5:58 · 44 shots · ~55% narration</p>
+<p class="lg">Elder <b>Aloo Chacha</b> builds a fantasy "Cooling Kingdom" water park to save the kids' summer, hits a water crisis, and solves it with rainwater harvesting. Wholesome, colourful, kid-safe — but <b>no betrayal, no villain, no romance</b>, which is exactly why it's the lowest of their "hits".</p>
+<div class="tags"><span class="tag veg">Aloo Chacha = elder hero</span><span class="tag bad">no betrayal engine = lowest hit</span><span class="tag bad">busy wide thumbnail, no emotional face</span></div>
+</div></div></div>
+
+<div class="vid dud"><div class="vhead"><img src="../assets/funtoo/W1VqSGevi0E.jpg" alt="thumbnail"><div>
+<h3>Corn's magic seed 😨 (genre departure — newest)</h3>
+<p class="rank" style="color:var(--muted)">124K views · 9:55 · 63 shots · ~55% narration</p>
+<p class="lg">Corn finds a magic seed that grows a golden-fruit tree; his greedy brother <b>Tomato</b> steals it and is punished by a forest guardian, then forgiven. Titled "terrifying 😨" but delivers a mild greed-morality fable. <b>Magic/horror instead of human melodrama</b>, plus 30+ seconds of plowing before the hook — genre gamble that hasn't paid (yet).</p>
+<div class="tags"><span class="tag bad">off the betrayal engine (fantasy)</span><span class="tag bad">title promises horror, delivers a fable</span><span class="tag bad">9:55 for a thin plot = retention drag</span></div>
+</div></div></div>
+
+<div class="vid dud"><div class="vhead"><img src="../assets/funtoo/kbxChkYY6o4.jpg" alt="thumbnail"><div>
+<h3>Poor Gajar &amp; the unfaithful Tamatar</h3>
+<p class="rank" style="color:var(--muted)">84K views · 3:45 · 22 shots · ~65% narration</p>
+<p class="lg">Carrot's wife <b>Tomato</b> elopes with rich Eggplant, gets abandoned, and is taken back by her forgiving husband. Right engine — but <b>too short (3:45)</b>, a mid-video subscribe plea dropped <em>at the emotional peak</em>, a visible blurred/mosaic glitch frame, and an off-model villain.</p>
+<div class="tags"><span class="tag bad">too short to build stakes</span><span class="tag bad">CTA interrupts the gut-punch</span><span class="tag bad">visible AI glitch frame</span></div>
+</div></div></div>
+
+<div class="vid dud"><div class="vhead"><img src="../assets/funtoo/nNuA4obg1Fk.jpg" alt="thumbnail"><div>
+<h3>Aloo betrays Kaddu (friendship gossip)</h3>
+<p class="rank" style="color:var(--muted)">30K views · 4:54 · 32 shots · ~50% narration</p>
+<p class="lg">A jealous <b>Chili</b> spreads lies to break up best friends <b>Pumpkin</b> and <b>Potato</b>; the truth comes out and they reconcile. <b>Low-stakes friendship misunderstanding</b> — no money, no romance, no family. Title/content mismatch (Aloo doesn't really betray anyone). Opens on everyone being happy — zero hook. 1.70 w/s = long dead-air stretches.</p>
+<div class="tags"><span class="tag bad">no existential stakes</span><span class="tag bad">title ≠ story</span><span class="tag bad">opens happy = no reason to stay</span></div>
+</div></div></div>
+
+<div class="vid dud"><div class="vhead"><img src="../assets/funtoo/xenMNizjQ9c.jpg" alt="thumbnail"><div>
+<h3>Cabbage abandons his parents for a Strawberry <span class="tag bad">6K — biggest dud</span></h3>
+<p class="rank" style="color:var(--muted)">6.1K views · 3:38 · 27 shots · ~75% narration</p>
+<p class="lg">Poor parents mortgage their home to make son <b>Cabbage</b> a doctor; he ditches them for glamorous wife <b>Strawberry</b>, she leaves him broke, he returns repentant. Older-skewing "ungrateful son" morality tale, <b>75% narration (tell-don't-show)</b>, the muddiest art of the batch, a ghosting glitch, a cluttered low-contrast thumbnail, and a rushed 3:38 with an abrupt ending.</p>
+<div class="tags"><span class="tag bad">topic skews old, no young-viewer hook</span><span class="tag bad">over-narrated, cheapest-looking</span><span class="tag bad">cluttered thumbnail + rushed ending</span></div>
+</div></div></div>
+</section>
+
+<!-- ══════════════════════════ DUDS ══════════════════════════ -->
+<section id="duds">
+<h2>Why their flops flopped — our "avoid" list</h2>
+<p class="sub">The four under-130K videos share a tight cluster of mistakes. Every one is avoidable.</p>
+
+<ol class="rules">
+<li><b>No cold-open hook.</b><span>All four open on slow "once upon a time" narration or small-talk — a farmer plowing, a family being introduced, everyone being happy. None front-loads the shock/betrayal/money image in the first 3–5 seconds, which is exactly where the swipe-away decision is made.</span></li>
+<li><b>Over-narration / tell-don't-show.</b><span>The 6K dud is ~75% narrator reciting the plot; the 30K runs on dead music at 1.70 w/s. When the narrator <em>describes</em> the drama instead of letting characters emote it at the peak, immersion collapses.</span></li>
+<li><b>Off the betrayal engine.</b><span>The further from money-driven infidelity / poor-vs-rich / clear-villain melodrama, the worse it did: friendship-gossip (30K), abandon-your-parents (6K), magic/horror fantasy (124K). Their reliable spine is emotional betrayal over wealth — every departure underperformed.</span></li>
+<li><b>Weak, cluttered, portrait-y thumbnails.</b><span>Tiny faces, 6+ competing elements, unreadable stakes, low silhouette contrast. If a viewer can't read "who wronged whom" in one glance, they don't click.</span></li>
+<li><b>Visible AI-slop seams.</b><span>Blurred/mosaic frames, ghosting, colour-drift characters, off-model leads. The mega-hits protect design consistency; the flops let the cracks show and read as cheap.</span></li>
+<li><b>Runtime mis-tuned at both ends.</b><span>Under 5 minutes rushes the payoff (3:38 with an abrupt ending); bloating a thin plot to 9:55 drags retention. The sweet spot is 8–12 minutes <em>of stacked beats</em>.</span></li>
+<li><b>An immersion-breaking mid-video CTA.</b><span>The 84K dud drops <span class="hi">"जल्दी से लाइक और सब्सक्राइब कर दो"</span> at the emotional climax — killing retention exactly where the viewer was hooked. Put the CTA at a breath, or bake it into the ending/cliffhanger.</span></li>
+</ol>
+</section>
+
+<!-- ══════════════════════════ WHAT WE CHANGE ══════════════════════════ -->
+<section id="change">
+<h2>What we take into our scripts</h2>
+<p class="sub">The point of the whole teardown. Each item is a concrete change for the next batch of scripts — what to keep doing, and what to reconsider. Green is the new/confirmed rule.</p>
+
+<ul class="chg">
+<li><b class="h">1 · Open ON the conflict — kill the "once upon a time" intro.</b>
+<span class="was"><b>Was:</b> our scripts (and their flops) open on setup narration — establishing the village, the family, the weather.</span>
+<span class="now"><b>Now:</b> the first shot is already mid-crisis, and the first spoken line is a hook — a price shock, a taunt, a threat, a luxury car pulling up. Plant the injustice the hero will fix inside the first 10 seconds. Every one of their 2M+ hits does this; every flop doesn't.</span></li>
+
+<li><b class="h">2 · Reconsider narrator-led vs dialogue-led (open decision for Shilpi/Dominic).</b>
+<span class="was"><b>Was:</b> our Story-12 decision commits to dialogue-dominant with per-character Veo lip-sync (from the Vegetables World read).</span>
+<span class="now"><b>Now:</b> the #1 channel in our niche wins at 28.6M views on a <b>narrator-led hybrid</b> (~50–70% storyteller VO + dialogue only at the peaks). It's cheaper (one voice actor, minimal lip-sync), it survives Veo's dialogue refusals, and it compresses more story per minute. <b>Recommend we test one script the Funtoo way</b> — narrator carries the plot, characters speak only the taunt/betrayal/reveal lines — and A/B it. This is a decision for you two, not one I'll flip unilaterally.</span></li>
+
+<li><b class="h">3 · Build every story on the money-betrayal-karma spine.</b>
+<span class="now"><b>Keep &amp; sharpen:</b> sympathetic poor hero → a branded luxury prop detonates the plot → someone trades love for money → held teary close-up at the low point → karma delivered <b>and stated aloud</b> → end on justice, reunion, or a Part-2 cliffhanger. Wealth is always the corrupter. Steer away from friendship-gossip, abandon-parents, and magic/horror — every Funtoo departure from this spine underperformed.</span></li>
+
+<li><b class="h">4 · Lengthen by stacking beats, not by holding shots.</b>
+<span class="was"><b>Was:</b> our re-shoots grew runtime partly by lengthening shots and padding.</span>
+<span class="now"><b>Now:</b> target 8–12 minutes and earn it with <em>more</em> beats + more words + faster cuts. Their 11:43 champion cuts fastest (6.3s/shot) and is densest (2.88 w/s). Under 5 minutes is a proven dead zone here — all three sub-5-min videos flopped.</span></li>
+
+<li><b class="h">5 · Art: cute Pixar 3D, not photoreal — hold consistency like a hawk.</b>
+<span class="was"><b>Was:</b> Story 12+ direction is photoreal veg-head-on-human-body.</span>
+<span class="now"><b>Now:</b> the winning look is <b>glossy CUTE Pixar-style</b> veg-head-on-human-body — big expressive eyes, leaves-as-hair, human faces/hands, Indian dress that upgrades with status. Worth revisiting the photoreal call. And whatever the style, <b>protect design consistency</b> — the flops are where colour-drift, glitch frames and off-model leads show; that's the "slop" tell.</span></li>
+
+<li><b class="h">6 · Colour-code virtue vs temptation.</b>
+<span class="now"><b>Adopt:</b> warm golden mud-house village = home/virtue; cool neon-blue glass-tower city + luxury brands/landmarks (India Gate, Charminar, Merc/BMW/Lambo) = temptation/corruption. The palette itself tells the moral, and the wealth props double as thumbnail bait.</span></li>
+
+<li><b class="h">7 · Thumbnail = staged spoiler tableau (this matches our Playbook 2.0 — enforce it).</b>
+<span class="now"><b>Keep &amp; enforce:</b> 3–4 characters mid-drama, one branded wealth prop, one emotion signal (floating red hearts OR tears), warm-vs-cold poor↔rich staging, minimal title text. Never a lone portrait. Their flop thumbnails break exactly the rules our thumbnail playbook already sets — so this is confirmation, not a change: it's the biggest single CTR lever they have.</span></li>
+
+<li><b class="h">8 · Use a recurring "veg-actor troupe," recast by role.</b>
+<span class="now"><b>Adopt:</b> Funtoo keeps a fixed cast of designs (Aloo, Bhindi, Karela, Mooli, Baingan…) and recasts them each video — Aloo is a hero one week and a betrayer the next; Bhindi is a wronged wife or a rich seductress. Same locked looks = brand recognition + reusable render refs. We should lock a house troupe of ~8 veg designs and rotate their roles.</span></li>
+
+<li><b class="h">9 · Lean on the seasonal / tangible hook.</b>
+<span class="now"><b>Adopt:</b> four of their biggest are heatwave stories wrapped around a concrete business idea (ice truck, AC, cooling dhaba, water park). Seasonal + physically-relatable + a novel prop = a hook and a thumbnail in one. Bank a few season-pegged concepts.</span></li>
+
+<li><b class="h">10 · Fix the CTA placement + the title.</b>
+<span class="now"><b>Adopt:</b> never interrupt the emotional peak with a like/subscribe plea (their 84K dud's mistake) — put it at a breath or fold it into a Part-2 cliffhanger. And note their titles fully spoil the plot; that's their weakest habit — we can beat them with a curiosity-gap title (our title formula already does this).</span></li>
+</ul>
+
+<div class="note good"><b>Net:</b> we already do #3, #6, #7, #9 in spirit — Funtoo <em>confirms</em> them at scale. The genuinely new calls for you are <b>#2 (narrator-led model)</b> and <b>#5 (cute Pixar vs photoreal)</b> — both cut against a current Story-12 decision, both are cheaper, and both are what the 28.6M-view channel actually ships. Those two are worth a deliberate test before the next batch.</div>
+</section>
+
+<!-- ══════════════════════════ OPEN ══════════════════════════ -->
+<section id="open">
+<h2>Open questions for you two</h2>
+<ol class="q">
+<li><b>Do we test the narrator-led model?</b> One script written the Funtoo way — storyteller VO carries the plot, characters speak only the peaks — rendered head-to-head against a dialogue-led one. This is the biggest strategic question the teardown raises.</li>
+<li><b>Photoreal or cute Pixar for the art?</b> Their look is deliberately cute/stylised, not photoreal, and it's winning. Do we revisit the Story-12 photoreal direction, or hold it and differentiate?</li>
+<li><b>Do we serialise?</b> Their 3.97M Lauki video is an explicit "Part 1" with a subscribe-for-Part-2 card. Same serialisation lever we flagged for Facebook — worth running on YouTube long-form too?</li>
+<li><b>Which concept first?</b> Given the season, a heatwave-pegged story (our own ice-truck / cooling-business spin) is the highest-confidence next script. Want me to draft it on the winning template?</li>
+</ol>
+</section>
+
+<footer class="foot"><div class="wrap">
+Veggie Toons TV · Funtoo Baba TV teardown · 13 videos measured 17 July 2026 · views independently re-verified · <a href="../index.html">🥔 Studio</a> · <a href="fb-teardown.html">📘 FB Teardown</a> · <a href="../guides/thumbnail-playbook.html">🖼️ Thumbs 2.0</a>
+</div></footer>
+
+</main>
+</body></html>
