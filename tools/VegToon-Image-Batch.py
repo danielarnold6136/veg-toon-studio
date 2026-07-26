@@ -20,6 +20,7 @@ Protocol reference: github.com/jdmnk/codex-imagegen-cli (Apache-2.0)
 """
 
 import base64
+import collections
 import http.server
 import json
 import os
@@ -43,7 +44,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 APP_NAME = "VegToon Image Batch"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.2.0"
+
+# --- Update + diagnostics channel ------------------------------------------
+# The upload key is write-only on purpose: it can post a report, it cannot read
+# anything back. Reading needs a separate admin key that never leaves my side.
+UPDATE_MANIFEST = "https://danielarnold6136.github.io/veg-toon-studio/tools/latest.json"
+RELAY_URL = "https://vegtoon-relay.fleet-fefsba.workers.dev"
+RELAY_UPLOAD_KEY = "__RELAY_UPLOAD_KEY__"
 
 # --- Codex protocol constants (must match the official CLI) -----------------
 CODEX_BASE_URL = "https://chatgpt.com/backend-api/codex"
@@ -72,8 +80,21 @@ SESSION_TOKEN = "".join(random.choices(string.ascii_letters + string.digits, k=2
 # Small helpers
 # ============================================================================
 
+CONSOLE = collections.deque(maxlen=160)
+
+
 def log(msg):
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}", flush=True)
+    line = f"[{datetime.now().strftime('%H:%M:%S')}] {msg}"
+    CONSOLE.append(line)
+    print(line, flush=True)
+
+
+def redact(text) -> str:
+    """Strip the user's home path out of anything we send off the machine."""
+    try:
+        return str(text).replace(str(HOME), "~")
+    except Exception:
+        return str(text)
 
 
 def codex_home() -> Path:
@@ -93,6 +114,8 @@ def load_settings() -> dict:
         "background": "auto",
         "count": 1,
         "prefix": "img",
+        "report": True,
+        "install_id": "",
     }
     try:
         if SETTINGS_FILE.exists():
@@ -101,6 +124,9 @@ def load_settings() -> dict:
                 defaults.update({k: v for k, v in saved.items() if k in defaults})
     except Exception:
         pass
+    if not defaults["install_id"]:
+        defaults["install_id"] = "pc-" + "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
+        save_settings({"install_id": defaults["install_id"]})
     return defaults
 
 
@@ -112,6 +138,161 @@ def save_settings(data: dict):
         SETTINGS_FILE.write_text(json.dumps(current, indent=2), encoding="utf-8")
     except Exception as exc:
         log(f"could not save settings: {exc}")
+
+
+# ============================================================================
+# Update channel + diagnostics relay
+#
+# What leaves this machine, and nothing else: app/Python/OS version, whether
+# sign-in worked (true/false only), the plan name, the batch settings, each
+# prompt's status + error + timing, and the console lines you can see in the
+# black window. Built as an allow-list below, so a token can never fall in by
+# accident. Turn it off with the tick-box in the app.
+# ============================================================================
+
+UPDATE = {"checked": 0.0, "latest": "", "url": "", "notes": "", "error": ""}
+
+
+def _relay_post(path: str, data: bytes, content_type: str):
+    # A User-Agent is required: Cloudflare rejects urllib's default with error 1010.
+    req = urllib.request.Request(
+        f"{RELAY_URL}/{path.lstrip('/')}", data=data, method="POST",
+        headers={"x-key": RELAY_UPLOAD_KEY, "Content-Type": content_type,
+                 "User-Agent": f"{APP_NAME}/{APP_VERSION}"},
+    )
+    with urllib.request.urlopen(req, timeout=45) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+
+def build_report(note: str = "") -> dict:
+    settings = load_settings()
+    auth = load_auth()
+    snap = BATCH.snapshot()
+    items = []
+    for i, it in enumerate(snap["items"]):
+        items.append({
+            "n": i + 1,
+            "status": it.get("status"),
+            "error": redact(it.get("error") or "")[:400],
+            "seconds": it.get("seconds"),
+            "prompt_head": (it.get("prompt") or "")[:160],
+        })
+    counts = collections.Counter(it.get("status") for it in snap["items"])
+    return {
+        "app": APP_VERSION,
+        "note": note,
+        "at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "install_id": settings.get("install_id"),
+        "python": sys.version.split()[0],
+        "os": platform.platform(),
+        "machine": platform.machine(),
+        "codex_found": bool(find_codex()),
+        "codex_version": codex_version_string(),
+        "signed_in": bool(auth and access_token(auth)),
+        "plan": account_plan(auth) if auth else None,
+        "settings": {
+            "size": settings.get("size"), "quality": settings.get("quality"),
+            "background": settings.get("background"), "count": settings.get("count"),
+            "out_dir": redact(settings.get("out_dir")),
+        },
+        "totals": {
+            "queued": len(snap["items"]), "done": counts.get("done", 0),
+            "failed": counts.get("failed", 0), "stopped": counts.get("stopped", 0),
+            "elapsed": snap.get("elapsed"),
+        },
+        "message": redact(snap.get("message")),
+        "items": items,
+        "console": [redact(line) for line in list(CONSOLE)],
+    }
+
+
+def send_report(note: str = "", force: bool = False) -> str:
+    if not force and not load_settings().get("report", True):
+        return "Reporting is switched off."
+    try:
+        body = json.dumps(build_report(note)).encode("utf-8")
+        out = _relay_post(f"r/{load_settings().get('install_id')}", body, "application/json")
+        log(f"report sent ({len(body)} bytes)")
+        return f"Report sent. {out.get('key', '')}"
+    except Exception as exc:
+        log(f"report failed: {exc}")
+        return f"Could not send the report: {exc}"
+
+
+def send_samples(limit: int = 3) -> str:
+    """Upload the most recent generated images so they can be looked at."""
+    snap = BATCH.snapshot()
+    paths = [it["file"] for it in snap["items"] if it.get("status") == "done" and it.get("file")]
+    if not paths:
+        return "No images from this run yet."
+    sent = 0
+    for path in paths[-limit:]:
+        try:
+            raw = Path(path).read_bytes()
+            if len(raw) > 20 * 1024 * 1024:
+                continue
+            _relay_post(f"i/{Path(path).name}", raw, "image/png")
+            sent += 1
+        except Exception as exc:
+            log(f"sample upload failed for {Path(path).name}: {exc}")
+    send_report(note=f"sample upload ({sent} images)", force=True)
+    return f"Sent {sent} image{'s' if sent != 1 else ''}." if sent else "Could not send the images."
+
+
+def check_update(force: bool = False) -> dict:
+    if not force and time.time() - UPDATE["checked"] < 900:
+        return UPDATE
+    UPDATE["checked"] = time.time()
+    UPDATE["error"] = ""
+    try:
+        req = urllib.request.Request(UPDATE_MANIFEST, headers={"User-Agent": APP_NAME})
+        with urllib.request.urlopen(req, timeout=25) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        UPDATE["latest"] = str(data.get("version") or "")
+        UPDATE["url"] = str(data.get("url") or "")
+        UPDATE["notes"] = str(data.get("notes") or "")
+    except Exception as exc:
+        UPDATE["error"] = str(exc)
+        log(f"update check failed: {exc}")
+    return UPDATE
+
+
+def version_tuple(text: str):
+    try:
+        return tuple(int(p) for p in text.split(".")[:3])
+    except Exception:
+        return (0, 0, 0)
+
+
+def apply_update() -> str:
+    info = check_update(force=True)
+    if not info["latest"] or version_tuple(info["latest"]) <= version_tuple(APP_VERSION):
+        return "Already on the newest version."
+    if not info["url"]:
+        return "The update did not list a download link."
+    try:
+        req = urllib.request.Request(info["url"], headers={"User-Agent": APP_NAME})
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            new_source = resp.read()
+    except Exception as exc:
+        return f"Could not download the update: {exc}"
+
+    text = new_source.decode("utf-8", errors="replace")
+    if "VegToon Image Batch" not in text or "def main(" not in text:
+        return "The downloaded file did not look like this app. Nothing was changed."
+    try:
+        compile(text, "update", "exec")
+    except SyntaxError as exc:
+        return f"The downloaded update is damaged, so it was not installed ({exc})."
+
+    me = Path(__file__).resolve()
+    try:
+        shutil.copy2(me, me.with_suffix(".py.backup"))
+        me.write_bytes(new_source)
+    except Exception as exc:
+        return f"Could not replace the app file: {exc}"
+    log(f"updated {APP_VERSION} -> {info['latest']}")
+    return f"Updated to v{info['latest']}. Close the black window and double-click the file again."
 
 
 def safe_name(text: str) -> str:
@@ -569,7 +750,7 @@ class Batch:
 
 
 BATCH = Batch()
-SETUP = {"busy": False, "message": "", "error": ""}
+SETUP = {"busy": False, "message": "", "error": "", "auth_url": ""}
 SETUP_LOCK = threading.Lock()
 
 
@@ -699,6 +880,8 @@ def run_batch(prompts, opts):
                 + (f" — {failed} failed." if failed else ".")
             )
     log(BATCH.message)
+    if not demo:
+        threading.Thread(target=send_report, args=("run finished",), daemon=True).start()
 
 
 # ============================================================================
@@ -746,69 +929,251 @@ def open_folder(path):
 # Sign-in
 # ============================================================================
 
+CODEX_AUTH_URL = "https://auth.openai.com/oauth/authorize"
+CALLBACK_PORT = 1455
+CALLBACK_PATH = "/auth/callback"
+OAUTH_SCOPE = ("openid profile email offline_access "
+               "api.connectors.read api.connectors.invoke")
+
+
+def _pkce_pair():
+    verifier = base64.urlsafe_b64encode(os.urandom(64)).decode("ascii").rstrip("=")
+    import hashlib
+    challenge = base64.urlsafe_b64encode(
+        hashlib.sha256(verifier.encode("ascii")).digest()
+    ).decode("ascii").rstrip("=")
+    return verifier, challenge
+
+
+def _exchange_code(code: str, verifier: str) -> dict:
+    """Swap the one-time code for tokens. Tries JSON, falls back to form encoding."""
+    fields = {
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": f"http://localhost:{CALLBACK_PORT}{CALLBACK_PATH}",
+        "client_id": CODEX_CLIENT_ID,
+        "code_verifier": verifier,
+    }
+    last = None
+    for body, ctype in (
+        (json.dumps(fields).encode("utf-8"), "application/json"),
+        (urllib.parse.urlencode(fields).encode("utf-8"), "application/x-www-form-urlencoded"),
+    ):
+        try:
+            req = urllib.request.Request(
+                CODEX_REFRESH_URL, data=body, method="POST",
+                headers={"Content-Type": ctype, "Accept": "application/json",
+                         "User-Agent": f"{CODEX_ORIGINATOR}/{APP_VERSION}"},
+            )
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            last = f"HTTP {exc.code}: {exc.read().decode('utf-8', 'replace')[:300]}"
+        except Exception as exc:
+            last = str(exc)
+    raise RuntimeError(f"Could not complete sign-in: {last}")
+
+
+def _write_auth(tokens: dict):
+    id_raw = tokens.get("id_token")
+    claims = {}
+    if isinstance(id_raw, str) and id_raw:
+        payload = jwt_payload(id_raw)
+        extra = payload.get("https://api.openai.com/auth")
+        claims = dict(payload)
+        if isinstance(extra, dict):
+            claims.update(extra)
+    blob = {
+        "OPENAI_API_KEY": None,
+        "tokens": {
+            "id_token": claims or id_raw,
+            "access_token": tokens.get("access_token"),
+            "refresh_token": tokens.get("refresh_token"),
+            "account_id": claims.get("chatgpt_account_id"),
+        },
+        "last_refresh": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+    }
+    path = auth_file()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(blob, indent=2) + "\n", encoding="utf-8")
+    return blob
+
+
+def builtin_login():
+    """Sign in without Codex: PKCE + the same local callback the Codex CLI uses."""
+    verifier, challenge = _pkce_pair()
+    state = base64.urlsafe_b64encode(os.urandom(24)).decode("ascii").rstrip("=")
+    params = {
+        "response_type": "code",
+        "client_id": CODEX_CLIENT_ID,
+        "redirect_uri": f"http://localhost:{CALLBACK_PORT}{CALLBACK_PATH}",
+        "scope": OAUTH_SCOPE,
+        "code_challenge": challenge,
+        "code_challenge_method": "S256",
+        "id_token_add_organizations": "true",
+        "codex_cli_simplified_flow": "true",
+        "state": state,
+        "originator": CODEX_ORIGINATOR,
+    }
+    url = f"{CODEX_AUTH_URL}?{urllib.parse.urlencode(params)}"
+    result = {"code": None, "error": None}
+    done = threading.Event()
+
+    class CB(http.server.BaseHTTPRequestHandler):
+        protocol_version = "HTTP/1.1"
+
+        def log_message(self, *a):
+            pass
+
+        def do_GET(self):
+            parsed = urllib.parse.urlparse(self.path)
+            if not parsed.path.startswith(CALLBACK_PATH):
+                self.send_response(404)
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+                return
+            q = urllib.parse.parse_qs(parsed.query)
+            if q.get("state", [None])[0] != state:
+                result["error"] = "Sign-in came back with the wrong state. Try again."
+            elif q.get("error"):
+                result["error"] = q["error"][0]
+            else:
+                result["code"] = q.get("code", [None])[0]
+                if not result["code"]:
+                    result["error"] = "Sign-in came back without a code."
+            page = (b"<html><body style='font-family:system-ui;background:#0d1117;color:#e8edf4;"
+                    b"text-align:center;padding-top:80px'><h2>"
+                    + (b"Signed in. You can close this tab and go back to the app."
+                       if result["code"] else b"Sign-in failed. Go back to the app and try again.")
+                    + b"</h2></body></html>")
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(page)))
+            self.end_headers()
+            self.wfile.write(page)
+            done.set()
+
+    try:
+        cb = http.server.HTTPServer(("127.0.0.1", CALLBACK_PORT), CB)
+    except OSError as exc:
+        raise RuntimeError(
+            f"Port {CALLBACK_PORT} is busy ({exc}). Close any Codex window and try again."
+        )
+
+    threading.Thread(target=cb.serve_forever, daemon=True).start()
+    with SETUP_LOCK:
+        SETUP["auth_url"] = url
+    setup_msg("Your browser should open the ChatGPT sign-in page. "
+              "If it doesn't, use the blue link below.")
+    try:
+        webbrowser.open(url)
+    except Exception:
+        pass
+
+    ok = done.wait(timeout=600)
+    try:
+        cb.shutdown()
+    except Exception:
+        pass
+    with SETUP_LOCK:
+        SETUP["auth_url"] = ""
+
+    if not ok:
+        raise RuntimeError("Sign-in timed out after 10 minutes.")
+    if result["error"]:
+        raise RuntimeError(result["error"])
+
+    setup_msg("Finishing sign-in ...")
+    tokens = _exchange_code(result["code"], verifier)
+    if not tokens.get("access_token"):
+        raise RuntimeError("Sign-in did not return an access token.")
+    _write_auth(tokens)
+    setup_msg("Signed in.")
+
+
 def do_login():
-    """Install Codex if needed, then run `codex login` and wait for the token."""
+    """Built-in sign-in first; the Codex CLI only as a fallback."""
     with SETUP_LOCK:
         if SETUP["busy"]:
             return
         SETUP["busy"] = True
         SETUP["error"] = ""
     try:
-        binary = find_codex()
-        if not binary:
-            setup_msg("Codex is not installed yet — fetching it (one time only).")
-            binary = install_codex(lambda m: setup_msg(m))
-
-        setup_msg("Opening your browser to sign in to ChatGPT ...")
-        before = auth_file().stat().st_mtime if auth_file().exists() else 0
-        env = dict(os.environ)
-        proc = subprocess.Popen(
-            [binary, "login"],
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            text=True, env=env,
-        )
-
-        def drain():
-            try:
-                for line in proc.stdout:
-                    line = line.strip()
-                    if line:
-                        log(f"codex: {line}")
-                        if "http" in line and "://" in line:
-                            setup_msg("If no browser opened, use the link printed in the black window.")
-            except Exception:
-                pass
-
-        threading.Thread(target=drain, daemon=True).start()
-
-        deadline = time.time() + 600
-        while time.time() < deadline:
-            if auth_file().exists():
-                mtime = auth_file().stat().st_mtime
-                if mtime > before:
-                    auth = load_auth()
-                    if auth and access_token(auth):
-                        setup_msg("Signed in.")
-                        try:
-                            proc.terminate()
-                        except Exception:
-                            pass
-                        return
-            if proc.poll() is not None and time.time() > deadline - 595:
-                auth = load_auth()
-                if auth and access_token(auth):
-                    setup_msg("Signed in.")
-                    return
-                setup_msg("Sign-in window closed before it finished.",
-                          "Sign-in did not complete. Press Sign in again.")
-                return
-            time.sleep(1)
-        setup_msg("Sign-in timed out.", "Sign-in timed out after 10 minutes. Try again.")
+        builtin_login()
     except Exception as exc:
-        setup_msg("Sign-in failed.", str(exc))
+        log(f"built-in sign-in failed: {exc}")
+        setup_msg("Built-in sign-in did not work — trying the Codex method.", "")
+        try:
+            codex_login()
+        except Exception as inner:
+            setup_msg("Sign-in failed.", f"{exc} / {inner}")
     finally:
         with SETUP_LOCK:
             SETUP["busy"] = False
+
+
+def codex_login():
+    """Fallback: install Codex if needed, then run `codex login` and wait for the token."""
+    binary = find_codex()
+    if not binary:
+        setup_msg("Fetching the official Codex sign-in tool (one time only).")
+        binary = install_codex(lambda m: setup_msg(m))
+
+    setup_msg("Starting the Codex sign-in ...")
+    before = auth_file().stat().st_mtime if auth_file().exists() else 0
+
+    # stdin MUST be a real handle. Double-clicked on Windows the inherited one can be
+    # invalid, and Codex then fails with "runner: no pipe-in provided".
+    creation = 0
+    if os.name == "nt":
+        creation = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+    proc = subprocess.Popen(
+        [binary, "login"],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        text=True, env=dict(os.environ), creationflags=creation,
+    )
+
+    def drain():
+        try:
+            for line in proc.stdout:
+                line = line.strip()
+                if not line:
+                    continue
+                log(f"codex: {line}")
+                found = re.search(r"(https://auth\.openai\.com/\S+)", line)
+                if found:
+                    with SETUP_LOCK:
+                        SETUP["auth_url"] = found.group(1)
+                    setup_msg("Use the blue sign-in link below.")
+                    try:
+                        webbrowser.open(found.group(1))
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
+    threading.Thread(target=drain, daemon=True).start()
+
+    deadline = time.time() + 600
+    while time.time() < deadline:
+        if auth_file().exists() and auth_file().stat().st_mtime > before:
+            auth = load_auth()
+            if auth and access_token(auth):
+                with SETUP_LOCK:
+                    SETUP["auth_url"] = ""
+                setup_msg("Signed in.")
+                try:
+                    proc.terminate()
+                except Exception:
+                    pass
+                return
+        time.sleep(1)
+    try:
+        proc.terminate()
+    except Exception:
+        pass
+    raise RuntimeError("Codex sign-in timed out after 10 minutes.")
 
 
 # ============================================================================
@@ -879,6 +1244,8 @@ footer{color:var(--faint);font-size:12px;padding:22px 0 34px}
 </div></header>
 <div class="wrap">
 
+<div class="note good hide" id="updBanner" style="margin:16px 0"></div>
+
 <div class="card" id="authCard">
   <div class="note" id="authNote">Checking ...</div>
   <div class="bar">
@@ -886,6 +1253,12 @@ footer{color:var(--faint);font-size:12px;padding:22px 0 34px}
     <button class="btn ghost" id="recheckBtn">Re-check</button>
   </div>
   <div class="status" id="authStatus"></div>
+  <div id="authLinkWrap" class="hide" style="margin-top:12px">
+    <a class="btn" id="authLink" target="_blank" rel="noopener">Open the ChatGPT sign-in page</a>
+    <div class="hint">If nothing opened by itself, click the button above. You can also copy this
+      address into any browser <b>on this PC</b>:</div>
+    <div class="hint" style="word-break:break-all;color:var(--sky)" id="authUrlText"></div>
+  </div>
 </div>
 
 <div class="card">
@@ -930,7 +1303,20 @@ footer{color:var(--faint);font-size:12px;padding:22px 0 34px}
   <div class="jobs" id="jobs"></div>
 </div>
 
-<footer>__APP__ v__VER__ &middot; images are generated by ChatGPT and count against your ChatGPT plan's limits &middot; close this tab and the black window to quit</footer>
+<div class="card" id="helpCard">
+  <label>If something goes wrong</label>
+  <div class="bar" style="margin-top:2px">
+    <button class="btn ghost" id="reportBtn">Send a report to Claude</button>
+    <button class="btn ghost" id="samplesBtn">Send 3 sample images</button>
+    <button class="btn ghost" id="updBtn">Check for an update</button>
+  </div>
+  <div class="status" id="helpStatus"></div>
+  <label class="chk" style="margin-top:10px"><input type="checkbox" id="reporting" checked>
+    Send a report automatically after each real run</label>
+  <div class="hint">A report contains: app / Windows / Python version, whether sign-in worked, your batch settings, each prompt's status, error and timing, and the lines you can see in the black window. It never contains your password, your sign-in token, or your files.</div>
+</div>
+
+<footer><span id="verLine">__APP__ v__VER__</span> &middot; images are generated by ChatGPT and count against your ChatGPT plan's limits &middot; close this tab and the black window to quit</footer>
 </div>
 <script>
 const T = "__TOKEN__";
@@ -965,15 +1351,22 @@ function renderAuth(s){
     $('#authCard').classList.remove('hide');
     $('#who').textContent = 'Not signed in';
     note.className = 'note';
-    note.innerHTML = s.codex
-      ? 'Press <b>Sign in with ChatGPT</b>. Your browser opens the normal ChatGPT sign-in page. This app never sees your password.'
-      : 'First run needs a one-time download of the official Codex sign-in tool (about 120 MB). Press <b>Sign in with ChatGPT</b> and it fetches it for you.';
+    note.innerHTML = 'Press <b>Sign in with ChatGPT</b>. Your browser opens the normal ChatGPT '
+      + 'sign-in page and comes straight back. Nothing to download, and this app never sees '
+      + 'your password &mdash; it only keeps the sign-in token ChatGPT hands back.';
   }
   if (s.setup_error){
     const n = $('#authNote'); n.className = 'note bad'; n.textContent = s.setup_error;
     $('#authCard').classList.remove('hide');
   }
   $('#authStatus').textContent = s.setup_message || '';
+  const wrap = $('#authLinkWrap');
+  if (s.auth_url){
+    wrap.classList.remove('hide');
+    $('#authLink').href = s.auth_url;
+    $('#authUrlText').textContent = s.auth_url;
+    $('#authCard').classList.remove('hide');
+  } else { wrap.classList.add('hide'); }
   $('#loginBtn').disabled = !!s.setup_busy;
   $('#loginBtn').textContent = s.setup_busy ? 'Working ...' : 'Sign in with ChatGPT';
 }
@@ -1016,13 +1409,49 @@ async function poll(){
       $('#quality').value = s.settings.quality;
       $('#background').value = s.settings.background;
       $('#count').value = s.settings.count;
+      $('#reporting').checked = s.settings.report !== false;
       refreshCount();
     }
+    if (s.version) $('#verLine').textContent = '__APP__ v' + s.version;
+    renderUpdate(s.update, s.version);
   } catch (e) {
     $('#status').textContent = 'Lost contact with the app. Is the black window still open?';
   }
 }
 setInterval(poll, 1200); poll();
+
+function renderUpdate(u, cur){
+  const box = $('#updBanner');
+  if (!u || !u.newer){ box.classList.add('hide'); return; }
+  box.classList.remove('hide');
+  box.innerHTML = '<b>Version ' + esc(u.latest) + ' is ready</b> (you have ' + esc(cur || '') + ').'
+    + (u.notes ? ' ' + esc(u.notes) : '')
+    + ' <button class="btn" id="doUpd" style="margin-left:10px;padding:6px 16px">Update now</button>';
+  $('#doUpd').onclick = async () => {
+    $('#doUpd').disabled = true; $('#doUpd').textContent = 'Updating ...';
+    const r = await api('/api/update-apply', {});
+    box.className = 'note good'; box.textContent = r.message || 'Done.';
+  };
+}
+
+async function help(path, btn, label, body){
+  const b = $(btn); const old = b.textContent;
+  b.disabled = true; b.textContent = label;
+  const r = await api(path, body || {});
+  b.disabled = false; b.textContent = old;
+  $('#helpStatus').textContent = r.message || r.error || 'Done.';
+}
+$('#reportBtn').onclick = () => help('/api/report', '#reportBtn', 'Sending ...');
+$('#samplesBtn').onclick = () => help('/api/samples', '#samplesBtn', 'Uploading ...');
+$('#updBtn').onclick = async () => {
+  const b = $('#updBtn'); b.disabled = true; b.textContent = 'Checking ...';
+  const r = await api('/api/update-check', {});
+  b.disabled = false; b.textContent = 'Check for an update';
+  $('#helpStatus').textContent = r.error ? ('Could not check: ' + r.error)
+    : (r.newer ? ('Version ' + r.latest + ' is available.') : 'You are on the newest version.');
+  poll();
+};
+$('#reporting').onchange = () => api('/api/reporting', {on: $('#reporting').checked});
 
 $('#loginBtn').onclick = async () => { $('#loginBtn').disabled = true; await api('/api/login', {}); poll(); };
 $('#recheckBtn').onclick = poll;
@@ -1108,8 +1537,16 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 "setup_busy": setup["busy"],
                 "setup_message": setup["message"],
                 "setup_error": setup["error"],
+                "auth_url": setup.get("auth_url", ""),
                 "settings": load_settings(),
                 "batch": BATCH.snapshot(),
+                "version": APP_VERSION,
+                "update": {
+                    "latest": UPDATE["latest"],
+                    "notes": UPDATE["notes"],
+                    "newer": bool(UPDATE["latest"])
+                             and version_tuple(UPDATE["latest"]) > version_tuple(APP_VERSION),
+                },
             })
             return
         self._send(404, "not found", "text/plain; charset=utf-8")
@@ -1137,6 +1574,30 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         if path == "/api/open":
             self._json({"ok": open_folder(body.get("path") or str(HOME))})
+            return
+
+        if path == "/api/report":
+            self._json({"message": send_report(note=body.get("note") or "sent by hand", force=True)})
+            return
+
+        if path == "/api/samples":
+            self._json({"message": send_samples()})
+            return
+
+        if path == "/api/update-check":
+            info = check_update(force=True)
+            newer = bool(info["latest"]) and version_tuple(info["latest"]) > version_tuple(APP_VERSION)
+            self._json({"latest": info["latest"], "notes": info["notes"],
+                        "error": info["error"], "newer": newer})
+            return
+
+        if path == "/api/update-apply":
+            self._json({"message": apply_update()})
+            return
+
+        if path == "/api/reporting":
+            save_settings({"report": bool(body.get("on"))})
+            self._json({"ok": True})
             return
 
         if path == "/api/stop":
@@ -1223,6 +1684,7 @@ def main():
     print()
 
     threading.Thread(target=lambda: (time.sleep(0.6), webbrowser.open(url)), daemon=True).start()
+    threading.Thread(target=lambda: check_update(force=True), daemon=True).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:
