@@ -44,7 +44,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 APP_NAME = "VegToon Image Batch"
-APP_VERSION = "1.2.0"
+APP_VERSION = "1.3.0"
 
 # --- Update + diagnostics channel ------------------------------------------
 # The upload key is write-only on purpose: it can post a report, it cannot read
@@ -83,10 +83,30 @@ SESSION_TOKEN = "".join(random.choices(string.ascii_letters + string.digits, k=2
 CONSOLE = collections.deque(maxlen=160)
 
 
+LOG_FILE = APP_DIR / "log.txt"
+
+
 def log(msg):
-    line = f"[{datetime.now().strftime('%H:%M:%S')}] {msg}"
+    line = f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {msg}"
     CONSOLE.append(line)
     print(line, flush=True)
+    try:
+        APP_DIR.mkdir(parents=True, exist_ok=True)
+        if LOG_FILE.exists() and LOG_FILE.stat().st_size > 400_000:
+            tail = LOG_FILE.read_text(encoding="utf-8", errors="replace")[-150_000:]
+            LOG_FILE.write_text(tail, encoding="utf-8")
+        with open(LOG_FILE, "a", encoding="utf-8") as fh:
+            fh.write(line + "\n")
+    except Exception:
+        pass
+
+
+def auto_report(note: str):
+    """Fire-and-forget report. Used on every success AND every failure."""
+    try:
+        threading.Thread(target=send_report, args=(note, False), daemon=True).start()
+    except Exception:
+        pass
 
 
 def redact(text) -> str:
@@ -772,6 +792,8 @@ def run_batch(prompts, opts):
         BATCH.set_message(f"Cannot use that folder: {exc}")
         with BATCH.lock:
             BATCH.running = False
+        log(f"batch aborted: bad folder — {exc}")
+        auto_report("batch aborted: bad folder")
         return
 
     auth = headers = None
@@ -783,6 +805,8 @@ def run_batch(prompts, opts):
             BATCH.set_message(str(exc))
             with BATCH.lock:
                 BATCH.running = False
+            log(f"batch aborted: {exc}")
+            auto_report(f"batch aborted: {str(exc)[:200]}")
             return
 
     per_prompt = max(1, int(opts.get("count", 1)))
@@ -880,8 +904,7 @@ def run_batch(prompts, opts):
                 + (f" — {failed} failed." if failed else ".")
             )
     log(BATCH.message)
-    if not demo:
-        threading.Thread(target=send_report, args=("run finished",), daemon=True).start()
+    auto_report("run finished" + (" (test run)" if demo else ""))
 
 
 # ============================================================================
@@ -946,32 +969,34 @@ def _pkce_pair():
 
 
 def _exchange_code(code: str, verifier: str) -> dict:
-    """Swap the one-time code for tokens. Tries JSON, falls back to form encoding."""
-    fields = {
-        "grant_type": "authorization_code",
-        "code": code,
-        "redirect_uri": f"http://localhost:{CALLBACK_PORT}{CALLBACK_PATH}",
-        "client_id": CODEX_CLIENT_ID,
-        "code_verifier": verifier,
-    }
-    last = None
-    for body, ctype in (
-        (json.dumps(fields).encode("utf-8"), "application/json"),
-        (urllib.parse.urlencode(fields).encode("utf-8"), "application/x-www-form-urlencoded"),
-    ):
-        try:
-            req = urllib.request.Request(
-                CODEX_REFRESH_URL, data=body, method="POST",
-                headers={"Content-Type": ctype, "Accept": "application/json",
-                         "User-Agent": f"{CODEX_ORIGINATOR}/{APP_VERSION}"},
-            )
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                return json.loads(resp.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            last = f"HTTP {exc.code}: {exc.read().decode('utf-8', 'replace')[:300]}"
-        except Exception as exc:
-            last = str(exc)
-    raise RuntimeError(f"Could not complete sign-in: {last}")
+    """Swap the one-time code for tokens.
+
+    ONE attempt, form-encoded, byte-for-byte like the Codex CLI does it. The code
+    is single-use: any earlier attempt (e.g. a JSON-bodied one) burns it and the
+    real request then fails. Do not add a second encoding here.
+    """
+    q = lambda v: urllib.parse.quote(str(v), safe="")
+    redirect = f"http://localhost:{CALLBACK_PORT}{CALLBACK_PATH}"
+    body = (
+        f"grant_type=authorization_code&code={q(code)}"
+        f"&redirect_uri={q(redirect)}&client_id={q(CODEX_CLIENT_ID)}"
+        f"&code_verifier={q(verifier)}"
+    ).encode("utf-8")
+    req = urllib.request.Request(
+        CODEX_REFRESH_URL, data=body, method="POST",
+        headers={"Content-Type": "application/x-www-form-urlencoded",
+                 "User-Agent": f"{CODEX_ORIGINATOR}/{APP_VERSION}"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", "replace")[:500]
+        log(f"token exchange HTTP {exc.code}: {detail}")
+        raise RuntimeError(f"Sign-in could not be completed (HTTP {exc.code}). {detail}")
+    except Exception as exc:
+        log(f"token exchange failed: {exc}")
+        raise RuntimeError(f"Sign-in could not be completed: {exc}")
 
 
 def _write_auth(tokens: dict):
@@ -1092,21 +1117,41 @@ def builtin_login():
 
 
 def do_login():
-    """Built-in sign-in first; the Codex CLI only as a fallback."""
+    """Built-in sign-in. Every outcome is reported, success or failure."""
     with SETUP_LOCK:
         if SETUP["busy"]:
             return
         SETUP["busy"] = True
         SETUP["error"] = ""
     try:
+        log("sign-in: starting built-in flow")
         builtin_login()
+        log("sign-in: SUCCESS")
+        auto_report("sign-in succeeded")
     except Exception as exc:
-        log(f"built-in sign-in failed: {exc}")
-        setup_msg("Built-in sign-in did not work — trying the Codex method.", "")
-        try:
-            codex_login()
-        except Exception as inner:
-            setup_msg("Sign-in failed.", f"{exc} / {inner}")
+        log(f"sign-in: FAILED — {exc}")
+        setup_msg("Sign-in failed.", str(exc)[:600])
+        auto_report(f"sign-in failed: {str(exc)[:300]}")
+    finally:
+        with SETUP_LOCK:
+            SETUP["busy"] = False
+
+
+def do_codex_login():
+    """Only runs if he explicitly presses the fallback button."""
+    with SETUP_LOCK:
+        if SETUP["busy"]:
+            return
+        SETUP["busy"] = True
+        SETUP["error"] = ""
+    try:
+        codex_login()
+        log("codex sign-in: SUCCESS")
+        auto_report("codex sign-in succeeded")
+    except Exception as exc:
+        log(f"codex sign-in: FAILED — {exc}")
+        setup_msg("Codex sign-in failed.", str(exc)[:600])
+        auto_report(f"codex sign-in failed: {str(exc)[:300]}")
     finally:
         with SETUP_LOCK:
             SETUP["busy"] = False
@@ -1248,9 +1293,11 @@ footer{color:var(--faint);font-size:12px;padding:22px 0 34px}
 
 <div class="card" id="authCard">
   <div class="note" id="authNote">Checking ...</div>
+  <div class="note bad hide" id="authErr" style="margin-bottom:12px"></div>
   <div class="bar">
     <button class="btn" id="loginBtn">Sign in with ChatGPT</button>
     <button class="btn ghost" id="recheckBtn">Re-check</button>
+    <button class="btn ghost" id="codexBtn" title="Only if the button above keeps failing">Try the Codex method</button>
   </div>
   <div class="status" id="authStatus"></div>
   <div id="authLinkWrap" class="hide" style="margin-top:12px">
@@ -1313,6 +1360,8 @@ footer{color:var(--faint);font-size:12px;padding:22px 0 34px}
   <div class="status" id="helpStatus"></div>
   <label class="chk" style="margin-top:10px"><input type="checkbox" id="reporting" checked>
     Send a report automatically after each real run</label>
+  <div class="hint">Everything is also written to a log file at <b>__LOGPATH__</b> &mdash; if the internet
+    report ever fails, send me that file.</div>
   <div class="hint">A report contains: app / Windows / Python version, whether sign-in worked, your batch settings, each prompt's status, error and timing, and the lines you can see in the black window. It never contains your password, your sign-in token, or your files.</div>
 </div>
 
@@ -1355,10 +1404,13 @@ function renderAuth(s){
       + 'sign-in page and comes straight back. Nothing to download, and this app never sees '
       + 'your password &mdash; it only keeps the sign-in token ChatGPT hands back.';
   }
+  const eb = $('#authErr');
   if (s.setup_error){
-    const n = $('#authNote'); n.className = 'note bad'; n.textContent = s.setup_error;
+    eb.classList.remove('hide');
+    eb.innerHTML = '<b>Last error:</b> ' + esc(s.setup_error)
+      + '<br><span style="opacity:.85">This was sent to Claude automatically. Nothing else for you to do.</span>';
     $('#authCard').classList.remove('hide');
-  }
+  } else { eb.classList.add('hide'); }
   $('#authStatus').textContent = s.setup_message || '';
   const wrap = $('#authLinkWrap');
   if (s.auth_url){
@@ -1454,7 +1506,18 @@ $('#updBtn').onclick = async () => {
 $('#reporting').onchange = () => api('/api/reporting', {on: $('#reporting').checked});
 
 $('#loginBtn').onclick = async () => { $('#loginBtn').disabled = true; await api('/api/login', {}); poll(); };
-$('#recheckBtn').onclick = poll;
+$('#recheckBtn').onclick = async () => {
+  const b = $('#recheckBtn'); b.disabled = true; b.textContent = 'Checking ...';
+  const s = await api('/api/status'); renderAuth(s);
+  b.disabled = false; b.textContent = 'Re-check';
+  $('#authStatus').textContent = s.authed
+    ? 'Signed in.'
+    : 'Still not signed in' + (s.setup_error ? ' — see the error above.' : '. Press Sign in with ChatGPT.');
+};
+$('#codexBtn').onclick = async () => {
+  $('#authStatus').textContent = 'Downloading the Codex tool (about 120 MB), then it will open sign-in ...';
+  await api('/api/login-codex', {}); poll();
+};
 $('#browseBtn').onclick = async () => {
   $('#browseBtn').disabled = true; $('#browseBtn').textContent = 'Choosing ...';
   const r = await api('/api/pick', {current: $('#outdir').value});
@@ -1517,6 +1580,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         path = urllib.parse.urlparse(self.path).path
         if path == "/":
             page = (PAGE.replace("__APP__", APP_NAME)
+                        .replace("__LOGPATH__", str(LOG_FILE))
                         .replace("__VER__", APP_VERSION)
                         .replace("__TOKEN__", SESSION_TOKEN))
             self._send(200, page, "text/html; charset=utf-8")
@@ -1574,6 +1638,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         if path == "/api/open":
             self._json({"ok": open_folder(body.get("path") or str(HOME))})
+            return
+
+        if path == "/api/login-codex":
+            threading.Thread(target=do_codex_login, daemon=True).start()
+            self._json({"ok": True})
             return
 
         if path == "/api/report":
