@@ -21,6 +21,7 @@ Protocol reference: github.com/jdmnk/codex-imagegen-cli (Apache-2.0)
 
 import base64
 import collections
+import http.client
 import http.server
 import json
 import os
@@ -45,7 +46,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 APP_NAME = "VegToon Image Batch"
-APP_VERSION = "1.4.0"
+APP_VERSION = "1.4.1"
 
 # --- Update + diagnostics channel ------------------------------------------
 # The upload key is write-only on purpose: it can post a report, it cannot read
@@ -68,6 +69,8 @@ BACKGROUNDS = ("auto", "opaque", "transparent")
 
 MAX_RETRIES = 4
 INPUT_IMAGE_RATE_DELAYS = (65.0, 130.0, 260.0, 300.0)
+STREAM_DROP_RETRIES = 2
+STREAM_DROP_DELAYS = (3.0, 8.0)
 
 HOME = Path.home()
 APP_DIR = HOME / ".vegtoon-batch"
@@ -148,17 +151,23 @@ def load_settings() -> dict:
     except Exception:
         pass
     if not defaults["install_id"]:
+        # Mint and write directly — calling save_settings() here would call
+        # load_settings() again and recurse until the file exists.
         defaults["install_id"] = "pc-" + "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
-        save_settings({"install_id": defaults["install_id"]})
+        _write_settings_file(defaults)
     return defaults
+
+
+def _write_settings_file(current: dict):
+    APP_DIR.mkdir(parents=True, exist_ok=True)
+    SETTINGS_FILE.write_text(json.dumps(current, indent=2), encoding="utf-8")
 
 
 def save_settings(data: dict):
     try:
-        APP_DIR.mkdir(parents=True, exist_ok=True)
         current = load_settings()
         current.update({k: v for k, v in data.items() if k in current})
-        SETTINGS_FILE.write_text(json.dumps(current, indent=2), encoding="utf-8")
+        _write_settings_file(current)
     except Exception as exc:
         log(f"could not save settings: {exc}")
 
@@ -210,7 +219,7 @@ def build_report(note: str = "") -> dict:
         "os": platform.platform(),
         "machine": platform.machine(),
         "codex_found": bool(find_codex()),
-        "codex_version": codex_version_string(),
+        "codex_version": codex_version_probed(),
         "signed_in": bool(auth and access_token(auth)),
         "plan": account_plan(auth) if auth else None,
         "settings": {
@@ -559,17 +568,38 @@ def ready_auth():
     return auth
 
 
+CODEX_FALLBACK_VERSION = "0.145.0"  # a real released Codex version, sent when the local one is unknown
+_CODEX_VERSION_CACHE = {"value": "", "real": ""}
+
+
 def codex_version_string():
+    """Version for the request headers — never '0.0.0', falls back to a real release."""
+    if _CODEX_VERSION_CACHE["value"]:
+        return _CODEX_VERSION_CACHE["value"]
     binary = find_codex()
     if binary:
         try:
-            out = subprocess.run([binary, "--version"], capture_output=True, text=True, timeout=20)
+            # First run of a fresh unsigned exe can sit in an antivirus scan,
+            # so give it a while; no console window on Windows.
+            flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+            out = subprocess.run([binary, "--version"], capture_output=True, text=True,
+                                 timeout=45, creationflags=flags)
             match = re.search(r"(\d+\.\d+\.\d+)", (out.stdout or "") + (out.stderr or ""))
             if match:
+                _CODEX_VERSION_CACHE["value"] = _CODEX_VERSION_CACHE["real"] = match.group(1)
                 return match.group(1)
-        except Exception:
-            pass
-    return "0.0.0"
+            log(f"codex --version gave no version (rc={out.returncode}, "
+                f"out={(out.stdout or '').strip()[:80]!r}, err={(out.stderr or '').strip()[:80]!r})")
+        except Exception as exc:
+            log(f"codex --version failed: {exc.__class__.__name__}: {str(exc)[:120]}")
+    _CODEX_VERSION_CACHE["value"] = CODEX_FALLBACK_VERSION
+    return CODEX_FALLBACK_VERSION
+
+
+def codex_version_probed():
+    """The locally measured Codex version for diagnostics — honest, never the fallback."""
+    codex_version_string()
+    return _CODEX_VERSION_CACHE["real"] or "unknown"
 
 
 def auth_headers(auth: dict) -> dict:
@@ -599,6 +629,10 @@ class RateLimited(Exception):
     def __init__(self, message, delay):
         super().__init__(message)
         self.delay = delay
+
+
+class StreamDropped(Exception):
+    """The SSE connection died mid-image — a network hiccup, not a rate limit."""
 
 
 def build_payload(prompt: str, size: str, quality: str, background: str, cache_key: str) -> dict:
@@ -704,7 +738,11 @@ def stream_one_image(headers: dict, payload: dict, timeout: float, cancel: threa
     except urllib.error.HTTPError as exc:
         raw = exc.read().decode("utf-8", errors="replace")
         raise urllib.error.HTTPError(exc.url, exc.code, raw[:500], exc.headers, None)
+    except (http.client.IncompleteRead, ConnectionError, TimeoutError) as exc:
+        raise StreamDropped(f"The connection dropped mid-image ({exc.__class__.__name__}).")
     except urllib.error.URLError as exc:
+        if isinstance(exc.reason, (http.client.IncompleteRead, ConnectionError, TimeoutError)):
+            raise StreamDropped(f"The connection dropped mid-image ({exc.reason.__class__.__name__}).")
         raise RuntimeError(f"Network problem: {exc.reason}")
 
     if last_error:
@@ -847,6 +885,7 @@ def _generate_one(idx, prompts, opts, auth_box, run_dir, prefix, per_prompt, dem
     BATCH.set_message(_progress_message(run_dir))
     t0 = time.time()
     attempt = 0
+    drops = 0
     encoded = None
 
     while True:
@@ -889,6 +928,25 @@ def _generate_one(idx, prompts, opts, auth_box, run_dir, prefix, per_prompt, dem
             attempt += 1
             BATCH.update(idx, status="waiting",
                          error=f"Rate limited — retrying in {delay:.0f}s ({attempt}/{MAX_RETRIES})")
+            BATCH.set_message(_progress_message(run_dir))
+            waited = 0.0
+            while waited < delay and not BATCH.cancel.is_set():
+                time.sleep(0.5)
+                waited += 0.5
+            if BATCH.cancel.is_set():
+                BATCH.update(idx, status="stopped")
+                break
+            BATCH.update(idx, status="running", error="")
+            continue
+        except StreamDropped as exc:
+            if drops >= STREAM_DROP_RETRIES:
+                BATCH.update(idx, status="failed",
+                             error=f"{exc} Gave up after {STREAM_DROP_RETRIES} retries.")
+                break
+            delay = STREAM_DROP_DELAYS[min(drops, len(STREAM_DROP_DELAYS) - 1)]
+            drops += 1
+            BATCH.update(idx, status="waiting",
+                         error=f"{exc} Retrying in {delay:.0f}s ({drops}/{STREAM_DROP_RETRIES}) ...")
             BATCH.set_message(_progress_message(run_dir))
             waited = 0.0
             while waited < delay and not BATCH.cancel.is_set():

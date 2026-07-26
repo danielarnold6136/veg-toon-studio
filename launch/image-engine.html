@@ -50,11 +50,11 @@ code{font-family:var(--mono);font-size:.92em;background:var(--panel2);border:1px
 </div></header>
 
 <section id="app"><div class="wrap">
-<h2><span class="dot"></span>Built — VegToon Image Batch <span class="badge win">v1.4.0 · ready</span></h2>
+<h2><span class="dot"></span>Built — VegToon Image Batch <span class="badge win">v1.4.1 · ready</span></h2>
 <p class="sub">One file. Double-click it, sign in once, paste prompts one per line, pick a folder, press Generate. Images come from ChatGPT and count against your ChatGPT plan — no API key, no API bill.</p>
 
 <div class="bar" style="display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px">
-<a class="btn" href="https://github.com/danielarnold6136/veg-toon-studio/releases/download/image-batch-v1.4.0/VegToon-Image-Batch.py">⬇ Download VegToon-Image-Batch.py</a>
+<a class="btn" href="https://github.com/danielarnold6136/veg-toon-studio/releases/download/image-batch-v1.4.1/VegToon-Image-Batch.py">⬇ Download VegToon-Image-Batch.py</a>
 <a class="btn ghost" href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener">Python (one-time install)</a>
 </div>
 
@@ -71,7 +71,7 @@ code{font-family:var(--mono);font-size:.92em;background:var(--panel2);border:1px
 <div class="grid g3">
 <div class="card"><h3>Shape, quality, count</h3><p style="color:var(--muted);margin:.3em 0 0">Portrait 2:3 for 9:16 shorts, quality set to <b>high</b> on every image, and 1–8 images per prompt. The web app never lets you fix these.</p></div>
 <div class="card"><h3>Never overwrites</h3><p style="color:var(--muted);margin:.3em 0 0">Files are named <code>prefix-001.png</code> upward. If a name already exists it adds a number instead of destroying the old one.</p></div>
-<div class="card"><h3>Handles the limit</h3><p style="color:var(--muted);margin:.3em 0 0">If ChatGPT rate-limits mid-batch, it reads how long to wait, waits, and retries up to 4 times — showing you the countdown instead of just failing.</p></div>
+<div class="card"><h3>Handles the limit</h3><p style="color:var(--muted);margin:.3em 0 0">If ChatGPT rate-limits mid-batch, it reads how long to wait, waits, and retries up to 4 times — showing you the countdown instead of just failing. And if the connection drops mid-image, it quietly retries that prompt twice before giving up.</p></div>
 </div>
 
 <p class="sub" style="margin-top:16px"><b>Tested before it reached you:</b> 24 automated checks on the engine (batch queue, file writing, no-overwrite, bad-folder handling, settings) and 24 more driving the real page in a browser (buttons, guards, progress, layout at phone/laptop/desktop widths, zero console errors) — plus the automatic Codex download run for real on both the Windows and Linux packages.</p>

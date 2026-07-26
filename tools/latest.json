@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
-  "url": "https://github.com/danielarnold6136/veg-toon-studio/releases/download/image-batch-v1.4.0/VegToon-Image-Batch.py",
-  "notes": "4 images at a time, and every run now gets its own dated folder."
+  "version": "1.4.1",
+  "url": "https://github.com/danielarnold6136/veg-toon-studio/releases/download/image-batch-v1.4.1/VegToon-Image-Batch.py",
+  "notes": "First-launch error message gone, dropped connections retry themselves, honest Codex version."
 }
