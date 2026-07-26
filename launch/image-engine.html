@@ -50,18 +50,18 @@ code{font-family:var(--mono);font-size:.92em;background:var(--panel2);border:1px
 </div></header>
 
 <section id="app"><div class="wrap">
-<h2><span class="dot"></span>Built — VegToon Image Batch <span class="badge win">v1.0.0 · ready</span></h2>
+<h2><span class="dot"></span>Built — VegToon Image Batch <span class="badge win">v1.2.0 · ready</span></h2>
 <p class="sub">One file. Double-click it, sign in once, paste prompts one per line, pick a folder, press Generate. Images come from ChatGPT and count against your ChatGPT plan — no API key, no API bill.</p>
 
 <div class="bar" style="display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px">
-<a class="btn" href="https://github.com/danielarnold6136/veg-toon-studio/releases/download/image-batch-v1.0.0/VegToon-Image-Batch.py">⬇ Download VegToon-Image-Batch.py</a>
+<a class="btn" href="https://github.com/danielarnold6136/veg-toon-studio/releases/download/image-batch-v1.2.0/VegToon-Image-Batch.py">⬇ Download VegToon-Image-Batch.py</a>
 <a class="btn ghost" href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener">Python (one-time install)</a>
 </div>
 
 <ol class="steps">
 <li><b>Install Python once</b> — python.org, run the installer, and <b>tick "Add Python to PATH"</b> on the first screen. That is the only thing you ever install by hand.</li>
 <li><b>Double-click <code>VegToon-Image-Batch.py</code>.</b> A black window opens and your browser opens the app. Keep the black window open while you work; closing it quits the app.</li>
-<li><b>Press "Sign in with ChatGPT".</b> First time only, it downloads the official Codex sign-in tool (~120&nbsp;MB, automatic) and then opens the normal ChatGPT sign-in page in your browser. The app never sees your password.</li>
+<li><b>Press "Sign in with ChatGPT".</b> Your browser opens the normal ChatGPT sign-in page and comes straight back — nothing to download. If your browser doesn't open by itself, the page shows a <b>blue sign-in link</b> to click instead. The app never sees your password.</li>
 <li><b>Paste prompts, one per line</b> (or separate longer ones with a line containing only <code>---</code>), choose the output folder, press <b>Generate</b>. You get a live list showing each image as it saves.</li>
 </ol>
 
@@ -76,6 +76,7 @@ code{font-family:var(--mono);font-size:.92em;background:var(--panel2);border:1px
 
 <p class="sub" style="margin-top:16px"><b>Tested before it reached you:</b> 24 automated checks on the engine (batch queue, file writing, no-overwrite, bad-folder handling, settings) and 24 more driving the real page in a browser (buttons, guards, progress, layout at phone/laptop/desktop widths, zero console errors) — plus the automatic Codex download run for real on both the Windows and Linux packages.</p>
 
+<div class="flag"><b>It updates itself.</b> When I ship a fix, the app shows a "Version X is ready" bar with an <b>Update now</b> button — one click, no re-download by hand. There is also a <b>Send a report to Claude</b> button that ships the version numbers, each prompt's status and error, and the console lines to me, so I can diagnose that PC without touching it. It never sends your password, your sign-in token or your files, and there is a tick-box to switch it off.</div>
 <div class="flag"><b>Still unknown, and only your account can answer it:</b> how many images ChatGPT gives you before it stops. Run one short's worth — 8 prompts — and tell me where it stopped. That number decides whether this is enough or whether we go multi-account (§4).</div>
 </div></section>
 
