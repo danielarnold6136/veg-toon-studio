@@ -1,214 +1,169 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>Bulk Image Generation — the engine decision · Veg-Toon Studio</title>
-<meta name="description" content="How to generate our character stills in bulk: what ChatGPT can and cannot be automated into, and the cheaper engine we already own.">
+<title>ChatGPT images in bulk — the three paths · Veg-Toon Studio</title>
+<meta name="description" content="How to batch-generate our stills through ChatGPT: extension, Codex CLI, or a multi-account ChatGPT build.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖼️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <style>
-.verdict{background:linear-gradient(180deg,rgba(91,208,122,.10),rgba(91,208,122,.03));border:1px solid rgba(91,208,122,.35);border-radius:var(--radius);padding:20px 22px;margin:18px 0}
-.verdict h3{margin:0 0 6px;color:var(--leaf);font-size:19px}
-.verdict p{margin:0;color:#dff0e4}
-.route{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin:12px 0;position:relative}
-.route.go{border-color:rgba(91,208,122,.45)}
-.route.no{border-color:rgba(255,90,90,.35);opacity:.94}
-.route h3{margin:0 0 4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.rank{font-family:var(--mono);font-size:12px;font-weight:700;color:#1a1206;background:var(--marigold);border-radius:6px;padding:2px 8px}
-.route.no .rank{background:var(--chili);color:#2a0c0c}
-.route .why{color:var(--muted);margin:.35em 0 0;font-size:14.5px}
-.kv{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.path{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin:14px 0}
+.path.best{border-color:rgba(91,208,122,.5);background:linear-gradient(180deg,rgba(91,208,122,.06),var(--panel))}
+.path h3{margin:0 0 4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:19px}
+.rank{font-family:var(--mono);font-size:12px;font-weight:700;color:#1a1206;background:var(--marigold);border-radius:6px;padding:2px 9px}
+.path.best .rank{background:var(--leaf);color:#0a2413}
+.path .why{color:var(--muted);margin:.4em 0 0;font-size:15px}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .kv span{font-size:12px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
 .kv span b{color:var(--ink)}
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 th{color:var(--faint);font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;white-space:nowrap}
-td.num{text-align:right;font-family:var(--mono);white-space:nowrap}
-tr.hl td{background:rgba(91,208,122,.07)}
-.flag{font-size:13.5px;color:var(--muted);border-left:2px solid var(--line2);padding-left:12px;margin:10px 0}
-.flag b{color:#f6dada}
 .steps{counter-reset:s;list-style:none;padding:0;margin:14px 0 0}
-.steps li{counter-increment:s;position:relative;padding:0 0 14px 40px;color:var(--muted)}
+.steps li{counter-increment:s;position:relative;padding:0 0 16px 40px;color:var(--muted)}
 .steps li:before{content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:8px;
   background:var(--marigold);color:#1a1206;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
 .steps li b{color:var(--ink)}
 pre.pb{background:#0a0e14;border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 16px;overflow-x:auto;
-  font-family:var(--mono);font-size:12.5px;line-height:1.6;color:#cfe0f0;white-space:pre-wrap;margin:0}
-.pbhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 6px}
+  font-family:var(--mono);font-size:12.5px;line-height:1.65;color:#cfe0f0;white-space:pre;margin:0}
+.pbhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:16px 0 6px}
 .pbhead .t{font-size:13px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
 .copy{cursor:pointer;border:1px solid var(--line2);background:var(--panel);color:var(--muted);
   border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;font-family:var(--sans)}
 .copy:hover{color:var(--ink);border-color:var(--marigold);background:rgba(255,174,59,.08)}
 .copy.ok{color:var(--leaf);border-color:var(--leaf)}
-.src{font-size:13px;color:var(--faint)}
-.src a{color:var(--muted)}
-.src li{margin-bottom:5px}
+.flag{font-size:13.5px;color:var(--muted);border-left:2px solid var(--line2);padding-left:12px;margin:10px 0}
+.flag b{color:#f6dada}
+.src{font-size:13px;color:var(--faint)} .src a{color:var(--muted)} .src li{margin-bottom:5px}
+code{font-family:var(--mono);font-size:.92em;background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
 </style>
 </head><body>
-<nav class="toc"><div class="wrap"><a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a><a href="#verdict">Verdict</a><a href="#today">Do today</a><a href="#routes">The 4 routes</a><a href="#cost">Cost</a><a href="#build">What to build</a><a href="#chatgpt">Why not ChatGPT</a><a href="#codex">Codex</a><a href="#flags">Unverified</a><a href="../launch/fb-teardown-2.html">🎬 FB Shorts 1–18</a></div></nav>
+<nav class="toc"><div class="wrap"><a class="brand" href="../index.html">🥔 Veg<span>Toon</span> Studio</a><a href="#answer">The answer</a><a href="#p1">1 · Extension</a><a href="#p2">2 · Codex batch</a><a href="#p3">3 · ChatGPT Multi</a><a href="#ceiling">The ceiling</a><a href="#flags">Risks</a><a href="../launch/fb-teardown-2.html">🎬 FB Shorts 1–18</a></div></nav>
 
 <header class="hero"><div class="wrap">
-<div class="crumbs"><a href="../index.html">Studio</a> › Bulk image generation</div>
-<span class="kicker">🖼️ Engine decision · researched 26 Jul 2026</span>
-<h1>Generating our stills in bulk</h1>
-<p class="lede">You asked whether ChatGPT image generation can be automated — an extension, a repo, a Codex trick, or a "ChatGPT&nbsp;Multi" like the Veo tool. Short answer: it can be automated, and you still shouldn't. The reason is not the automation. It's that we are almost certainly comparing ChatGPT against the wrong engine on our own side.</p>
+<div class="crumbs"><a href="../index.html">Studio</a> › ChatGPT images in bulk</div>
+<span class="kicker">🖼️ Bulk pipeline · 26 Jul 2026</span>
+<h1>ChatGPT images in bulk</h1>
+<p class="lede">Three ways to stop generating one at a time, all of them running on the ChatGPT account we already pay for. One works this afternoon with no code. One is a real batch tool that already exists. One is the multi-account build — your idea, and the right end state.</p>
 </div></header>
 
-<section id="verdict"><div class="wrap">
-<h2><span class="dot"></span>The verdict</h2>
-
-<div class="verdict">
-<h3>Veo Flow Multi has been generating with Imagen 4 this whole time.</h3>
-<p>The image-model dropdown in our own tool lists three options and the first one — the default — is labelled <b>"Imagen 4 (best)"</b>. It is not the best. It is the oldest of the three. Google's current top image model, <b>Nano&nbsp;Banana&nbsp;Pro</b>, is the third option in that same dropdown, and unless you changed it by hand every image we've made came from Imagen&nbsp;4. That is the realism gap you've been feeling — not "Veo can't do realism".</p>
+<section id="answer"><div class="wrap">
+<h2><span class="dot"></span>The answer, in one line</h2>
+<div class="path best">
+<h3><span class="rank">★</span> <code>codex-imagegen batch --input jobs.jsonl --out-dir out/</code></h3>
+<p class="why">A command-line tool that takes a file of prompts and writes out the images — generated by ChatGPT, billed to your existing Plus subscription, <b>no API key and no API bill</b>. It authenticates by reusing the Codex login you do once in a browser, then talks to ChatGPT's own image endpoint directly. This is the thing you were asking whether Codex could do. It can, and someone already built the batch wrapper.</p>
+<div class="kv"><span>Repo <b>jdmnk/codex-imagegen-cli</b></span><span>Licence <b>Apache-2.0</b></span><span>Billing <b>your Plus plan</b></span><span>Batch <b>JSONL in, PNGs out</b></span><span>Refs <b>up to 5 images per job</b></span></div>
 </div>
-
-<p class="sub">Two things follow from that, and they cost nothing to check:</p>
-<div class="grid g2">
-<div class="card"><h3>1 · The gap may already be closed</h3><p style="color:var(--muted);margin:.3em 0 0">Nano Banana Pro is a genuinely current model, it is already wired into our tool, and image generation there costs <b>0 credits</b> — measured live by the tool's own balance-delta readout, across ~10 pooled accounts. Switching the dropdown is a 2-second change.</p></div>
-<div class="card"><h3>2 · It is the only model that promises our exact problem</h3><p style="color:var(--muted);margin:.3em 0 0">Google documents Nano Banana Pro as accepting <b>"up to 5 images of characters to maintain character consistency"</b>. We have a repertory cast of exactly five — Aloo, Tamatar, Pyaz, Matar aunty, Mirchi. No other model publishes a character-slot count at all, and OpenAI ships an explicit warning that it <i>"may occasionally struggle to maintain visual consistency for recurring characters."</i></p></div>
-</div>
-
-<div class="note" style="margin-top:16px"><b>Nothing here is a decision yet.</b> Step one is a 20-minute A/B you run yourself, below. If Nano Banana Pro still loses to ChatGPT on our look, we fall back to the paid API route in §4 — which is still not the ChatGPT web app.</div>
+<p class="sub">Below: the zero-build option to try today, the full setup for the above, and the multi-account version that lifts the ceiling.</p>
 </div></section>
 
-<section id="today"><div class="wrap">
-<h2><span class="dot"></span>Do this today — the 20-minute A/B</h2>
-<p class="sub">Before anyone builds anything. Same prompt, four engines, judge on our actual look: whole-vegetable skin, deep-focus background, squat 3–4-head proportions.</p>
+<section id="p1"><div class="wrap">
+<h2><span class="dot"></span>Path 1 — the extension <span class="badge win">today, no code</span></h2>
+<p class="why" style="color:var(--muted);margin-bottom:14px">You asked for "an extension that keeps submitting prompts". Two exist, both current, both image-aware — they paste your prompt list into chatgpt.com one at a time, wait for each image to finish rendering, and auto-download it. Nothing to install beyond the browser.</p>
+
+<div class="tbl-wrap"><table>
+<thead><tr><th>Extension</th><th>Users</th><th>Updated</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><b>ChatGPT Automation — Auto ChatGPT</b></td><td>~10,000</td><td>26 Jul 2026</td><td>Text-to-image and image-to-image, aspect-ratio control (16:9 / 9:16 / 1:1), auto-download. The most image-specific of the two.</td></tr>
+<tr><td><b>ChatGPT Image Auto</b></td><td>~100,000</td><td>29 Apr 2026</td><td>Reads the finished image straight out of the page payload rather than guessing from the DOM, so it doesn't fire the next prompt early. Bigger userbase, slightly older.</td></tr>
+</tbody></table></div>
+
+<div class="note" style="margin-top:14px"><b>Try this first, tonight.</b> It costs nothing and it tells us the one thing no amount of research can: how many images your account actually gives us before it stops. That number decides whether Path 2 is enough or whether we need Path 3. <b>Run one short's worth of prompts — 8 images — and tell me where it stopped.</b></div>
+
+<div class="flag"><b>Don't bother with Superpower ChatGPT</b> (the big 100k-user one you may already know). Its queue only waits for the send button to come back, so with image prompts it fires the next one while the picture is still rendering. Wrong tool for this.</div>
+</div></section>
+
+<section id="p2"><div class="wrap">
+<h2><span class="dot"></span>Path 2 — Codex batch CLI <span class="badge win">the real one</span></h2>
+<p class="why" style="color:var(--muted);margin-bottom:6px">This is the proper answer to "can Codex generate too?". Codex has built-in image generation — OpenAI's own docs say it <i>"uses gpt-image-2 and counts toward your general Codex usage limits"</i>, i.e. it comes out of the Plus subscription, not an API bill. <code>codex-imagegen-cli</code> wraps that in a batch command.</p>
+<p class="why" style="color:var(--muted)">Why this beats the extension: it's a file in, a folder of PNGs out. No browser open, no tab to babysit, and it plugs straight into how we already work — our script pages emit a batch copy-block of image prompts, and that block becomes the input file almost unchanged.</p>
+
 <ol class="steps">
-<li><b>Open Veo Flow Multi → Image Generation.</b> Change the <b>Model</b> dropdown from <i>Imagen 4</i> to <b>Nano Banana Pro</b>. Set aspect to 9:16.</li>
-<li><b>Paste the block below</b> (three real prompts lifted from Shorts 16–18) and generate. Then run the same three on <b>Nano Banana</b> and on <b>Imagen 4</b>.</li>
-<li><b>Run the same three in ChatGPT by hand</b> — one at a time, as you do now.</li>
-<li><b>Put the four sets side by side.</b> Judge only on: does the skin read as the vegetable's own material, is the background sharp and fully built, are the bodies squat. Send me which set wins.</li>
+<li><b>Install Codex and log in once.</b> Browser opens, you sign in with the ChatGPT account, done. No API key anywhere.</li>
+<li><b>Install the batch tool</b> (one clone + one command).</li>
+<li><b>Write the prompt file</b> — one line per image, JSON. I'll generate this straight from the short's prompt block so you never hand-write it.</li>
+<li><b>Run the batch</b> and collect the folder.</li>
 </ol>
-<div class="pbhead"><span class="t">Test prompts — paste into the tool as-is</span><button class="copy" data-t="ab">Copy</button></div>
-<pre class="pb" id="ab-src">A photoreal ultra-detailed 3D render of an anthropomorphic potato villager standing in a mud-walled village courtyard at mid-morning. His whole head is a single potato; his hands, fingers, wrists, neck, forearms and bare ankles are the same brown potato skin and material as his head, with absolutely NO ordinary human skin tone anywhere. He is squat, about 3.5 heads tall, wearing a faded kurta with a gamcha over one shoulder. Deep focus: the background is as crisp as the foreground — a cracked mud wall, a hand pump, a peepal tree, a charpai. Locked-off tripod camera, warm daylight, no on-screen text of any kind.
----
-A photoreal ultra-detailed 3D render of an anthropomorphic tomato shopkeeper leaning on a glass counter inside a small village shop. His whole head is a single glossy red tomato; his hands, fingers, wrists, neck and forearms are the same glossy red tomato skin and material, with absolutely NO ordinary human skin tone anywhere. He is squat, about 3.5 heads tall, in a clean white shirt. Deep focus: shelves, a ceiling fan, a hanging bulb and the street beyond the doorway are all as sharp as he is. Locked-off tripod camera, bright clean light, no on-screen text of any kind.
----
-A photoreal ultra-detailed 3D render of an anthropomorphic green-chilli woman and an anthropomorphic pea woman talking beside a well in a village lane, late afternoon. Each whole head is a single vegetable — a green chilli and a pea pod; every hand, finger, wrist, neck, forearm and bare ankle is that same vegetable colour and material, with absolutely NO ordinary human skin tone anywhere. Both are squat, about 3.5 heads tall, in simple cotton saris. Deep focus: the well, the lane, a goat and a distant rooftop are all pin-sharp. Locked-off tripod camera, no on-screen text of any kind.</pre>
-</div></section>
 
-<section id="routes"><div class="wrap">
-<h2><span class="dot"></span>The four routes, ranked</h2>
+<div class="pbhead"><span class="t">Setup — run once</span><button class="copy" data-t="setup">Copy</button></div>
+<pre class="pb" id="setup-src">npm install -g @openai/codex
+codex login          # pick the "Sign in with ChatGPT" option
 
-<div class="route go">
-<h3><span class="rank">1</span> Nano Banana Pro inside Veo Flow Multi <span class="badge win">free · already built</span></h3>
-<p class="why">The tool already batches prompts across ~10 pooled Google accounts. Only two things change: pick the right model, and add reference-image support so the five portraits lock the cast. Marginal cost per image is zero.</p>
-<div class="kv"><span>Cost <b>$0</b></span><span>Batch <b>already works</b></span><span>Character refs <b>5 documented</b></span><span>Native res <b>1376×768</b></span><span>Build <b>small</b></span></div>
-</div>
+git clone https://github.com/jdmnk/codex-imagegen-cli.git
+cd codex-imagegen-cli
+uv sync --dev
+uv tool install -e .
 
-<div class="route go">
-<h3><span class="rank">2</span> OpenAI Images API + Batch — the paid fallback</h3>
-<p class="why">If the A/B says ChatGPT's look genuinely wins, this is how you get that look in bulk. Same model family, real batching, 50% off through the Batch API, no cooldowns, no ban risk, fully within the terms. This is what everyone who asked your exact question on Reddit ended up doing.</p>
-<div class="kv"><span>Model <b>gpt-image-2</b></span><span>Medium <b>$0.053/img</b></span><span>Batch <b>−50%</b></span><span>Rate <b>5–250 img/min by tier</b></span><span>Refs <b>yes, count undocumented</b></span></div>
-</div>
+codex-imagegen --help</pre>
 
-<div class="route no">
-<h3><span class="rank">3</span> Codex — real, official, but small <span class="badge">answers your question directly</span></h3>
-<p class="why">Yes, Codex can generate images, and it bills against the ChatGPT Plus subscription rather than the API. But OpenAI's own documentation tells you to stop doing it at our volume — see §6. Good for 10–20 images. Not an engine.</p>
-<div class="kv"><span>Uses <b>gpt-image-2</b></span><span>Billing <b>Plus plan limits</b></span><span>Burn rate <b>3–5× faster</b></span><span>Scriptable <b>yes, codex exec</b></span></div>
-</div>
+<div class="pbhead"><span class="t">jobs.jsonl — one line per image (portrait stills for a 9:16 short)</span><button class="copy" data-t="jobs">Copy</button></div>
+<pre class="pb" id="jobs-src">{"prompt":"A photoreal ultra-detailed 3D render of an anthropomorphic potato villager standing in a mud-walled village courtyard at mid-morning. His whole head is a single potato; his hands, fingers, wrists, neck, forearms and bare ankles are the same brown potato skin and material as his head, with absolutely NO ordinary human skin tone anywhere. He is squat, about 3.5 heads tall, wearing a faded kurta with a gamcha over one shoulder. Deep focus: the background is as crisp as the foreground. Locked-off tripod camera, no on-screen text of any kind.","out":"16-1.png"}
+{"prompt":"A photoreal ultra-detailed 3D render of an anthropomorphic tomato shopkeeper leaning on a glass counter inside a small village shop. His whole head is a single glossy red tomato; his hands, fingers, wrists, neck and forearms are the same glossy red tomato skin and material, with absolutely NO ordinary human skin tone anywhere. He is squat, about 3.5 heads tall, in a clean white shirt. Deep focus: shelves, a ceiling fan and the street beyond the doorway are all as sharp as he is. Locked-off tripod camera, no on-screen text of any kind.","out":"16-2.png"}
+{"prompt":"The same potato villager, seated on a charpai at dusk, head lowered.","images":["cast/aloo.png"],"mode":"edit","out":"16-3.png"}</pre>
 
-<div class="route no">
-<h3><span class="rank">4</span> Automating the ChatGPT web app <span class="badge hot">don't</span></h3>
-<p class="why">Working extensions and repos genuinely exist — this is not a technical dead end. It's a quota dead end plus a terms problem. Full reasoning in §5.</p>
-<div class="kv"><span>Quota <b>unpublished, low</b></span><span>Terms <b>prohibited</b></span><span>Breaks on <b>every UI change</b></span></div>
-</div>
-</div></section>
+<div class="pbhead"><span class="t">Run it</span><button class="copy" data-t="run">Copy</button></div>
+<pre class="pb" id="run-src">codex-imagegen batch \
+  --input jobs.jsonl \
+  --out-dir out/ \
+  --size 1024x1536 \
+  --quality high</pre>
 
-<section id="cost"><div class="wrap">
-<h2><span class="dot"></span>What 100 images actually costs</h2>
-<p class="sub">List prices read from the vendors' own pricing pages on 26 Jul 2026. "Batch" = the asynchronous 50%-off tier, 24-hour turnaround — which suits us perfectly, since we write scripts days before we shoot them.</p>
-<div class="tbl-wrap"><table>
-<thead><tr><th>Engine</th><th>Per image</th><th class="num">100 images</th><th class="num">100 via Batch</th><th>Character references</th></tr></thead>
-<tbody>
-<tr class="hl"><td><b>Nano Banana Pro via Veo Flow Multi</b> <span class="badge win">ours</span></td><td>0 credits (measured)</td><td class="num">$0.00</td><td class="num">n/a</td><td>up to 5 character images</td></tr>
-<tr><td>Nano Banana Pro — Gemini API 1K/2K</td><td>$0.134</td><td class="num">$13.40</td><td class="num">$6.70</td><td>up to 5 character images</td></tr>
-<tr><td>Nano Banana Pro — Gemini API 4K</td><td>$0.24</td><td class="num">$24.00</td><td class="num">$12.00</td><td>up to 5 character images</td></tr>
-<tr><td>Nano Banana 2 — Gemini API 1K</td><td>$0.067</td><td class="num">$6.70</td><td class="num">$3.35</td><td>up to 4 character images</td></tr>
-<tr><td>gpt-image-2 — low @1024²</td><td>$0.006</td><td class="num">$0.60</td><td class="num">$0.30</td><td rowspan="3">not documented; OpenAI warns on drift</td></tr>
-<tr class="hl"><td><b>gpt-image-2 — medium @1024²</b></td><td>$0.053</td><td class="num">$5.30</td><td class="num">$2.65</td></tr>
-<tr><td>gpt-image-2 — high @1024²</td><td>$0.211</td><td class="num">$21.10</td><td class="num">$10.55</td></tr>
-<tr><td>ChatGPT Plus web app, by hand</td><td>$20/mo flat</td><td class="num">—</td><td class="num">—</td><td>conversation context only</td></tr>
-</tbody></table></div>
-<p class="sub" style="margin-top:12px">Read the bottom row honestly: <b>if</b> Plus lets you pull 100 images in a day, $20/month beats every API line here on raw price. It just can't be automated, the daily ceiling is unpublished and appears to have tightened through 2026, and refused generations still burn it. That is the whole argument — not cost.</p>
-</div></section>
-
-<section id="build"><div class="wrap">
-<h2><span class="dot"></span>What I'd build — the Veo Flow Multi image upgrade</h2>
-<p class="sub">Three changes, in order of value. Nothing here needs a new app; you already own the hard part (auth harvesting, reCAPTCHA minting, account pooling, the job queue).</p>
-
+<h3>What it gives us that the web app doesn't</h3>
 <div class="grid g3">
-<div class="card"><h3>① Fix the dropdown <span class="badge win">minutes</span></h3><p style="color:var(--muted);margin:.3em 0 0">Make <b>Nano Banana Pro</b> the default and relabel it. The current "Imagen 4 (best)" label is actively misleading us and is the root cause of this whole question.</p></div>
-<div class="card"><h3>② Reference images on the image path <span class="badge">the real work</span></h3><p style="color:var(--muted);margin:.3em 0 0">The image call currently sends prompt + model + aspect + count and nothing else. The <i>video</i> path already knows how to attach reference images. Port that shape onto image generation so each render carries the five locked cast portraits. This is what turns a batch tool into a character-consistent batch tool.</p></div>
-<div class="card"><h3>③ Prompt list → images → I2V, one run <span class="badge">nice to have</span></h3><p style="color:var(--muted);margin:.3em 0 0">We already paste 8 image prompts and 8 i2v prompts per short. Chain them: generate the stills, auto-map each to its i2v prompt, fire the video batch. Removes the manual hand-off between our two copy-blocks.</p></div>
+<div class="card"><h3>Portrait natively</h3><p style="color:var(--muted);margin:.3em 0 0"><code>--size 1024x1536</code> — proper 2:3 stills for a 9:16 short, set per run instead of asked for in prose every time.</p></div>
+<div class="card"><h3>Quality as a flag</h3><p style="color:var(--muted);margin:.3em 0 0"><code>--quality high</code> on every image, not left to chance. The web app never exposes this.</p></div>
+<div class="card"><h3>The cast lock</h3><p style="color:var(--muted);margin:.3em 0 0">The third line of the example is the important one: <b>edit mode takes up to five input images</b>. Feed it our five approved portraits and every render is conditioned on the real cast instead of a text description of them.</p></div>
 </div>
 
-<div class="note warn" style="margin-top:16px"><b>One real limitation to accept up front.</b> Flow images come out at <b>1376×768 native</b> and image upscaling inside Flow is a known dead end — the endpoint body is undocumented and our earlier attempt shipped best-effort only. For 9:16 shorts that is a low pixel count going into Veo. It has not visibly hurt shorts 1–18, because Veo re-renders and the video path <i>does</i> have working 1080p/4K upscaling — but if the A/B shows softness, that is the reason, and route 2 (which does 2K natively) is the fix.</div>
+<div class="flag" style="margin-top:14px"><b>The honest catch, from OpenAI's own page:</b> image turns burn your included allowance <b>3–5× faster</b> than normal Codex use, and edit jobs have a per-minute limit on input images (the tool retries with backoff). It is subscription-gated to Plus and above. And it is not an officially supported automation surface — Codex's internals can change and break the tool.</div>
 </div></section>
 
-<section id="chatgpt"><div class="wrap">
-<h2><span class="dot"></span>Why not just automate ChatGPT</h2>
-<p class="sub">You asked for a repo or an extension. They exist, they're current, and I'd still say no. Here's the honest picture rather than a flat refusal.</p>
+<section id="p3"><div class="wrap">
+<h2><span class="dot"></span>Path 3 — ChatGPT Flow Multi <span class="badge">the build</span></h2>
+<p class="why" style="color:var(--muted);margin-bottom:6px">Your third idea: <i>"if there's a provision of making something like veo3 multi, we can embed chatgpt there and it can generate images for us in bulk."</i> Yes — and it's a closer fit than it was for Flow, because the hard part of Path 2 is already solved and proven by a working repo.</p>
 
-<h3>What actually works</h3>
+<h3>How it works</h3>
 <div class="tbl-wrap"><table>
-<thead><tr><th>Thing</th><th>State on 26 Jul 2026</th><th>Verdict</th></tr></thead>
+<thead><tr><th>Piece</th><th>Where it comes from</th></tr></thead>
 <tbody>
-<tr><td>Chrome extension <b>"ChatGPT Automation"</b></td><td>~10,000 users, updated the day I looked; does text-to-image, image-to-image, aspect ratios, auto-download</td><td>Works</td></tr>
-<tr><td>Chrome extension <b>"ChatGPT Image Auto"</b></td><td>~100,000 users, updated Apr 2026; reads the generated-image payload directly</td><td>Works</td></tr>
-<tr><td><b>CatGPT-Gateway</b> (open source, 211★)</td><td>Drives a real signed-in Chromium via Patchright, exposes an OpenAI-shaped endpoint; actively repaired against ChatGPT UI redesigns</td><td>Works, single-threaded</td></tr>
-<tr><td>Reverse-engineered HTTP clients (chat2api, ChatGPTReversed, the old acheong08 repo)</td><td>Dead or stale. ChatGPT's protection now verifies that a real browser fully booted and hydrated the React app</td><td>Broken</td></tr>
-<tr><td><b>Superpower ChatGPT</b> (100k users)</td><td>Its queue only waits for the send button, so it fires the next prompt while the image is still rendering</td><td>Wrong tool</td></tr>
+<tr><td>One isolated browser session per ChatGPT account, manual login once</td><td>Exactly the pattern the Flow tool uses — a separate persisted partition per account. Never scripts the sign-in screen.</td></tr>
+<tr><td>Harvest each account's Codex login token</td><td>Same file shape <code>codex-imagegen-cli</code> already reads. The batch tool even accepts <code>--auth-file</code>, so each account is just a different file path.</td></tr>
+<tr><td>Round-robin the prompt queue across accounts; drop an account when it hits its limit and carry on</td><td>The Flow tool already does precisely this for exhausted credits. Same logic, different exhaustion signal.</td></tr>
+<tr><td>Talk to ChatGPT's image endpoint directly</td><td><code>chatgpt.com/backend-api/codex/responses</code> — <b>not</b> the chat endpoint. This matters: the chat endpoint is behind the Cloudflare proof-of-work wall that killed every old ChatGPT automation project. This one isn't.</td></tr>
 </tbody></table></div>
 
-<h3>Why it still fails for us</h3>
-<div class="grid g3">
-<div class="card"><h3 style="color:var(--chili)">The quota, not the tech</h3><p style="color:var(--muted);margin:.3em 0 0">OpenAI publishes <b>no</b> image limit for Plus — I checked every help article. What users report through 2026 is a few dozen images and then a cooldown measured in <i>hours</i>, with failed and content-refused generations still counting against you. Those community numbers are unsourced and I could not corroborate them, so treat them as a warning rather than a figure. But no one anywhere reports pulling hundreds a day.</p></div>
-<div class="card"><h3 style="color:var(--chili)">The terms are explicit</h3><p style="color:var(--muted);margin:.3em 0 0">OpenAI's Terms of Use forbid users to <i>"automatically or programmatically extract data or Output"</i> and to <i>"circumvent any rate limits or restrictions."</i> Every one of these tools markets randomised delays "to stay under rate limits" — squarely the second clause.</p></div>
-<div class="card"><h3 style="color:var(--chili)">And the risk isn't the ban</h3><p style="color:var(--muted);margin:.3em 0 0">I found <b>zero</b> first-hand reports of a permanent ban for UI automation — the observed penalty is temporary lockouts and repeated human-verification prompts. The real hazard is that when OpenAI's classifiers <i>do</i> flag an account, 2026's appeals have been auto-rejected. It's a small chance of an unappealable loss, for a route that can't hit our volume anyway.</p></div>
-</div>
-<div class="flag" style="margin-top:14px"><b>Also worth knowing:</b> Google publishes a Chrome Web Store policy change taking effect <b>1 Aug 2026</b> that disallows extensions "designed to circumvent safety guardrails, usage restrictions, or other protective measures implemented by AI-powered services." Whether these two extensions are read as covered is not stated anywhere — but the category is in the blast radius, six days out.</div>
+<p class="sub" style="margin-top:14px"><b>N accounts = N× the daily images.</b> That is the entire point, and it's the same reason we pooled accounts for Veo.</p>
+
+<div class="note warn"><b>How I'd build it this time, given the Flow tool didn't work out.</b> Command line first, Electron never — or at least not until the engine is proven. Path 2's CLI already works standalone; step one is a thin script that runs it across N auth files and reports what each account did. If that runs clean for a week of real shorts, <i>then</i> it's worth a window and buttons. The Flow tool's problem was that a lot of UI got built on top of an engine that was still fighting Google. I'm not repeating that shape.</div>
 </div></section>
 
-<section id="codex"><div class="wrap">
-<h2><span class="dot"></span>"Can Codex generate too?" — yes, and here's the catch</h2>
-<p class="sub">This was your sharpest question, and the answer is a genuine yes. It's just bounded in a way OpenAI states outright.</p>
-<div class="grid g2">
-<div class="card"><h3 class="hi" style="color:var(--leaf)">What's true</h3><p style="color:var(--muted);margin:.3em 0 0">Codex has <b>built-in image generation</b>. Per OpenAI's docs it <i>"uses gpt-image-2 and counts toward your general Codex usage limits"</i> — i.e. it is paid for by the Plus subscription, not by API billing. Image generation is available on Plus (not on Free). Codex runs headlessly via <code>codex exec</code> and has official TypeScript and Python SDKs, so looping it over a prompt list is trivial.</p></div>
-<div class="card"><h3 class="hi" style="color:var(--chili)">What kills it</h3><p style="color:var(--muted);margin:.3em 0 0">Two sentences from the same page. <i>"Image generations use included limits 3–5× faster on average than similar turns without image generation."</i> And then, plainly: <i>"For larger batches, set OPENAI_API_KEY in your environment and ask ChatGPT to generate images through the API so API pricing applies."</i> OpenAI is telling you that at batch volume you are meant to be on route 2.</p></div>
-</div>
-<div class="flag"><b>Also dead, so nobody wastes a week on it:</b> Sora. The consumer app and website were discontinued <b>26 Apr 2026</b>, and the Sora API shuts down <b>24 Sep 2026</b> with no replacement model listed. Any plan that routes through Sora has two months of life.</div>
-<div class="flag"><b>And the premise worth retiring:</b> there is no "Veo 3 image generation". Flow's stills come from Imagen 4, Nano Banana 2, or Nano Banana Pro — three separate models, one dropdown. Veo is only the video half.</div>
+<section id="ceiling"><div class="wrap">
+<h2><span class="dot"></span>The one thing that decides everything</h2>
+<p class="sub">All three paths run into the same wall: how many images a single Plus account gives per day. <b>OpenAI publishes no number</b> — I checked every help article, and every figure circulating online traces back to content farms rather than to OpenAI. What's consistently reported is a few dozen images, then a cooldown measured in hours, and refused generations still count against you.</p>
+<p class="sub">So we measure it instead of researching it. <b>Path 1 tonight, 8 prompts, tell me where it stopped.</b> That single number tells us whether Path 2 alone covers a week of shorts, or whether Path 3 is mandatory.</p>
+<div class="flag">If we ever need volume beyond what pooled accounts give, OpenAI's own Codex documentation points the way out: set an API key and the same image model bills at API rates instead — around <b>$2.65 per 100 images</b> on the discounted batch tier. Noting it only so we know the ceiling isn't a dead end. Not proposing it.</div>
 </div></section>
 
 <section id="flags"><div class="wrap">
-<h2><span class="dot"></span>What I could not verify — read before you spend</h2>
-<div class="flag"><b>Flow image generation being credit-free is our measurement, not Google's promise.</b> Google's published Flow credit table lists only video operations and omits images entirely — that is an argument from silence, not a stated zero. Our own tool reads the real balance delta after each batch and has recorded 0 for images. <b>Re-check the delta on the first Nano Banana Pro run</b> before we lean on "free".</div>
-<div class="flag"><b>"gpt-image-2 is the model inside ChatGPT" is a strong inference, not a sourced fact.</b> No OpenAI page says it. The evidence is that the API snapshot is dated the same day ChatGPT Images 2.0 launched, and that OpenAI's deprecation table retires the <code>chatgpt-image-latest</code> alias and names <code>gpt-image-2</code> as its replacement. Good enough to plan on; not good enough to quote.</div>
-<div class="flag"><b>The ChatGPT Plus image cap is genuinely unpublished.</b> Every number circulating online traces to content farms. I am relying on the shape of community reports, not a figure.</div>
-<div class="flag"><b>Nobody has published a controlled test of character drift over hundreds of renders.</b> The only measured curve found stops at 20 images, where face similarity had already decayed ~10%. Every vendor's consistency claim — Google's five character slots included — is a marketing claim until we test it on our own five.</div>
-<div class="flag"><b>Google's "5 characters" is Nano Banana Pro specifically</b>, and the phrasing counts <i>images of characters</i>, drawn from a 14-image total budget — not necessarily five distinct people rendered perfectly. Our cast is exactly five, so this is right on the documented edge. Test it before we build the whole pipeline on it.</div>
+<h2><span class="dot"></span>Risks — stated once, your call</h2>
+<div class="flag"><b>The terms.</b> OpenAI's Terms of Use forbid users to <i>"automatically or programmatically extract data or Output"</i> and to <i>"circumvent any rate limits or restrictions."</i> All three paths sit inside that language, Path 2 least visibly (it uses an official Codex feature through an unofficial wrapper), Path 1 most visibly (the extensions advertise randomised delays "to stay under rate limits").</div>
+<div class="flag"><b>What actually happens in practice.</b> I found <b>zero</b> first-hand reports of a permanent ban for this. The observed penalty is temporary lockouts and repeated human-verification prompts. The real hazard is different: when OpenAI's classifiers do flag an account for anything, 2026's appeals have been auto-rejected. Small chance, but the downside is losing the account rather than getting a warning.</div>
+<div class="flag"><b>Chrome extensions specifically.</b> Google's Web Store policy update takes effect <b>1 Aug 2026</b> and disallows extensions "designed to circumvent safety guardrails, usage restrictions, or other protective measures implemented by AI-powered services." Whether these two are covered isn't stated anywhere — but Path 1 may not survive the month. Another reason it's the test, not the destination.</div>
+<div class="flag"><b>Path 2's tool is small.</b> Apache-2.0, proper tests and CI, but few users — no bug reports either way. Read it before running it, which I'll do as part of setting it up.</div>
 </div></section>
 
 <section id="sources"><div class="wrap">
 <h2><span class="dot"></span>Sources</h2>
 <ul class="src">
-<li>OpenAI image pricing &amp; per-image table — <a href="https://developers.openai.com/api/docs/guides/image-generation" target="_blank" rel="noopener">developers.openai.com/api/docs/guides/image-generation</a></li>
-<li>OpenAI Batch API (images supported, 50%, 24h) — <a href="https://developers.openai.com/api/docs/guides/batch" target="_blank" rel="noopener">developers.openai.com/api/docs/guides/batch</a></li>
-<li>gpt-image-2 model card + rate limits — <a href="https://developers.openai.com/api/docs/models/gpt-image-2" target="_blank" rel="noopener">developers.openai.com/api/docs/models/gpt-image-2</a></li>
-<li>Codex image generation — <a href="https://developers.openai.com/codex/image-generation" target="_blank" rel="noopener">developers.openai.com/codex/image-generation</a> · <a href="https://developers.openai.com/codex/pricing" target="_blank" rel="noopener">pricing</a> · <a href="https://developers.openai.com/codex/non-interactive-mode" target="_blank" rel="noopener">codex exec</a></li>
+<li>The batch CLI — <a href="https://github.com/jdmnk/codex-imagegen-cli" target="_blank" rel="noopener">github.com/jdmnk/codex-imagegen-cli</a></li>
+<li>Codex image generation (model, plan billing, 3–5× burn) — <a href="https://developers.openai.com/codex/image-generation" target="_blank" rel="noopener">developers.openai.com/codex/image-generation</a></li>
+<li>Codex sign-in and auth file — <a href="https://developers.openai.com/codex/auth" target="_blank" rel="noopener">developers.openai.com/codex/auth</a></li>
+<li>Browser-driven fallback, if the Codex path ever breaks — <a href="https://github.com/GautamVhavle/CatGPT-Gateway" target="_blank" rel="noopener">CatGPT-Gateway</a> · <a href="https://github.com/matthewmiglio/chatgpt-image-batcher" target="_blank" rel="noopener">chatgpt-image-batcher</a></li>
 <li>OpenAI Terms of Use — <a href="https://openai.com/policies/terms-of-use/" target="_blank" rel="noopener">openai.com/policies/terms-of-use</a></li>
-<li>Sora discontinuation — <a href="https://openai.com/sora/" target="_blank" rel="noopener">openai.com/sora</a> · <a href="https://developers.openai.com/api/docs/deprecations" target="_blank" rel="noopener">API deprecations</a></li>
-<li>Gemini image pricing — <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">ai.google.dev/gemini-api/docs/pricing</a></li>
-<li>"Up to 14 reference images" / 5 character images — <a href="https://ai.google.dev/gemini-api/docs/image-generation" target="_blank" rel="noopener">ai.google.dev/gemini-api/docs/image-generation</a></li>
-<li>Flow models &amp; credit costs — <a href="https://support.google.com/flow/answer/16352836" target="_blank" rel="noopener">models</a> · <a href="https://support.google.com/flow/answer/16526234" target="_blank" rel="noopener">credits</a></li>
 <li>Chrome Web Store AI policy, effective 1 Aug 2026 — <a href="https://developer.chrome.com/blog/cws-policy-updates-2026" target="_blank" rel="noopener">developer.chrome.com</a></li>
-<li>Image-model standings — <a href="https://artificialanalysis.ai/image/leaderboard/text-to-image" target="_blank" rel="noopener">Artificial Analysis</a></li>
 </ul>
-<p class="sub" style="margin-top:16px">Researched with four parallel agents, then every figure quoted above independently re-verified by a fifth. The verifier corrected three claims — they are stated in their corrected form here, and the ones that failed verification are in §8 rather than in the tables.</p>
 </div></section>
 
 <footer style="padding:26px 0 40px"><div class="wrap" style="color:var(--faint);font-size:13px">
