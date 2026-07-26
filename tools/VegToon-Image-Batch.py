@@ -25,6 +25,7 @@ import http.server
 import json
 import os
 import platform
+import queue
 import random
 import re
 import shutil
@@ -44,7 +45,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 APP_NAME = "VegToon Image Batch"
-APP_VERSION = "1.3.0"
+APP_VERSION = "1.4.0"
 
 # --- Update + diagnostics channel ------------------------------------------
 # The upload key is write-only on purpose: it can post a report, it cannot read
@@ -134,6 +135,8 @@ def load_settings() -> dict:
         "background": "auto",
         "count": 1,
         "prefix": "img",
+        "workers": 4,
+        "stamp_folder": True,
         "report": True,
         "install_id": "",
     }
@@ -782,12 +785,154 @@ def setup_msg(text, error=""):
     log(text if not error else f"{text} :: {error}")
 
 
-def run_batch(prompts, opts):
-    """Worker thread: generate every prompt, one at a time."""
-    out_dir = Path(opts["out_dir"]).expanduser()
-    demo = bool(opts.get("demo"))
+def _resolve_run_dir(base: Path, use_stamp: bool) -> Path:
+    """Each run gets its own dated folder, so runs never collide and stay separable."""
+    if not use_stamp:
+        return base
+    stamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    target = base / stamp
+    n = 2
+    while target.exists():
+        target = base / f"{stamp}-{n}"
+        n += 1
+    return target
+
+
+NAME_LOCK = threading.Lock()
+
+
+def _claim_path(run_dir: Path, prefix: str, item: dict, per_prompt: int) -> Path:
+    """Reserve a unique filename. Names are unique by construction inside a run;
+    the exists() loop is only a backstop for writing into a shared folder."""
+    name = f"{prefix}-{item['prompt_index'] + 1:03d}"
+    if per_prompt > 1:
+        name += f"-{item['copy_index'] + 1}"
+    with NAME_LOCK:
+        target = run_dir / f"{name}.png"
+        n = 2
+        while target.exists():
+            target = run_dir / f"{name}-{n}.png"
+            n += 1
+        target.touch()          # claim it so a sibling thread cannot pick the same one
+    return target
+
+
+def _progress_message(run_dir: Path) -> str:
+    with BATCH.lock:
+        counts = collections.Counter(i["status"] for i in BATCH.items)
+        total = len(BATCH.items)
+    done = counts.get("done", 0)
+    running = counts.get("running", 0)
+    waiting = counts.get("waiting", 0)
+    left = total - done - counts.get("failed", 0) - counts.get("stopped", 0)
+    bits = [f"{done} of {total} saved"]
+    if running:
+        bits.append(f"{running} generating now")
+    if waiting:
+        bits.append(f"{waiting} waiting on the limit")
+    if counts.get("failed"):
+        bits.append(f"{counts['failed']} failed")
+    return " · ".join(bits) + (f" · {left} to go" if left > 0 else "")
+
+
+def _generate_one(idx, prompts, opts, auth_box, run_dir, prefix, per_prompt, demo):
+    """One image, start to finish. Runs on a worker thread."""
+    with BATCH.lock:
+        item = dict(BATCH.items[idx])
+    if BATCH.cancel.is_set():
+        BATCH.update(idx, status="stopped")
+        return
+    prompt = prompts[item["prompt_index"]]
+    BATCH.update(idx, status="running", error="")
+    BATCH.set_message(_progress_message(run_dir))
+    t0 = time.time()
+    attempt = 0
+    encoded = None
+
+    while True:
+        try:
+            if demo:
+                time.sleep(0.35)
+                encoded = demo_png(idx)
+            else:
+                payload = build_payload(
+                    prompt, opts["size"], opts["quality"], opts["background"],
+                    f"vegtoon-batch-{idx}",
+                )
+                with auth_box["lock"]:
+                    headers = dict(auth_box["headers"])
+                encoded = stream_one_image(headers, payload, 600.0, BATCH.cancel)
+            break
+        except urllib.error.HTTPError as exc:
+            if exc.code == 401 and not demo and attempt == 0:
+                try:
+                    # Only one thread refreshes; the others pick up the new headers.
+                    with auth_box["lock"]:
+                        stale = auth_box["token"]
+                        current = load_auth()
+                        if access_token(current) == stale:
+                            current = refresh_auth(current)
+                        auth_box["headers"] = auth_headers(current)
+                        auth_box["token"] = access_token(current)
+                    attempt += 1
+                    continue
+                except Exception as inner:
+                    BATCH.update(idx, status="failed", error=f"Sign-in expired: {inner}")
+                    break
+            BATCH.update(idx, status="failed", error=f"HTTP {exc.code}: {exc.reason}")
+            break
+        except RateLimited as exc:
+            delay = exc.delay
+            if delay is None or attempt >= MAX_RETRIES:
+                BATCH.update(idx, status="failed", error=str(exc))
+                break
+            attempt += 1
+            BATCH.update(idx, status="waiting",
+                         error=f"Rate limited — retrying in {delay:.0f}s ({attempt}/{MAX_RETRIES})")
+            BATCH.set_message(_progress_message(run_dir))
+            waited = 0.0
+            while waited < delay and not BATCH.cancel.is_set():
+                time.sleep(0.5)
+                waited += 0.5
+            if BATCH.cancel.is_set():
+                BATCH.update(idx, status="stopped")
+                break
+            BATCH.update(idx, status="running", error="")
+            continue
+        except Exception as exc:
+            BATCH.update(idx, status="failed", error=str(exc)[:300])
+            break
+
+    with BATCH.lock:
+        if BATCH.items[idx]["status"] in ("failed", "stopped"):
+            return
+    if encoded is None:
+        BATCH.update(idx, status="failed", error="No image came back.")
+        return
+
+    target = _claim_path(run_dir, prefix, item, per_prompt)
     try:
-        out_dir.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(base64.b64decode(encoded))
+    except Exception as exc:
+        try:
+            target.unlink(missing_ok=True)
+        except Exception:
+            pass
+        BATCH.update(idx, status="failed", error=f"Could not save file: {exc}")
+        return
+
+    BATCH.update(idx, status="done", file=str(target), name=target.name,
+                 seconds=round(time.time() - t0, 1), error="")
+    BATCH.set_message(_progress_message(run_dir))
+
+
+def run_batch(prompts, opts):
+    """Runs the whole batch across a pool of worker threads."""
+    base = Path(opts["out_dir"]).expanduser()
+    demo = bool(opts.get("demo"))
+    run_dir = _resolve_run_dir(base, bool(opts.get("stamp_folder", True)))
+    try:
+        run_dir.mkdir(parents=True, exist_ok=True)
     except Exception as exc:
         BATCH.set_message(f"Cannot use that folder: {exc}")
         with BATCH.lock:
@@ -796,11 +941,15 @@ def run_batch(prompts, opts):
         auto_report("batch aborted: bad folder")
         return
 
-    auth = headers = None
+    with BATCH.lock:
+        BATCH.out_dir = str(run_dir)
+
+    auth_box = {"lock": threading.Lock(), "headers": {}, "token": None}
     if not demo:
         try:
             auth = ready_auth()
-            headers = auth_headers(auth)
+            auth_box["headers"] = auth_headers(auth)
+            auth_box["token"] = access_token(auth)
         except Exception as exc:
             BATCH.set_message(str(exc))
             with BATCH.lock:
@@ -811,98 +960,48 @@ def run_batch(prompts, opts):
 
     per_prompt = max(1, int(opts.get("count", 1)))
     prefix = safe_name(opts.get("prefix") or "img")
+    workers = max(1, min(8, int(opts.get("workers", 4))))
     total = len(BATCH.items)
-    completed = 0
+    log(f"batch: {total} images, {workers} at a time, into {run_dir}")
 
-    for idx, item in enumerate(list(BATCH.items)):
-        if BATCH.cancel.is_set():
-            BATCH.update(idx, status="stopped")
-            continue
-        prompt = prompts[item["prompt_index"]]
-        BATCH.update(idx, status="running", started=time.time())
-        BATCH.set_message(f"Generating {idx + 1} of {total} ...")
-        t0 = time.time()
+    jobs = queue.Queue()
+    for i in range(total):
+        jobs.put(i)
 
-        attempt = 0
+    def worker():
         while True:
             try:
-                if demo:
-                    time.sleep(0.35)
-                    encoded = demo_png(idx)
-                else:
-                    payload = build_payload(
-                        prompt, opts["size"], opts["quality"], opts["background"],
-                        f"vegtoon-batch-{idx}",
-                    )
-                    encoded = stream_one_image(headers, payload, 600.0, BATCH.cancel)
-                break
-            except urllib.error.HTTPError as exc:
-                if exc.code == 401 and not demo and attempt == 0:
-                    try:
-                        auth = refresh_auth(load_auth())
-                        headers = auth_headers(auth)
-                        attempt += 1
-                        continue
-                    except Exception as inner:
-                        BATCH.update(idx, status="failed", error=f"Sign-in expired: {inner}")
-                        break
-                BATCH.update(idx, status="failed", error=f"HTTP {exc.code}: {exc.reason}")
-                break
-            except RateLimited as exc:
-                delay = exc.delay
-                if delay is None or attempt >= MAX_RETRIES:
-                    BATCH.update(idx, status="failed", error=str(exc))
-                    break
-                attempt += 1
-                BATCH.update(idx, status="waiting",
-                             error=f"Rate limited — retrying in {delay:.0f}s ({attempt}/{MAX_RETRIES})")
-                BATCH.set_message(f"Rate limited. Waiting {delay:.0f}s before retry {attempt}.")
-                waited = 0.0
-                while waited < delay and not BATCH.cancel.is_set():
-                    time.sleep(0.5)
-                    waited += 0.5
+                idx = jobs.get_nowait()
+            except queue.Empty:
+                return
+            try:
                 if BATCH.cancel.is_set():
                     BATCH.update(idx, status="stopped")
-                    break
-                BATCH.update(idx, status="running", error="")
-                continue
+                else:
+                    _generate_one(idx, prompts, opts, auth_box, run_dir,
+                                  prefix, per_prompt, demo)
             except Exception as exc:
+                log(f"worker crashed on {idx}: {exc}")
                 BATCH.update(idx, status="failed", error=str(exc)[:300])
-                break
+            finally:
+                jobs.task_done()
 
-        with BATCH.lock:
-            status_now = BATCH.items[idx]["status"]
-        if status_now in ("failed", "stopped"):
-            continue
-
-        name = f"{prefix}-{item['prompt_index'] + 1:03d}"
-        if per_prompt > 1:
-            name += f"-{item['copy_index'] + 1}"
-        target = out_dir / f"{name}.png"
-        n = 2
-        while target.exists():
-            target = out_dir / f"{name}-{n}.png"
-            n += 1
-        try:
-            target.write_bytes(base64.b64decode(encoded))
-        except Exception as exc:
-            BATCH.update(idx, status="failed", error=f"Could not save file: {exc}")
-            continue
-
-        completed += 1
-        BATCH.update(idx, status="done", file=str(target), name=target.name,
-                     seconds=round(time.time() - t0, 1), error="")
+    threads = [threading.Thread(target=worker, daemon=True) for _ in range(min(workers, total))]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
 
     with BATCH.lock:
+        counts = collections.Counter(i["status"] for i in BATCH.items)
+        completed = counts.get("done", 0)
+        failed = counts.get("failed", 0)
         BATCH.running = False
         if BATCH.cancel.is_set():
-            BATCH.message = f"Stopped. {completed} of {total} saved to {out_dir}"
+            BATCH.message = f"Stopped. {completed} of {total} saved to {run_dir}"
         else:
-            failed = sum(1 for i in BATCH.items if i["status"] == "failed")
-            BATCH.message = (
-                f"Finished. {completed} of {total} saved to {out_dir}"
-                + (f" — {failed} failed." if failed else ".")
-            )
+            BATCH.message = (f"Finished. {completed} of {total} saved to {run_dir}"
+                             + (f" — {failed} failed." if failed else "."))
     log(BATCH.message)
     auto_report("run finished" + (" (test run)" if demo else ""))
 
@@ -1340,6 +1439,21 @@ footer{color:var(--faint);font-size:12px;padding:22px 0 34px}
     <div><label for="count">Images per prompt</label><input id="count" type="number" min="1" max="8" value="1"></div>
   </div>
 
+  <div class="row r3">
+    <div><label for="workers">How many at the same time</label><select id="workers">
+      <option value="1">1 &mdash; slowest, gentlest on the limit</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4" selected>4 &mdash; recommended</option>
+      <option value="6">6</option>
+      <option value="8">8 &mdash; fastest, hits the limit soonest</option>
+    </select></div>
+    <div style="grid-column:span 2;display:flex;align-items:flex-end">
+      <label class="chk" style="padding-bottom:10px"><input type="checkbox" id="stampFolder" checked>
+        Put each run in its own dated folder (recommended &mdash; keeps runs apart and can never clash)</label>
+    </div>
+  </div>
+
   <div class="bar">
     <button class="btn" id="goBtn">Generate</button>
     <button class="btn danger hide" id="stopBtn">Stop</button>
@@ -1462,6 +1576,8 @@ async function poll(){
       $('#background').value = s.settings.background;
       $('#count').value = s.settings.count;
       $('#reporting').checked = s.settings.report !== false;
+      $('#workers').value = s.settings.workers || 4;
+      $('#stampFolder').checked = s.settings.stamp_folder !== false;
       refreshCount();
     }
     if (s.version) $('#verLine').textContent = '__APP__ v' + s.version;
@@ -1536,7 +1652,10 @@ $('#goBtn').onclick = async () => {
   const r = await api('/api/start', {
     prompts, out_dir: $('#outdir').value.trim(), prefix: $('#prefix').value.trim() || 'img',
     size: $('#size').value, quality: $('#quality').value, background: $('#background').value,
-    count: Math.max(1, parseInt($('#count').value) || 1), demo: $('#demo').checked
+    count: Math.max(1, parseInt($('#count').value) || 1),
+    workers: parseInt($('#workers').value) || 4,
+    stamp_folder: $('#stampFolder').checked,
+    demo: $('#demo').checked
   });
   $('#goBtn').disabled = false;
   if (r.error) $('#status').textContent = r.error;
@@ -1691,6 +1810,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 "quality": body.get("quality") if body.get("quality") in QUALITIES else "high",
                 "background": body.get("background") if body.get("background") in BACKGROUNDS else "auto",
                 "count": max(1, min(8, int(body.get("count") or 1))),
+                "workers": max(1, min(8, int(body.get("workers") or 4))),
+                "stamp_folder": bool(body.get("stamp_folder", True)),
                 "demo": bool(body.get("demo")),
             }
             try:
